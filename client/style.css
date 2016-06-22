@@ -1,0 +1,59 @@
+/* -----------------
+    client
+------------------ */
+#client #control_buttons #geek {
+    float: right;
+}
+#client div.fb-like {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+}
+#client canvas {
+    /*background-color: #7E26F1;*/
+}
+#stateLog {
+	display: none;
+    background: #859bc3;
+    background: rgba(28, 83, 183, 0.77);
+    position: fixed;
+    padding: 5px;
+    color: #dde7f7;
+}
+#winner {
+	display: none;
+    background: green;
+    font-size: 10vw;
+    font-family: 'Righteous', cursive;
+    padding: 2vw;
+}
+#addRobot {
+    bottom: -1px;
+    position: absolute;
+    right: 25%;
+}
+/* button */
+.myButton {
+	box-shadow: 3px 4px 0px 0px #8a2a21;
+	border-radius:18px;
+	background:linear-gradient(to bottom, #c62d1f 5%, #f24437 100%);
+	border:1px solid #d02718;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:17px;
+	padding:7px 25px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #810e05;
+	margin-bottom: 8px;
+}
+.myButton:hover, .myButton:focus {
+	background:linear-gradient(to bottom, #f24437 5%, #c62d1f 100%);
+}
+.myButton:focus {
+    border: 1px solid red;
+}
+.myButton:disabled {
+	background: gray;
+}
