@@ -2,7 +2,7 @@
     $DEVserver = true;
     //         $mini = $_GET['mini'];
     // $minifiedCode = (($mini == true || $mini == false) ? $mini : false);
-    $minifiedCode = false;
+    $minifiedCode = !0;
     $listOtherFiles = false;
     $gameName = "Segwayv the Game";
     $noLoadPattern = '/(\/(NOLOAD|WAIT)|game\.js)/';
