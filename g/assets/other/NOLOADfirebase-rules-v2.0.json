@@ -1,0 +1,68 @@
+{
+  "rules": {
+    "gameServer": {
+      "$gameServer": {
+        ".read": "auth.uid !== null",
+        "gameVariables": {
+          ".write": true, //TODO: validate the server
+          "canvasSize": {
+            //it must only include a '0' and '1' and they must be numbers greater than 50
+            //	// we dont want the field to be too small
+            ".validate": "newData.hasChildren(['0','1'])",
+            "0": {
+              ".validate": "newData.isNumber() && newData.val() > 50"
+            },
+            "1": {
+              ".validate": "newData.isNumber() && newData.val() > 50"
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "$other": {
+            //no other fields can be changed by anyone
+            ".validate": false
+          }
+        },
+        "interactingObjects": {
+          "active": {
+            "$uid": {
+              //clients can only edit objects that they are the owner of
+              ".write": true,
+              //now we are allowing other users to delete projectiles
+//               ".write": "newData.child('gamePlay/owner').val() === auth.uid || data.child('gamePlay/owner').val() === auth.uid"
+            }
+          },
+          "background": {
+            ".validate": false, //this is coming
+          }
+        },
+        "lastPings": {
+          "$uid":{
+            //anybody can update their own ping time
+            ".write": "$uid === auth.uid || $uid === 'server'",
+           	".validate": "newData.val() <= now"
+          }
+        },
+        "messages": {
+          ".write": true
+        },
+        "whiteList": {
+          "$uid": {
+            ".write": true, //validate the server!
+            ".validate": "newData.isBoolean() || data.isBoolean()"
+//             //we need to allow deleting
+          }
+        }
+      }
+    },
+    "users": {
+      "$uid": {
+        //users can only write their own user
+        // --> other users need to read from here
+        ".read": "auth.uid !== null",
+        ".write": "$uid === auth.uid",
+      }
+    }
+  }
+}

@@ -1,0 +1,787 @@
+{
+  "gameServer" : {
+    "chrome" : {
+      "gameVariables" : {
+        "accelerationConst" : 7,
+        "canvasSize" : [ 673, 619 ],
+        "cleanUsersFrequency" : 180000,
+        "debugFlags" : {
+          "showFactoryFirings" : false,
+          "showFilesLoaded" : false,
+          "showGameVariableLog" : false,
+          "showKeyboardActions" : false,
+          "showPacketsRecieved" : false,
+          "showStagesPerformed" : false
+        },
+        "display" : {
+          "HPbar" : {
+            "HPcolor" : {
+              "absent" : "#B21000",
+              "present" : "#09B256"
+            },
+            "bottom_pad" : 1.5,
+            "height" : 12,
+            "left_pad" : 2,
+            "shieldColor" : {
+              "absent" : "#B28400",
+              "present" : "#003BA8"
+            },
+            "strifeColor" : {
+              "a" : "FFDB30",
+              "absent" : "#67147F",
+              "present" : "#FFDB30"
+            },
+            "weaponColor" : {
+              "absent" : "#FF6125",
+              "present" : "#00AB8C"
+            },
+            "width" : 150,
+            "y_offset" : 120
+          },
+          "profilePic" : {
+            "size" : 35,
+            "x_offset" : -120,
+            "y_from_HPbar" : 22
+          },
+          "usernameColor" : "#fff"
+        },
+        "eraseFullBoardFrequency" : 1500,
+        "gameSpeed" : 20,
+        "messageTimeout" : 5000,
+        "pingAllowance" : 10000,
+        "pingFrequency" : 30000,
+        "projectileSaveFrequency" : 60,
+        "reduceRammingDmg" : 8,
+        "sizeScale" : 100,
+        "timeStamp" : 187,
+        "userAccuracy" : {
+          "mouse" : 1,
+          "position" : 1,
+          "rotate" : 0.5
+        },
+        "userSaveFrequency" : 1
+      },
+      "lastPings" : {
+        "5dWIAbkkaWQgsl5dnhm1dRZScoI2" : 1467130543760,
+        "nvLfgor2mqRXYcoZcXUIv7WaBD32" : 1467069891778,
+        "server" : 1467139313897
+      }
+    }
+  },
+  "users" : {
+    "5dWIAbkkaWQgsl5dnhm1dRZScoI2" : {
+      "appearance" : {
+        "displayName" : "EFS Vigil",
+        "position" : [ 0, 0 ],
+        "rotate" : 0,
+        "shape" : [ "v2.1", {
+          "src" : "/g/assets/images/sprites/5concepts-red.png"
+        } ]
+      },
+      "class" : "userObject",
+      "gamePlay" : {
+        "HP" : 1400,
+        "buttonMapping" : {
+          "cw" : 82,
+          "cw_last_pressed" : -1,
+          "dn" : [ 40, 83 ],
+          "fi" : 32,
+          "lt" : [ 37, 65 ],
+          "rt" : [ 39, 68 ],
+          "sb" : 81,
+          "sl" : 90,
+          "sr" : 67,
+          "ss" : 69,
+          "up" : [ 38, 87 ]
+        },
+        "currentShieldBurnOut" : 0,
+        "damageMultiplier" : 1,
+        "immuneTo" : [ "no-one" ],
+        "maxHP" : 1400,
+        "maxShields" : 1000,
+        "owner" : "5dWIAbkkaWQgsl5dnhm1dRZScoI2",
+        "projectileSpeed" : 1,
+        "provider" : "google.com",
+        "resizeSpeed" : 25,
+        "rotateSpeed" : 5,
+        "shieldBurnOut" : 125,
+        "shieldRegen" : 2.8,
+        "shields" : 1000,
+        "sideThrusting" : {
+          "burned" : false,
+          "controlling" : false,
+          "current" : 0,
+          "displacement" : 0,
+          "extraAcceleration" : 30,
+          "extraSpeed" : 3,
+          "max" : 16,
+          "rate" : 1
+        },
+        "speed" : 12,
+        "weaponKeywords" : [ "Sword", "Sniper", "GrenadeLauncher", "TestWeapon", "Lazer" ],
+        "weapons" : [ {
+          "appearance" : {
+            "position" : [ 0, 0 ],
+            "rotate" : 0,
+            "shape" : [ "v2.1", {
+              "src" : "/g/assets/images/weapons/Arthas_sword.png"
+            } ],
+            "sizeScale" : [ 1 ]
+          },
+          "class" : "weapon",
+          "gamePlay" : {
+            "HP" : 1001,
+            "cooldown" : 0,
+            "damageMultiplier" : 1,
+            "immuneTo" : [ "no-one" ],
+            "launchCount" : 4,
+            "owner" : "generic",
+            "rangeMultiplier" : 1,
+            "rateOfFire" : 12,
+            "speedMultiplier" : 1,
+            "spread" : 65
+          },
+          "minimalToRender" : {
+            "appearance" : {
+              "position" : true,
+              "rotate" : true,
+              "sizeScale" : {
+                "2" : true
+              }
+            },
+            "gamePlay" : {
+              "immuneTo" : true,
+              "owner" : true
+            },
+            "name" : true,
+            "uid" : true
+          },
+          "name" : "Sword",
+          "physics" : {
+            "hitBox" : {
+              "corners" : [ [ 0.5, 0.5 ], [ 0.5, -0.5 ], [ -0.5, -0.5 ], [ -0.5, 0.5 ] ],
+              "simple" : [ -0.5, 0.5, 0.5, -0.5 ],
+              "testPoints" : [ [ 1, 1 ], [ 1, -1 ], [ -1, 1 ], [ -1, -1 ] ]
+            },
+            "mass" : 0,
+            "velocity" : [ 0, 0 ]
+          },
+          "uid" : "-KLMmU4sBWlhjMVTdFaS"
+        }, {
+          "appearance" : {
+            "position" : [ 0, 0 ],
+            "rotate" : 0,
+            "shape" : [ "v2.1", {
+              "src" : "/g/assets/images/weapons/pulse_rifle.png"
+            } ],
+            "sizeScale" : [ 1 ]
+          },
+          "class" : "weapon",
+          "gamePlay" : {
+            "HP" : 1001,
+            "cooldown" : 0,
+            "damageMultiplier" : 3.5,
+            "immuneTo" : [ "no-one" ],
+            "launchCount" : 1,
+            "owner" : "generic",
+            "rangeMultiplier" : 1,
+            "rateOfFire" : 20,
+            "speedMultiplier" : 1.5,
+            "spread" : 0
+          },
+          "minimalToRender" : {
+            "appearance" : {
+              "position" : true,
+              "rotate" : true,
+              "sizeScale" : {
+                "2" : true
+              }
+            },
+            "gamePlay" : {
+              "immuneTo" : true,
+              "owner" : true
+            },
+            "name" : true,
+            "uid" : true
+          },
+          "name" : "Sniper",
+          "physics" : {
+            "hitBox" : {
+              "corners" : [ [ 0.5, 0.5 ], [ 0.5, -0.5 ], [ -0.5, -0.5 ], [ -0.5, 0.5 ] ],
+              "simple" : [ -0.5, 0.5, 0.5, -0.5 ],
+              "testPoints" : [ [ 1, 1 ], [ 1, -1 ], [ -1, 1 ], [ -1, -1 ] ]
+            },
+            "mass" : 0,
+            "velocity" : [ 0, 0 ]
+          },
+          "uid" : "-KLMmU4tQG93wQP99-jQ"
+        }, {
+          "appearance" : {
+            "position" : [ 0, 0 ],
+            "rotate" : 0,
+            "shape" : [ "v2.1", {
+              "src" : "/g/assets/images/projectiles/missle-gray2.png"
+            } ],
+            "sizeScale" : [ 1 ]
+          },
+          "class" : "weapon",
+          "gamePlay" : {
+            "HP" : 1001,
+            "cooldown" : 0,
+            "damageMultiplier" : 1,
+            "immuneTo" : [ "no-one" ],
+            "launchCount" : 1,
+            "owner" : "generic",
+            "rangeMultiplier" : 1,
+            "rateOfFire" : 60,
+            "speedMultiplier" : 1,
+            "spread" : 0
+          },
+          "minimalToRender" : {
+            "appearance" : {
+              "position" : true,
+              "rotate" : true,
+              "sizeScale" : {
+                "2" : true
+              }
+            },
+            "gamePlay" : {
+              "immuneTo" : true,
+              "owner" : true
+            },
+            "name" : true,
+            "uid" : true
+          },
+          "name" : "GrenadeLauncher",
+          "physics" : {
+            "hitBox" : {
+              "corners" : [ [ 0.5, 0.5 ], [ 0.5, -0.5 ], [ -0.5, -0.5 ], [ -0.5, 0.5 ] ],
+              "simple" : [ -0.5, 0.5, 0.5, -0.5 ],
+              "testPoints" : [ [ 1, 1 ], [ 1, -1 ], [ -1, 1 ], [ -1, -1 ] ]
+            },
+            "mass" : 0,
+            "velocity" : [ 0, 0 ]
+          },
+          "uid" : "-KLMmU4tQG93wQP99-jR"
+        }, {
+          "appearance" : {
+            "position" : [ 0, 0 ],
+            "rotate" : 0,
+            "shape" : [ "v2.1", {
+              "src" : "/g/assets/images/weapons/purple_dominator.png"
+            } ],
+            "sizeScale" : [ 1 ]
+          },
+          "class" : "weapon",
+          "gamePlay" : {
+            "HP" : 1001,
+            "cooldown" : 0,
+            "damageMultiplier" : 1,
+            "immuneTo" : [ "no-one" ],
+            "launchCount" : 1,
+            "owner" : "generic",
+            "rangeMultiplier" : 1,
+            "rateOfFire" : 12,
+            "speed" : 10,
+            "speedMultiplier" : 1,
+            "spread" : 0
+          },
+          "minimalToRender" : {
+            "appearance" : {
+              "position" : true,
+              "rotate" : true,
+              "sizeScale" : {
+                "2" : true
+              }
+            },
+            "gamePlay" : {
+              "immuneTo" : true,
+              "owner" : true
+            },
+            "name" : true,
+            "uid" : true
+          },
+          "name" : "TestWeapon",
+          "physics" : {
+            "hitBox" : {
+              "corners" : [ [ 0.5, 0.5 ], [ 0.5, -0.5 ], [ -0.5, -0.5 ], [ -0.5, 0.5 ] ],
+              "simple" : [ -0.5, 0.5, 0.5, -0.5 ],
+              "testPoints" : [ [ 1, 1 ], [ 1, -1 ], [ -1, 1 ], [ -1, -1 ] ]
+            },
+            "mass" : 0,
+            "velocity" : [ 0, 0 ]
+          },
+          "uid" : "-KLMmU4tQG93wQP99-jS"
+        }, {
+          "appearance" : {
+            "position" : [ 0, 0 ],
+            "rotate" : 0,
+            "shape" : [ "v2.1", {
+              "src" : "/g/assets/images/weapons/kraad.png"
+            } ],
+            "sizeScale" : [ 1 ]
+          },
+          "class" : "weapon",
+          "gamePlay" : {
+            "HP" : 1001,
+            "cooldown" : 0,
+            "damageMultiplier" : 1,
+            "immuneTo" : [ "no-one" ],
+            "launchCount" : 1,
+            "owner" : "generic",
+            "rangeMultiplier" : 1,
+            "rateOfFire" : 20,
+            "speed" : 50,
+            "speedMultiplier" : 1,
+            "spread" : 0
+          },
+          "minimalToRender" : {
+            "appearance" : {
+              "position" : true,
+              "rotate" : true,
+              "sizeScale" : {
+                "2" : true
+              }
+            },
+            "gamePlay" : {
+              "immuneTo" : true,
+              "owner" : true
+            },
+            "name" : true,
+            "uid" : true
+          },
+          "name" : "Lazer",
+          "physics" : {
+            "hitBox" : {
+              "corners" : [ [ 0.5, 0.5 ], [ 0.5, -0.5 ], [ -0.5, -0.5 ], [ -0.5, 0.5 ] ],
+              "simple" : [ -0.5, 0.5, 0.5, -0.5 ],
+              "testPoints" : [ [ 1, 1 ], [ 1, -1 ], [ -1, 1 ], [ -1, -1 ] ]
+            },
+            "mass" : 0,
+            "velocity" : [ 0, 0 ]
+          },
+          "uid" : "-KLMmU4tQG93wQP99-jT"
+        } ]
+      },
+      "minimalToRender" : {
+        "appearance" : {
+          "position" : true,
+          "rotate" : true,
+          "sizeScale" : {
+            "2" : true
+          }
+        },
+        "gamePlay" : {
+          "HP" : true,
+          "immuneTo" : true,
+          "owner" : true,
+          "shields" : true,
+          "weaponKeywords" : true
+        },
+        "name" : true,
+        "physics" : {
+          "velocity" : true
+        },
+        "uid" : true,
+        "user" : {
+          "publicProfileImg" : true,
+          "username" : true
+        }
+      },
+      "name" : "Vigil",
+      "physics" : {
+        "hitBox" : {
+          "corners" : [ [ 0.5, 0.5 ], [ 0.5, -0.5 ], [ -0.5, -0.5 ], [ -0.5, 0.5 ] ],
+          "simple" : [ -0.5, 0.5, 0.5, -0.5 ],
+          "testPoints" : [ [ 1, 1 ], [ 1, -1 ], [ -1, 1 ], [ -1, -1 ] ]
+        },
+        "mass" : 90,
+        "userVelocity" : [ 0, 0 ],
+        "velocity" : [ 0, 0 ]
+      },
+      "uid" : "5dWIAbkkaWQgsl5dnhm1dRZScoI2",
+      "user" : {
+        "availableToPublic" : true,
+        "email" : "the30clues@gmail.com",
+        "isAnonymous" : false,
+        "level" : 0,
+        "mouse" : {
+          "down" : false,
+          "x" : 0,
+          "y" : 0
+        },
+        "name" : "James Finlinson",
+        "publicProfileImg" : "https://lh3.googleusercontent.com/-gbqQWAnYQNk/AAAAAAAAAAI/AAAAAAAAFHk/T1lOAX8gX5U/s96-c/photo.jpg",
+        "stats" : {
+          "dateCreated" : 1467130441816,
+          "lastLogin" : 1467130556088,
+          "stats" : "other stats",
+          "totalTimePlayed" : 0
+        },
+        "upgrades" : {
+          "damageBoost" : 1
+        },
+        "username" : "charmingSKIRMISH",
+        "xp" : 0,
+        "xpNeeded" : 4000
+      }
+    },
+    "nvLfgor2mqRXYcoZcXUIv7WaBD32" : {
+      "appearance" : {
+        "displayName" : "EAS Tempest",
+        "position" : [ 0, 0 ],
+        "rotate" : 0,
+        "shape" : [ "v2.1", {
+          "src" : "/g/assets/images/sprites/5c2-purple.png"
+        } ]
+      },
+      "class" : "userObject",
+      "gamePlay" : {
+        "HP" : 3330,
+        "buttonMapping" : {
+          "cw" : 82,
+          "cw_last_pressed" : -1,
+          "dn" : [ 40, 83 ],
+          "fi" : 32,
+          "lt" : [ 37, 65 ],
+          "rt" : [ 39, 68 ],
+          "sb" : 81,
+          "sl" : 90,
+          "sr" : 67,
+          "ss" : 69,
+          "up" : [ 38, 87 ]
+        },
+        "currentShieldBurnOut" : 0,
+        "damageMultiplier" : 2,
+        "immuneTo" : [ "no-one" ],
+        "maxHP" : 3330,
+        "maxShields" : 300,
+        "owner" : "nvLfgor2mqRXYcoZcXUIv7WaBD32",
+        "projectileSpeed" : 1,
+        "provider" : "google.com",
+        "resizeSpeed" : 15,
+        "rotateSpeed" : 5,
+        "shieldBurnOut" : 125,
+        "shieldRegen" : 2,
+        "shields" : 300,
+        "sideThrusting" : {
+          "burned" : false,
+          "controlling" : false,
+          "current" : 0,
+          "displacement" : 0,
+          "extraAcceleration" : 30,
+          "extraSpeed" : 3,
+          "max" : 16,
+          "rate" : 1
+        },
+        "speed" : 15,
+        "weaponKeywords" : [ "Sniper", "Sword", "GrenadeLauncher", "TestWeapon", "Lazer" ],
+        "weapons" : [ {
+          "appearance" : {
+            "position" : [ 0, 0 ],
+            "rotate" : 0,
+            "shape" : [ "v2.1", {
+              "src" : "/g/assets/images/weapons/pulse_rifle.png"
+            } ],
+            "sizeScale" : [ 1 ]
+          },
+          "class" : "weapon",
+          "gamePlay" : {
+            "HP" : 1001,
+            "cooldown" : 0,
+            "damageMultiplier" : 3.5,
+            "immuneTo" : [ "no-one" ],
+            "launchCount" : 1,
+            "owner" : "generic",
+            "rangeMultiplier" : 1,
+            "rateOfFire" : 20,
+            "speedMultiplier" : 1.5,
+            "spread" : 0
+          },
+          "minimalToRender" : {
+            "appearance" : {
+              "position" : true,
+              "rotate" : true,
+              "sizeScale" : {
+                "2" : true
+              }
+            },
+            "gamePlay" : {
+              "immuneTo" : true,
+              "owner" : true
+            },
+            "name" : true,
+            "uid" : true
+          },
+          "name" : "Sniper",
+          "physics" : {
+            "hitBox" : {
+              "corners" : [ [ 0.5, 0.5 ], [ 0.5, -0.5 ], [ -0.5, -0.5 ], [ -0.5, 0.5 ] ],
+              "simple" : [ -0.5, 0.5, 0.5, -0.5 ],
+              "testPoints" : [ [ 1, 1 ], [ 1, -1 ], [ -1, 1 ], [ -1, -1 ] ]
+            },
+            "mass" : 0,
+            "velocity" : [ 0, 0 ]
+          },
+          "uid" : "-KLIvUFLhwBaGd_Q3BUM"
+        }, {
+          "appearance" : {
+            "position" : [ 0, 0 ],
+            "rotate" : 0,
+            "shape" : [ "v2.1", {
+              "src" : "/g/assets/images/weapons/Arthas_sword.png"
+            } ],
+            "sizeScale" : [ 1 ]
+          },
+          "class" : "weapon",
+          "gamePlay" : {
+            "HP" : 1001,
+            "cooldown" : 0,
+            "damageMultiplier" : 1,
+            "immuneTo" : [ "no-one" ],
+            "launchCount" : 4,
+            "owner" : "generic",
+            "rangeMultiplier" : 1,
+            "rateOfFire" : 12,
+            "speedMultiplier" : 1,
+            "spread" : 65
+          },
+          "minimalToRender" : {
+            "appearance" : {
+              "position" : true,
+              "rotate" : true,
+              "sizeScale" : {
+                "2" : true
+              }
+            },
+            "gamePlay" : {
+              "immuneTo" : true,
+              "owner" : true
+            },
+            "name" : true,
+            "uid" : true
+          },
+          "name" : "Sword",
+          "physics" : {
+            "hitBox" : {
+              "corners" : [ [ 0.5, 0.5 ], [ 0.5, -0.5 ], [ -0.5, -0.5 ], [ -0.5, 0.5 ] ],
+              "simple" : [ -0.5, 0.5, 0.5, -0.5 ],
+              "testPoints" : [ [ 1, 1 ], [ 1, -1 ], [ -1, 1 ], [ -1, -1 ] ]
+            },
+            "mass" : 0,
+            "velocity" : [ 0, 0 ]
+          },
+          "uid" : "-KLIvUFM3vtHRu_zUlFk"
+        }, {
+          "appearance" : {
+            "position" : [ 0, 0 ],
+            "rotate" : 0,
+            "shape" : [ "v2.1", {
+              "src" : "/g/assets/images/projectiles/missle-gray2.png"
+            } ],
+            "sizeScale" : [ 1 ]
+          },
+          "class" : "weapon",
+          "gamePlay" : {
+            "HP" : 1001,
+            "cooldown" : 0,
+            "damageMultiplier" : 1,
+            "immuneTo" : [ "no-one" ],
+            "launchCount" : 1,
+            "owner" : "generic",
+            "rangeMultiplier" : 1,
+            "rateOfFire" : 60,
+            "speedMultiplier" : 1,
+            "spread" : 0
+          },
+          "minimalToRender" : {
+            "appearance" : {
+              "position" : true,
+              "rotate" : true,
+              "sizeScale" : {
+                "2" : true
+              }
+            },
+            "gamePlay" : {
+              "immuneTo" : true,
+              "owner" : true
+            },
+            "name" : true,
+            "uid" : true
+          },
+          "name" : "GrenadeLauncher",
+          "physics" : {
+            "hitBox" : {
+              "corners" : [ [ 0.5, 0.5 ], [ 0.5, -0.5 ], [ -0.5, -0.5 ], [ -0.5, 0.5 ] ],
+              "simple" : [ -0.5, 0.5, 0.5, -0.5 ],
+              "testPoints" : [ [ 1, 1 ], [ 1, -1 ], [ -1, 1 ], [ -1, -1 ] ]
+            },
+            "mass" : 0,
+            "velocity" : [ 0, 0 ]
+          },
+          "uid" : "-KLIvUFM3vtHRu_zUlFl"
+        }, {
+          "appearance" : {
+            "position" : [ 0, 0 ],
+            "rotate" : 0,
+            "shape" : [ "v2.1", {
+              "src" : "/g/assets/images/weapons/purple_dominator.png"
+            } ],
+            "sizeScale" : [ 1 ]
+          },
+          "class" : "weapon",
+          "gamePlay" : {
+            "HP" : 1001,
+            "cooldown" : 0,
+            "damageMultiplier" : 1,
+            "immuneTo" : [ "no-one" ],
+            "launchCount" : 1,
+            "owner" : "generic",
+            "rangeMultiplier" : 1,
+            "rateOfFire" : 12,
+            "speed" : 10,
+            "speedMultiplier" : 1,
+            "spread" : 0
+          },
+          "minimalToRender" : {
+            "appearance" : {
+              "position" : true,
+              "rotate" : true,
+              "sizeScale" : {
+                "2" : true
+              }
+            },
+            "gamePlay" : {
+              "immuneTo" : true,
+              "owner" : true
+            },
+            "name" : true,
+            "uid" : true
+          },
+          "name" : "TestWeapon",
+          "physics" : {
+            "hitBox" : {
+              "corners" : [ [ 0.5, 0.5 ], [ 0.5, -0.5 ], [ -0.5, -0.5 ], [ -0.5, 0.5 ] ],
+              "simple" : [ -0.5, 0.5, 0.5, -0.5 ],
+              "testPoints" : [ [ 1, 1 ], [ 1, -1 ], [ -1, 1 ], [ -1, -1 ] ]
+            },
+            "mass" : 0,
+            "velocity" : [ 0, 0 ]
+          },
+          "uid" : "-KLIvUFM3vtHRu_zUlFm"
+        }, {
+          "appearance" : {
+            "position" : [ 0, 0 ],
+            "rotate" : 0,
+            "shape" : [ "v2.1", {
+              "src" : "/g/assets/images/weapons/kraad.png"
+            } ],
+            "sizeScale" : [ 1 ]
+          },
+          "class" : "weapon",
+          "gamePlay" : {
+            "HP" : 1001,
+            "cooldown" : 0,
+            "damageMultiplier" : 1,
+            "immuneTo" : [ "no-one" ],
+            "launchCount" : 1,
+            "owner" : "generic",
+            "rangeMultiplier" : 1,
+            "rateOfFire" : 20,
+            "speed" : 50,
+            "speedMultiplier" : 1,
+            "spread" : 0
+          },
+          "minimalToRender" : {
+            "appearance" : {
+              "position" : true,
+              "rotate" : true,
+              "sizeScale" : {
+                "2" : true
+              }
+            },
+            "gamePlay" : {
+              "immuneTo" : true,
+              "owner" : true
+            },
+            "name" : true,
+            "uid" : true
+          },
+          "name" : "Lazer",
+          "physics" : {
+            "hitBox" : {
+              "corners" : [ [ 0.5, 0.5 ], [ 0.5, -0.5 ], [ -0.5, -0.5 ], [ -0.5, 0.5 ] ],
+              "simple" : [ -0.5, 0.5, 0.5, -0.5 ],
+              "testPoints" : [ [ 1, 1 ], [ 1, -1 ], [ -1, 1 ], [ -1, -1 ] ]
+            },
+            "mass" : 0,
+            "velocity" : [ 0, 0 ]
+          },
+          "uid" : "-KLIvUFM3vtHRu_zUlFn"
+        } ]
+      },
+      "minimalToRender" : {
+        "appearance" : {
+          "position" : true,
+          "rotate" : true,
+          "sizeScale" : {
+            "2" : true
+          }
+        },
+        "gamePlay" : {
+          "HP" : true,
+          "immuneTo" : true,
+          "owner" : true,
+          "shields" : true,
+          "weaponKeywords" : true
+        },
+        "name" : true,
+        "physics" : {
+          "velocity" : true
+        },
+        "uid" : true,
+        "user" : {
+          "publicProfileImg" : true,
+          "username" : true
+        }
+      },
+      "name" : "Tempest",
+      "physics" : {
+        "hitBox" : {
+          "corners" : [ [ 0.5, 0.5 ], [ 0.5, -0.5 ], [ -0.5, -0.5 ], [ -0.5, 0.5 ] ],
+          "simple" : [ -0.5, 0.5, 0.5, -0.5 ],
+          "testPoints" : [ [ 1, 1 ], [ 1, -1 ], [ -1, 1 ], [ -1, -1 ] ]
+        },
+        "mass" : 300,
+        "userVelocity" : [ 0, 0 ],
+        "velocity" : [ 0, 0 ]
+      },
+      "uid" : "nvLfgor2mqRXYcoZcXUIv7WaBD32",
+      "user" : {
+        "availableToPublic" : true,
+        "email" : "james@finlinson.net",
+        "isAnonymous" : false,
+        "level" : 0,
+        "mouse" : {
+          "down" : false,
+          "x" : 0,
+          "y" : 0
+        },
+        "name" : "James Finlinson",
+        "publicProfileImg" : "https://lh6.googleusercontent.com/-CF1qTP3je9I/AAAAAAAAAAI/AAAAAAAAAEc/KxzfDDG8l4c/s96-c/photo.jpg",
+        "stats" : {
+          "dateCreated" : 1467065703142,
+          "lastLogin" : 1467069800502,
+          "stats" : "other stats",
+          "totalTimePlayed" : 0
+        },
+        "upgrades" : {
+          "damageBoost" : 1
+        },
+        "username" : "friendlyHEADROOM",
+        "xp" : 0,
+        "xpNeeded" : 4000
+      }
+    }
+  }
+}
