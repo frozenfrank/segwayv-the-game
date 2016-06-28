@@ -13,7 +13,7 @@ function Melee(){
 				src: '/g/assets/images/projectiles/blue-sword-arc.png',
 			}],
 			sizeScale: {
-				2: 200,
+				2: 1.2 * variables.sizeScale,
 			},
 		},
 		physics: {

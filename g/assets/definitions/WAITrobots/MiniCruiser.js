@@ -7,8 +7,8 @@ function MiniCruiser(){
                     'orange/cruiser.png',
             }],
             sizeScale: {
-                2: 75,
-            }
+                2: 0.5 * variables.sizeScale,
+            },
         },
         gamePlay: {
             weaponKeywords: ['LittleSister'],
@@ -34,7 +34,7 @@ function MiniCruiser(){
                         c = AI.count;
 
                     //change this to count of these attacking
-                    if(c[me.name] > 3)
+                    if(c[me.name] >= 3)
                         me.ai.addState('wander');
                         //avoid over population
                 },
@@ -43,7 +43,7 @@ function MiniCruiser(){
                         c = AI.count;
 
                     //change this to count of these attacking
-                    if(c[me.name] <= 3)
+                    if(c[me.name] < 3)
                         me.ai.removeState();
                 }
             },

@@ -4,7 +4,7 @@ function orb(){
             spinDirection: rand(0,2) ? 1 : -1,
             spinSpeed: rand(3,7),
             sizeScale: {
-                2: 20,
+                2: 0.15 * variables.sizeScale,
             },
         },
         gamePlay: {

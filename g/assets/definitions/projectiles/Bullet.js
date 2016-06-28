@@ -10,9 +10,6 @@ function Bullet(){
 			shape: ['v2.1',{
 				src: '/g/assets/images/projectiles/8bit-green.png',
 			}],
-			sizeScale: {
-				2: 60,
-			}
 		},
 		physics: {
 			mass: 10,

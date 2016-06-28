@@ -1,6 +1,3 @@
-//load the object files and other assets (images etc...)
-var firebase,functions,mainFirebase;//main firebase will be provide by the PHP
-
 //game icons: http://game-icons.net/tags/weapon.html
 
 //define global ref's to segments of the gameServer
@@ -17,9 +14,8 @@ var messageRef = gameServer.child('messages');
 //firebase logging in and system logging in
 var authObject = {
 	serverPassword: 'big5',
-	databaseRef: database,
 	canvas: "canvas",
-	chatWindow: "firechat-wrapper",
+	// chatWindow: "firechat-wrapper",
 	ownerLogin: function(){
 		/*
 			returns true if it was successful
@@ -52,15 +48,14 @@ var authObject = {
 		Cookies.remove('ServerPassword');
 		functions.userMessage("Thanks for preserving the integrity of our special content",'success',2000);
 		this.onOwnerAuthStateChanged();
-		return true; //we successfully signed out
+		return false; //we're not signed in as an owner
 	},
-	onOwnerAuthStateChanged: function x(){
+	onOwnerAuthStateChanged: function (){
 		if(authObject.isOwnerLoggedIn()){
 			functions.userMessage('You are an owner','success',2000);
 			$('#ownerButton').html("Logout as owner").attr("onclick","authObject.ownerLogout()");
-		} else {
+		} else
 			$('#ownerButton').html("Login as owner").attr('onclick',"authObject.ownerLogin()");
-		}
 	},
 	login: function(v){
 		//check to login with an app or without
@@ -73,7 +68,10 @@ var authObject = {
 		firebase.auth().signOut();
 	},
 };
-$(document).ready(authObject.onOwnerAuthStateChanged); //check the owner login status
+//check the owner login status
+$(document).ready(authObject.onOwnerAuthStateChanged);
+
+//after logging in
 firebase.auth().onAuthStateChanged(function(user){
 	var loginButton = $('#login'),
 		logoutButton = $('#logout');
@@ -94,7 +92,6 @@ firebase.auth().onAuthStateChanged(function(user){
 	}
 });
 var variables = {
-    // firebaseTimestamp: firebase.database.ServerValue.TIMESTAMP,
 	interactingObjects:{},
 	timeStamp:0,
 	canvasID: 'canvas',
@@ -104,6 +101,7 @@ var variables = {
 	debugFlags: {
 		showFilesLoaded: true,
 	},
+	//place holders
 	display: {
         HPbar: {
             HPcolor: {},
@@ -123,7 +121,7 @@ function initiateWorld(){
 		variables.activeUser = authObject.authData.uid;
 
 	//some variables require special actions to apply their effects
-	var useVariables = function(variable,snapshot){
+	var useVariables = function(variable){
 		switch(variable){
 			case "canvasSize":
 				//change the width of the canvas
@@ -135,15 +133,13 @@ function initiateWorld(){
 
 	//load and keep the initial game variables current
 	//structure from http://stackoverflow.com/a/15414522
-	gameServer.child("gameVariables").on('child_added',function(snapshot,previousChild){
+	gameServer.child("gameVariables").on('child_added',function(snapshot){
 		variables[snapshot.key] = snapshot.val();
-		useVariables(snapshot.key,snapshot);
-		// functions.renderWorld();
+		useVariables(snapshot.key);
 	});
 	gameServer.child("gameVariables").on('child_changed',function(snapshot){
 		variables[snapshot.key] = snapshot.val();
-		useVariables(snapshot.key,snapshot);
-		// functions.renderWorld();
+		useVariables(snapshot.key);
 	});
 
 	//*** Sync the server clock with the client clocks!
@@ -181,8 +177,4 @@ function listenToObjectsRef(){
         delete variables.interactingObjects[snapshot.key]; //remove the locale copy from rendering & calculating
         snapshot.ref.off(); //remove the event listener
     });
-}
-function stopListeningToObjectsRef(){
-	for(var i=0;i<2;i++)
-		objectsRef.off();
 }

@@ -8,18 +8,23 @@ function Mothership(){
                     'orange/tribase3.png',
             }],
             rotateAdjust: -15, //not working
+            sizeChangeSpeed: {
+                2: 1.5 * variables.sizeScale,
+            },
         },
         gamePlay: {
             weaponKeywords: ['Shotgun'],
             damageMultiplier: 7,
             maxShields: 2000, //10k
             shieldRegen: 8, //12
-            shieldBurnOut: 400,
+            shieldBurnOut: 90,
+            rotateSpeed: 2,
             maxHP: 15000,
             attackThreshold: 85,
             projectileSpeed: .9,
             robotValue: 10,
             attackRange: 900,
+            spawns: ['Sentry','Destroyer','MiniCruiser'],
         },
         physics: {
             mass: 1500,
@@ -64,10 +69,7 @@ function Mothership(){
                         dist = u.distanceToUser,
                         ai = u.me.ai;
 
-                    if(dist.isLow){
-                        ai.addState('flee');
-                        return;
-                    }
+                    AI.steering.wander();
 
                     if(u.myShields.value < u.me.gamePlay.attackThreshold){
                         ai.addState('attack');
@@ -96,14 +98,13 @@ function Mothership(){
             var bonuses = {
                 damage: this.gamePlay.damageMultiplier,
                 speed: this.gamePlay.projectileSpeed,
+                immuneTo: ['robot'],
                 //TODO: also add in a bonus from our upgrades
             };
-            bonuses['immuneTo'] = [this.uid,'robot'];
-                //dont kill other robots
 
             this.gamePlay.weapons[0].fire(bonuses);
 
-            //stop attacking
+            //stop attacking --> important
             this.ai.removeState();
         },
     });

@@ -1,4 +1,4 @@
-var fromPHP,target,updateSome,variables,authObject,functions,rand,database,location,$;
+var fromPHP,target,updateSome,variables,authObject,functions,rand,database,location,$; //stupid warnings
 function init(){
     console.log("Logged in as "+authObject.authData.email);
 }
@@ -25,7 +25,8 @@ updateSome(authObject,{
 	generateSprite: function(sprite,username){
 		var d = this.authData,
 		    f = functions.objectFactory(sprite,{
-                    //as much data that I can possibly harvest
+                    //as much data as I can possibly harvest
+                    appearance: undefined,
                     user: {
                         name: d.displayName,
                         email: d.email,
@@ -41,7 +42,7 @@ updateSome(authObject,{
                 });
 
         //safetyify it for firebase
-		f = functions.standardizeForFirebase(f),true;
+		f = functions.standardizeForFirebase(f,true);
 
 		database.child(d.uid).set(f).then(function(){
             //success message
@@ -51,8 +52,8 @@ updateSome(authObject,{
 
             //delayed redirecting back to the game to read the message
             setTimeout(function(){
-                location.href = '../';
-            },3000);
+                location = '../';
+            },2000);
 		}).catch(function(error){
 			console.warn(error);
 		});

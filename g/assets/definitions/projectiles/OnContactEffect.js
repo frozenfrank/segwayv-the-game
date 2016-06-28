@@ -11,8 +11,14 @@ function OnContactEffect(){
 					'on-contact-effect.png',
 			}],
 			sizeScale: {
-				2: 50,
+				2: 0.4 * variables.sizeScale,
 			},
+		},
+		minimalToRender: {
+			appearance: false,
+			gamePlay: false,
+			physics: false,
+			user: false,
 		},
 		physics: {
 			mass: 10,

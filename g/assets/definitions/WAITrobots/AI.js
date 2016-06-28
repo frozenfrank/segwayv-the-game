@@ -74,10 +74,7 @@ var AI = {
                 if(AI.count.total >= AI.config.maxRobots)           return;
                 if(AI.count.totalValue >= AI.config.maxValue)       return;
 
-                //*** work ***
-                //move into the robots
-                var robots = ['Sentry','MiniCruiser','Destroyer'];
-                AI.user.me.spawn(robots[rand(0,robots.length)]);
+                AI.user.me.spawn(); //GO!
             });
         },
         wander: function(){
@@ -298,75 +295,44 @@ var AI = {
     config: {
         ranges: {
             angle: {
+                //degrees
                 low: 6,
                 medium: 17,
                 high: 45,
+                tolerance: 2,
             },
             distance: {
                 //re configure
-                low: 400,
-                medium: 850,
-                high: 1700,
-                tolerance: 50,
+                //pixels
+                low: 200,
+                medium: 470,
+                high: 880,
+                tolerance: 25,
             },
             health: {
+                //percent
                 low: 40,
                 medium: 70,
                 high: 97,
             },
+            time: {
+                //game cycles
+                low: 15,
+                medium: 30,
+                high: 60,
+                tolerance: 3,
+            },
         },
         maxRobots: 10,
-        maxValue: 50,
-        maxSpawnDistance: 60, //from the spawner
+        maxValue: 35,
     },
     count: {
         total: 0,
         totalValue: 0,
+        lastRespawn: 0,
     },
     win: function(){
         //the user won
         $('#winner').show().delay(3000).fadeOut('slow');
     },
-    enterSinglePlayerMode:function(){
-		//enter solitary mode
-		stopListeningToObjectsRef();
-
-        //delete to other users
-		var obj,toDelete=false;
-		for(var i in variables.interactingObjects){
-			obj = variables.interactingObjects[i];
-			if(obj.class !== 'userObject')
-				toDelete = true;
-			if(!toDelete && !obj.isOwner())
-				toDelete = true;
-
-			if(toDelete){
-				delete variables.interactingObjects[i];
-				toDelete = false;
-			}
-		}
-
-		//decrease our shield burnout & incrase shield regen
-		var me = variables.interactingObjects[variables.activeUser];
-		me.gamePlay.shieldBurnOut /= 2;
-		me.gamePlay.shieldRegen *= 2;
-
-		//update some variables
-		variables.singlePlayerMode = true;
-		//these have to be set now, because before the page has not loaded yet
-		AI.user.stateLog = document.getElementById('stateLog');
-		AI.count.lastRespawn = variables.timeStamp;
-
-		if(authObject.isOwnerLoggedIn())
-		    AI.user.stateLog.style.display = 'block';
-
-		//load some more resources: win font (font for winning)
-		$('head').append('<link href="https://fonts.googleapis.com/css?family=Righteous" rel="stylesheet">');
-
-		//send a message
-		functions.userMessage("You are now in single player mode. "
-			+ "Your actions are not shared and you wont see other peoples actions.</br>"
-			+ "To play with other people, just <b>reload your window</b>.</br>"
-			+ "Enjoy the AI!",'success');
-	},
 };

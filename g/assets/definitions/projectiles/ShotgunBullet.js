@@ -10,9 +10,6 @@ function ShotgunBullet(){
 			shape: ['v2.1',{
 				src: '/g/assets/images/projectiles/blue-lazer.png',
 			}],
-			sizeScale: {
-				2: 45,
-			}
 		},
 		leaveArena: function(){
 			return true; //die

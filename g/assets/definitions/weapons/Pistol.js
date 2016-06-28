@@ -9,9 +9,6 @@ function Pistol(){
 			shape: ['v2.1',{
 				src:'/g/assets/images/projectiles/missle-gray1.png',
 			}],
-			sizeScale: {
-                2: 125,
-            },
 		}
 	});
 }

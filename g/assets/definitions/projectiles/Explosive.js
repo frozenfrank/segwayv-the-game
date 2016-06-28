@@ -9,7 +9,7 @@ function Explosive(){
 		},
 		appearance: {
 			sizeScale: {
-                2: 180,
+                2: 0.7 * variables.sizeScale,
             },
             shape: ['v2.1',{
             	src: "/g/assets/images/projectiles/orbs/circular-lazer-shot.png",

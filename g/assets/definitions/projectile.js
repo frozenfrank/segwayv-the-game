@@ -1,6 +1,11 @@
 function projectile(){
     return updateSome(new displayObject(), {
         class: 'projectile',
+        appearance: {
+            sizeScale: {
+                2: 0.2 * variables.sizeScale,
+            },
+        },
         gamePlay: {
             damage: 40,
             speed: 20,

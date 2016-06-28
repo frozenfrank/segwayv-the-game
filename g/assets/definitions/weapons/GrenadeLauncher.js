@@ -10,9 +10,6 @@ function GrenadeLauncher(){
 				src:'/g/assets/images/projectiles/' +
 					'missle-gray2.png',
 			}],
-			sizeScale: {
-                2: 100,
-            },
 		}
 	});
 }

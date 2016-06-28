@@ -1,73 +1,20 @@
-var variables,firebase,initiateWorld,location,whitelistRef,objectsRef,database,functions,$,listenToObjectsRef,updateSome,md5; //just to get rid of the annoying warnings
+var variables,firebase,whitelistRef,objectsRef,database,functions,$; //just to get rid of the annoying warnings
 function init(){
     //initial call --> from the initiatWorld which is called on login
-
-    //ask to join the server
-    functions.gameMessage({action:"join",target:"server"},true);
-    var clientRequestButton = $('#control_buttons > #client-request'),
-        loginButton = $('#control_buttons > #login'),
-        geekBoxInput = $('#control_buttons > #geek input'),
-        geekBox = $('#control_buttons > #geek'),
-        v = variables;
-
-    //change the values of the buttons
-    clientRequestButton.html("Requested to join the server");
-
-    //let the user re-request after a period of time
-    setTimeout(function(){
-        clientRequestButton.removeAttr("disabled");
-        clientRequestButton.html("The request has timed out. Request again...");
-    },20000);
-
-    //use the UID provided by the login to PRE-load the user
+    var v = variables;
     database.child(v.activeUser).once('value').then(function(snapshot){
         var s = snapshot.val();
 
+        //create me from the database    
         functions.objectFactory(s.name,s,{ save: true });
-        //hopefully, 's' will already have the uid of the active user --> if everything works like it should
-        if(s.uid !== variables.activeUser) console.warn("things didn't work like they should");
 
         v.activeUserGameServer = objectsRef.child(v.activeUser);
         v.activeUserDatabase = database.child(v.activeUser);
-        v.geek = geekBoxInput.prop('checked');
-
-        geekBox.html(v.geek ? "You're a Geek" : "We'll keep the smart stuff hidden (Whenever possible)");
-        if(v.geek) functions.userMessage("You are a geek",'info');
-
-        listenToObjectsRef(); //keep object positions in sync
 
         //update the lastLogin value
         v.activeUserDatabase.child("user/stats/lastLogin").set(firebase.database.ServerValue.TIMESTAMP);
 
-        //listen for our uid to be added to the whitelist
-        whitelistRef.on('child_added',function(snapshot){
-            if(snapshot.key === v.activeUser)
-                if(snapshot.val() === true)             clientActivate();
-                else if(snapshot.val() === false)       clientDeactivate();
-                else                                    console.warn("Weird value in the firebase");
-        });
-        whitelistRef.on('child_changed',function(snapshot){
-            if(snapshot.key === v.activeUser)
-                if(snapshot.val() === true)             clientActivate();
-                else if(snapshot.val() === false)       clientDeactivate();
-                else                                    console.warn("Weird data value in the firebase");
-        });
-        whitelistRef.on('child_removed',function(snapshot){
-            if(snapshot.key === v.activeUser)           clientDeactivate();
-        });
-
-        //listen for new messages and act on them
-        messageRef.on('child_added',function(snapshot){
-            var s = snapshot.val();
-            if(s.target === "all" || s.target === v.activeUser){
-                if(s.action === 'post'){
-                //    console.log(s.localeTimestamp,s.gameTimestamp,s.origin,s.target,s.message);
-                }
-            }
-            if(s.target === v.activeUser){
-                snapshot.ref.remove();
-            }
-        });
+        modeInit();
     });
 }
 function gameLoop(){
@@ -160,12 +107,12 @@ function clientActivate(){
     if(v.debugFlags.showStagesPerformed)
         console.log(v.activeUser + ": We just got accepted to the game");
 
-    if(!v.geek)
-        document.getElementById("control_buttons").style.display = 'none';
-
     //restore the backup if there is one
     if(v.userBackup)
         v.interactingObjects[v.activeUser] = v.userBackup;
+        
+    //hide the control buttons
+    document.getElementById("control_buttons").style.display = 'none';
 
     //add event listeners that store the data on the locale client
     var saveLocation = function() { return v.interactingObjects[v.activeUser].user; };
@@ -260,13 +207,47 @@ function ping(){
     pingsRef.child(variables.activeUser).set(firebase.database.ServerValue.TIMESTAMP);
     setTimeout(ping,variables.pingFrequency);
 }
+function listenToMessages(){
+    var v = variables;
+    messageRef.on('child_added',function(snapshot){
+        var s = snapshot.val();
+        if(s.target === "all" || s.target === v.activeUser){
+            if(s.action === 'post'){
+            //    console.log(s.localeTimestamp,s.gameTimestamp,s.origin,s.target,s.message);
+            }
+        }
+        if(s.target === v.activeUser){
+            snapshot.ref.remove();
+        }
+    });
+}
+function waitForWhitelist(){
+    //listen for our uid to be added to the whitelist
+    var v = variables;
+    whitelistRef.on('child_added',function(snapshot){
+        if(snapshot.key === v.activeUser)
+            if(snapshot.val() === true)             clientActivate();
+            else if(snapshot.val() === false)       clientDeactivate();
+            else                                    console.warn("Weird value in the firebase");
+    });
+    whitelistRef.on('child_changed',function(snapshot){
+        if(snapshot.key === v.activeUser)
+            if(snapshot.val() === true)             clientActivate();
+            else if(snapshot.val() === false)       clientDeactivate();
+            else                                    console.warn("Weird data value in the firebase");
+    });
+    whitelistRef.on('child_removed',function(snapshot){
+        if(snapshot.key === v.activeUser)           clientDeactivate();
+    });
+}
+function goToMenu(){
+    if(Cookies.get('mode')){
+        //dont go to the menu if were already at the menu
+        Cookies.remove("mode");
+        location.reload();
+    }
+}
 firebase.auth().onAuthStateChanged(function(user){
-    if(user)
-    	database.child(user.uid).once("value",function(snapshot){
-			//check if the user has already been created
-			if(snapshot.exists())
-				initiateWorld();
-			else
-				location.href='createUser'; //redirect to the createUser page to chose a sprite
-		});
-})
+    if(user)    initiateWorld();
+    else        goToMenu();
+});

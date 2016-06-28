@@ -7,10 +7,12 @@ function LazerBeam(){
 			speed: 50,
 		},
 		appearance: {
-			sizeScale: [120,120,120],
 			shape: ['v2.1',{
 				src:'/g/assets/images/projectiles/solid-red-lazer.jpg',
 			}],
+			sizeScale: {
+				2: .9 * variables.sizeScale,
+			}
 		},
 		physics: {
 			mass: 20,

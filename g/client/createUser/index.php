@@ -1,16 +1,12 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>DEV createUser: Segwayv the Game</title>
 <?php
 	$role = 'createUser';
 	$root = realpath('../../');
+	$dontclosehead = true;
 	require("../../includeJS.php");
 
 	//we need to get a list of the userObjects
 	echo "\n<script>fromPHP.userObjects = [";
-	foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root.'/assets/definitions/userObjects')) as $filename){
+	foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root.'/assets/definitions/WAITuserObjects')) as $filename){
 		if(substr($filename,-1) === ".")
 			continue; //skip if its a directory
 
@@ -20,12 +16,14 @@
 		echo "'$name',";
 	}
 	echo "].sort();</script>\n";
+	
 	echo "<style type='text/css'>\n";
 	readfile(realpath('dark-form-theme.css'));
 	echo "</style>\n";
+	
+	// Google fonts
+	echo "<link href='https://fonts.googleapis.com/css?family=Ranchers' rel='stylesheet' type='text/css'/>\n";
 ?>
-<!--Google fonts-->
-<link href='https://fonts.googleapis.com/css?family=Ranchers' rel='stylesheet' type='text/css'/>
 </head>
 <body id="create-user">
 	<div id="wrapper">

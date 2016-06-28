@@ -20,10 +20,13 @@ var functions = {
 		switch(ap.shape[0]){
 			case 'v2.1':
 				//{src:'url'},
-				var img = new Image(), obj = ap.shape[1], ratio;
+				var img = new Image(),
+					obj = ap.shape[1],
+					ratio;
 
 				img.src = obj.src;
 				ratio = Math.min(ap.sizeScale[2] / img.width, ap.sizeScale[2] / img.height);
+				if(toErase) ratio *= 2; //give some comfort room to elimate artifacts
 				img.width *= ratio;
 				img.height *= ratio;
 
@@ -148,9 +151,10 @@ var functions = {
 			if(typeof needed[i] === 'object'){
 				copy[i] = functions.reduceToRequired(obj[i],needed[i]);
 				if(jQuery.isEmptyObject(copy[i]))
-					delete copy[i];
+					delete copy[i]; //if we delete every property, then dont sent the parent
 			}else if(needed[i] === true)
-				copy[i] = obj[i];
+				if(obj[i]) //skip it if the orginal doesn't exist
+					copy[i] = obj[i];
 			else if(typeof needed[i] === 'string')
 				//round some numbers (to send less packets) by providing a
 				//  variable representing the multiple to round it to
@@ -162,7 +166,7 @@ var functions = {
 				switch(true){
 					case needed[i] !== false:
 					case typeof needed[i] === 'function':
-						// console.warn("more investigation required");
+						console.warn("more investigation required");
 				}
 				return null;
 			}
@@ -170,20 +174,15 @@ var functions = {
 		return copy;
 	},
 	standardizeForFirebase:function(obj,keepAllProps){
-        var t;
-        if(!keepAllProps)
-            t = functions.reduceToRequired(obj); //thing
-        else
-            t = clone(obj);
-
 		return (function recurse(thingToRecurseOver){
 			var s; //something
 			for(var i in thingToRecurseOver){
 				s = thingToRecurseOver[i];
 				switch (true) {
-					case typeof s === 'function':
 					case s === undefined:
 					case s === Infinity:
+					case isReallyNaN(s):
+					case typeof s === 'function':
 						delete thingToRecurseOver[i];
 						break;
 					case typeof s === 'object':
@@ -194,7 +193,7 @@ var functions = {
 				}
 			}
 			return thingToRecurseOver;
-		})(t);
+		})(keepAllProps ? clone(obj) : functions.reduceToRequired(obj));
     },
 	objectFactory:function(name,updateProps,config){
 		/* config takes:

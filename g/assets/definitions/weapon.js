@@ -13,7 +13,7 @@ function weapon(){
         },
         appearance: {
             sizeScale: {
-                2: 150,
+                2: 0.4 * variables.sizeScale,
             },
         },
         fire: function(bonuses){

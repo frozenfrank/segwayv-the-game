@@ -1,16 +1,31 @@
 /* -----------------
     client
 ------------------ */
-#client #control_buttons #geek {
-    float: right;
+/*
+#client canvas {
+    background-color: #7E26F1;
 }
+*/
 #client div.fb-like {
     position: absolute;
-    bottom: 20px;
-    left: 20px;
+    bottom: 2px;
+    left: 2px;
+    width: 96px;
+    overflow: hidden;
 }
-#client canvas {
-    /*background-color: #7E26F1;*/
+#client[mode='chooserole'] canvas,
+#client[mode='chooserole'] #back2chooseRole {
+    display: none;
+}
+#back2chooseRole {
+    cursor: pointer;
+    width: 187px;
+    padding: 3px;
+    left: 14px;
+}
+#back2chooseRole small {
+    color: #3a1637;
+    letter-spacing: -0.2px;
 }
 #stateLog {
 	display: none;
@@ -19,6 +34,8 @@
     position: fixed;
     padding: 5px;
     color: #dde7f7;
+    font-size: 12px;
+    right: 0;
 }
 #winner {
 	display: none;
@@ -27,26 +44,21 @@
     font-family: 'Righteous', cursive;
     padding: 2vw;
 }
-#addRobot {
-    bottom: -1px;
-    position: absolute;
-    right: 25%;
-}
 /* button */
 .myButton {
-	box-shadow: 3px 4px 0px 0px #8a2a21;
-	border-radius:18px;
-	background:linear-gradient(to bottom, #c62d1f 5%, #f24437 100%);
-	border:1px solid #d02718;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-	font-family:Arial;
-	font-size:17px;
-	padding:7px 25px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #810e05;
-	margin-bottom: 8px;
+    box-shadow: 3px 4px 0px 0px #8a2a21;
+    border-radius: 18px;
+    background: linear-gradient(to bottom, #c62d1f 5%, #f24437 100%);
+    border: 1px solid #d02718;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Arial;
+    font-size: 17px;
+    padding: 0.45em 2.6em;
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #810e05;
+    margin-bottom: 8px;
 }
 .myButton:hover, .myButton:focus {
 	background:linear-gradient(to bottom, #f24437 5%, #c62d1f 100%);
@@ -56,4 +68,27 @@
 }
 .myButton:disabled {
 	background: gray;
+}
+
+ /* cssarrowplease.com */
+.arrow_box {
+    position: relative;
+    background: #ec0035;
+    border-radius: 3px;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.arrow_box:after {
+    right: 100%;
+    top: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-color: rgba(255, 240, 0, 0);
+    border-right-color: #ec0035;
+    border-width: 12px;
+    margin-top: -12px;
 }

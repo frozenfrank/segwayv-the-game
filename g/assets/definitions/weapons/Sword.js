@@ -11,9 +11,6 @@ function Sword(){
 			shape: ['v2.1',{
 				src: '/g/assets/images/weapons/Arthas_sword.png',
 			}],
-			sizeScale: {
-				2: 125,
-			}
 		},
 	});
 }

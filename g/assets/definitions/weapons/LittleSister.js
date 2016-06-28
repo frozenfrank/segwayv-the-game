@@ -3,15 +3,12 @@ function LittleSister(){
 		name: 'LittleSister',
 		gamePlay: {
 			launches: SisterShell,
-			rateOfFire: 10,
+			rateOfFire: 7,
 		},
 		appearance: {
 			shape:['v2.1',{
 				src: '/g/assets/images/weapons/Type-31_Rifle.png',
 			}],
-			sizeScale: {
-				2: 50,
-			},
 		}
 	});
 }

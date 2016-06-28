@@ -1,0 +1,5 @@
+<script>
+function modeInit(){console.log("Choosing a mode to play in")}firebase.auth().onAuthStateChanged(function(a){var b=$(".gamemode");a?(database.child(a.uid).once("value",function(a){a.exists()||(location="createUser")}),b.prop("disabled",!1)):b.prop("disabled",!0)});
+function playMultiplayer(){Cookies.set("mode","multiplayer");location.reload()}
+function playSingleplayer(){var a=variables;Cookies.set("mode","singleplayer");Cookies.set("sprite",a.interactingObjects[a.activeUser].name);location.reload()};
+</script>

@@ -7,9 +7,6 @@ function Destroyer(){
                     'orange/destroyer.png',
             }],
         },
-        user: {
-            username: 'Destroyer',
-        },
         gamePlay: {
             rotateSpeed: 4,
             weaponKeywords: ['Lazer','LittleSister'],
@@ -22,6 +19,9 @@ function Destroyer(){
         },
         physics: {
             mass: 1500,
+        },
+        user: {
+            username: 'Destroyer',
         },
         ai: {
             stateStack: ['attack'],

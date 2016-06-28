@@ -4,9 +4,9 @@ function userObject(){
         class: 'userObject',
         appearance: {
             sizeScale: {
-                // 0: 60,
-                // 1: 180,
-                2: 100,
+                0: 0.8 * variables.sizeScale,
+                1: 1.3 * variables.sizeScale,
+                2: 1.0 * variables.sizeScale,
             },
         },
         gamePlay: {
@@ -78,19 +78,19 @@ function userObject(){
             },
         },
         minimalToRender: {
-            appearance: false,
-            // gamePlay: {
-            //     shields: true,
-            //     weaponKeywords: true,
-            //     HP: true,
-            // },
-            // physics: {
-            //     velocity: true,
-            // },
-            // user: {
-            //     publicProfileImg: true,
-            //     username: true,
-            // }
+            // appearance: false,
+            gamePlay: {
+                shields: true,
+                weaponKeywords: true,
+                HP: true,
+            },
+            physics: {
+                velocity: true,
+            },
+            user: {
+                publicProfileImg: true,
+                username: true,
+            },
         },
         leaveArena: function(direction,extras){
             var p = this.physics,
@@ -118,13 +118,13 @@ function userObject(){
         },
         gameCycle: function(){
             //wrapper to allow robots to use it also
-            this.applyGamePhysics();
+            this.applyGameLogic();
 
             if(this.isOwner())
                 if(variables.timeStamp % variables.userSaveFrequency === 0)
                     this.save();
         },
-        applyGamePhysics: function(){
+        applyGameLogic: function(){
             //shorthand
             var obj = this,
                 v = variables,
@@ -199,11 +199,35 @@ function userObject(){
                     p.userVelocity = [g.speed * (up - dn) * (dn * 0.5 || 1), ap.rotate.toRadians()].toCartesian();
 
                     //change in size: for each of these, each iteration should move a certain percent
-                    // if(this.isPressed('sb') ap.sizeScale[2] += (ap.sizeScale[1] - ap.sizeScale[0]) / g.resizeSpeed; //size larger
-                    // if(this.isPressed('ss') ap.sizeScale[2] -= (ap.sizeScale[1] - ap.sizeScale[0]) / g.resizeSpeed; //size smaller
-
-                    //error checking --> make sure the size is within the bounds
-                    ap.sizeScale[2] = Math.max(ap.sizeScale[0],Math.min(ap.sizeScale[1],ap.sizeScale[2]));
+                    var sss = this.isPressed('ss'), //size smaller
+                        sb = this.isPressed('sb');
+                    resize: if(sss + sb === 1){
+                        var ss = ap.sizeScale,
+                            sizeChangeSpeed = (ss[1] - ss[0]) / g.resizeSpeed;
+                            
+                        //change size
+                        if(sss) sizeChangeSpeed *= -1;
+                        
+                        //keep size within limits
+                        if(sss && ss[0] >= ss[2]) break resize;
+                        if(sb  && ss[1] <= ss[2]) break resize;
+                        
+                        //EFFECTS!
+                        //balancing multipliers
+                        var hpMultiplier = 25,
+                            otherMultiplier = 0.04,
+                            hpPercent = g.HP / g.maxHP; //cache this
+                        
+                        //as you get bigger you also...
+                        ss[2] = (ss[2] + sizeChangeSpeed); //get bigger
+                        g.maxHP             -= sizeChangeSpeed * hpMultiplier; //lose max hp
+                        g.maxShields        -= sizeChangeSpeed * hpMultiplier; //lose max shields
+                        g.shieldRegen       -= sizeChangeSpeed * otherMultiplier * 1.1; //lose shield regen
+                        g.speed             -= sizeChangeSpeed * otherMultiplier * 4; //lose speed
+                        g.damageMultiplier  += sizeChangeSpeed * otherMultiplier; //increase dmg
+                        
+                        g.HP = hpPercent * g.maxHP;
+                    }
 
                     //decrease weapon cooldowns
                     w[0].gamePlay.cooldown--; //only the first one to avoid abuse
@@ -271,14 +295,14 @@ function userObject(){
                 present: ctnr.HPcolor.present,
                 absent: ctnr.HPcolor.absent,
                 percent: g.HP / g.maxHP,
-                text: parseInt(g.HP,10) + " / " + g.maxHP,
+                text: Math.round(g.HP) + " / " + Math.round(g.maxHP),
             }); //HP bar
 
             var shieldMsg = '';
             shieldMsg = (g.currentShieldBurnOut > 0 && this.isOwner()) ? //only the owner can see this info
                     //ulterior motive: i didn't want to send g.currentShieldBurnOut over the bandwidth AND it caused bugs
                 "Burned out for: " + Math.ceil(g.currentShieldBurnOut / 10) :
-                shieldMsg = parseInt(g.shields,10) + " / " + g.maxShields;
+                shieldMsg = Math.round(g.shields) + " / " + Math.round(g.maxShields);
 
             bars.push({
                 present: ctnr.shieldColor.present,
@@ -301,7 +325,7 @@ function userObject(){
                 });
             }
 
-            //show strifing
+            //show strafing
             if(s.current > 0){
                 bars.push({
                     present: ctnr.strifeColor.present,

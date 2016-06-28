@@ -16,9 +16,10 @@ function displayObject(){
             sizeScale: {
                 //adjust
                 0: 1,
-                1: 900,
+                1: 3 * variables.sizeScale,
                 2: 1,
             },
+            //randomize the position, easily overridden but harder to implement lots of times
             position: (!!variables.canvas ? [rand(0,variables.canvas.width), rand(0,variables.canvas.height)] : [0,0]),
         },
         physics: {

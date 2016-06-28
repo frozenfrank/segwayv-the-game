@@ -34,6 +34,7 @@ body#create-user {
     position: absolute;
     height: inherit;
     width: inherit;
+    overflow: hidden;
 }
 /* title */
 .title {

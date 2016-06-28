@@ -1,4 +1,3 @@
-var $,Image;
 Array.prototype.move = function (oldIndex, newIndex) {
 	//http://stackoverflow.com/a/5306832
 	while (oldIndex < 0) {
@@ -56,6 +55,9 @@ Number.prototype.max = function(maxValue){
     if(this > maxValue) return maxValue;
     return this;
 }
+Number.prototype.minMax = function(min,max){
+    return this.min(min).max(max);
+}
 Number.prototype.roundTo = function(multiple){
 	if(!multiple)
 		multiple = 1;
@@ -79,12 +81,6 @@ Number.prototype.steeringAngle = function(){
     if(a > 180) return a - 360;
     else        return a;
 };
-String.prototype.upperFirst = function() {
-    //make the first letter uppercase
-    //on the chopping block
-    console.log("called a function that is on the chopping block");
-    return this.charAt(0).toUpperCase() + this.slice(1);
-}
 CanvasRenderingContext2D.prototype.setFontSize = function(size) {
     var font = this.font.split(" ");
     font = font[font.length-1];
@@ -145,21 +141,6 @@ function rand(min,max){
     //returns an integer
 	return Math.floor(Math.random()*(max-min))+min;
 }
-function forEach(obj,funct,extra1,extra2){
-    //on the chopping block
-    console.log("called forEach");
-	for (var i in obj) {
-		// skip loop if the property is from prototype
-		if (!obj.hasOwnProperty(i)) continue;
-
-		funct(obj[i],extra1,extra2);
-	}
-}
-function randomHexCode(){
-    //im not using this anymore
-    console.log("called randomHexCode");
-	return "#000000".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
-}
 function getFileExtension(fname){
     if(fname.indexOf("?") !== -1)
         fname = fname.substr(0,fname.indexOf("?")); //take off any js flags
@@ -208,30 +189,6 @@ var loadFile = (function(filename,logFile){
         filesLoaded++;
     }
 })();
-function hexAverage() {
-	//from: http://stackoverflow.com/a/23851999
-    //on the chopping block
-    console.log("called a function that is on the chopping block");
-
-	var args = Array.prototype.slice.call(arguments);
-	function padToTwo(numberString) {
-		if (numberString.length < 2) {
-			numberString = '0' + numberString;
-		}
-		return numberString;
-	}
-	return args.reduce(function (previousValue, currentValue) {
-		return currentValue
-			.replace(/^#/, '')
-			.match(/.{2}/g)
-			.map(function (value, index) {
-				return previousValue[index] + parseInt(value, 16);
-			});
-	}, [0, 0, 0])
-	.reduce(function (previousValue, currentValue) {
-		return previousValue + padToTwo(Math.floor(currentValue / args.length).toString(16));
-	}, '#');
-}
 function arrayifyArguments(a){
 	var args = [];
 	for(var i = 0; i < a.length; i++)
@@ -383,56 +340,6 @@ Array.prototype.toPolygonPathForm = function(center,scalar,rotation){
 
     return points;
 };
-function clone(obj,type){
-    //http://stackoverflow.com/a/728694
-    //on the chopping block
-    console.log("called a function that is on the chopping block");
-
-    if(!type) type = 3;
-
-    switch(type){
-        case 1:
-            return JSON.parse(JSON.stringify(a));
-            break;
-        case 2:
-            return jQuery.extend(true, {}, obj);
-            break;
-        case 3:
-            var copy;
-
-            // Handle the 3 simple types, and null or undefined
-            if (null == obj || "object" != typeof obj) return obj;
-
-            // Handle Date
-            if (obj instanceof Date) {
-                copy = new Date();
-                copy.setTime(obj.getTime());
-                return copy;
-            }
-
-            // Handle Array
-            if (obj instanceof Array) {
-                copy = [];
-                for (var i = 0, len = obj.length; i < len; i++) {
-                    copy[i] = clone(obj[i]);
-                }
-                return copy;
-            }
-
-            // Handle Object
-            if (obj instanceof Object) {
-                copy = {};
-                for (var attr in obj) {
-                    if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
-                }
-                return copy;
-            }
-
-            throw new Error("Unable to copy obj! Its type isn't supported.");
-        default:
-            console.warn("Something bad happened");
-    }
-}
 function clone(item) {
     if (!item) { return item; } // null, undefined values check
 
@@ -488,29 +395,32 @@ function clone(item) {
  * @param {Boolean} allowOverlapping    Optional. Default: false;
  * @author Vitim.us http://stackoverflow.com/a/7924240/2844859
  */
-function occurrences(string, subString, allowOverlapping) {
-    //on the chopping block
-    console.log("called a function that is on the chopping block");
-
-    string += "";
-    subString += "";
-    if (subString.length <= 0) return (string.length + 1);
-
-    var n = 0,
-        pos = 0,
-        step = allowOverlapping ? 1 : subString.length;
-
-    while (true) {
-        pos = string.indexOf(subString, pos);
-        if (pos >= 0) {
-            ++n;
-            pos += step;
-        } else break;
-    }
-    return n;
-}
 function scrollTo(elementID,duration){
     $('html, body').animate({
         scrollTop: $("#" + elementID).offset().top
     }, duration || 2000);
 }
+function isReallyNaN(a){
+    // http://stackoverflow.com/a/8965463/2844859
+    return a !== a;
+};
+var QueryURL = function () {
+  // http://stackoverflow.com/a/979995/2844859
+  // This function is anonymous, is executed immediately and 
+  // the return value is assigned to QueryURL!
+  var query_string = {};
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+    var pair = vars[i].split("=");
+    if (typeof query_string[pair[0]] === "undefined") {
+      query_string[pair[0]] = decodeURIComponent(pair[1]);
+    } else if (typeof query_string[pair[0]] === "string") {
+      var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+      query_string[pair[0]] = arr;
+    } else {
+      query_string[pair[0]].push(decodeURIComponent(pair[1]));
+    }
+  } 
+  return query_string;
+}();

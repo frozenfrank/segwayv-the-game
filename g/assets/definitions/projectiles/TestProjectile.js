@@ -12,7 +12,7 @@ function TestProjectile(){
 				src: '/g/assets/images/projectiles/missle-darkgray2.png',
 			}],
 			sizeScale: {
-				2: 100,
+				2: .85 * variables.sizeScale,
 			}
 		},
 		physics: {

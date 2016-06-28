@@ -1,22 +1,21 @@
 var variables,functions,updateSome,userObject,getStandardAngle,AI; //stupid warnings
 function robot(){
-    if(!variables.singlePlayerMode)
-        AI.enterSinglePlayerMode();
     return updateSome(new userObject, {
         class: 'robot',
         appearance: {
             sizeScale: {
-                2: 200,
-            },
+                2: 1 * variables.sizeScale,
+            }
         },
         gamePlay: {
             maxHP: 4000,
-            maxRotateSpeed: 5,
+            rotateSpeed: 4,
             speed: 8,
             damageMultiplier: 0.5,
             weaponKeywords: ['GrenadeLauncher'],
             robotValue: 1,
             respawnWait: 125, //200
+            spawns: [],
             maxShields: 500,
             shieldRegen: 3,
             attackRange: 500,
@@ -102,9 +101,8 @@ function robot(){
                 AI.states[currentState]();
 
             //then run our state
-            if(this.ai.states[currentState])
-                //allow for states that dont need to do anything special
-                this.ai.states[currentState]();
+            //force me to have the state in the this.ai.states for readability
+            this.ai.states[currentState]();
 
             //apply changes
             updateSome(this,AI.user.me);
@@ -112,7 +110,7 @@ function robot(){
             this.ai.stateStack = AI.user.me.ai.stateStack; //hack -> I HATE this
 
             //act on adjustments
-            this.applyGamePhysics();
+            this.applyGameLogic();
 
             //reset buttons
             var bt = this.gamePlay.buttonMapping;
@@ -159,27 +157,23 @@ function robot(){
                     console.warn(otherOBJ.class,"unknown class of other object");
             }
         },
-        spawn: function(what){
+        spawn: function(){
             var g = this.gamePlay,
                 v = variables,
-                c = AI.count;
+                c = AI.count,
+                what = g.spawns[rand(0,g.spawns.length)];
 
-            if(v.timeStamp - g.lastRespawn < g.respawnWait)
-                return; //wait a period of time each time
+            //if i dont spawn anything, dont waste any time
+            //and, wait a period of time each time
+            if(g.spawns.length === 0)                           return;
+            if(v.timeStamp - g.lastRespawn < g.respawnWait)     return;
                     //TODO: change this based on what spawned last
 
             //reset the respawn wait
             g.lastRespawn = v.timeStamp;
-
-            //place them on top of us --> with variation
-            var here = clone(this.appearance.position),
-                change = AI.config.maxSpawnDistance;
-
-            here[0] += rand(here[0] - change, here[0] + change);
-            here[1] += rand(here[1] - change, here[1] + change);
-
-            //go!
-            var robot = functions.objectFactory(what ? what : this.name,{appearance: { position:here }});
+            
+            //go! place the other robot right on top of us
+            var robot = functions.objectFactory(what, {appearance: { position:this.appearance.position }});
 
             //dont save it if it exceeds the game limit
             if(c.totalValue + robot.gamePlay.robotValue > AI.config.maxValue)
@@ -204,7 +198,6 @@ function robot(){
             //completely fill the health and shield bars
             g.HP = g.maxHP;
             g.shields = g.maxShields;
-            g.rotateSpeed = g.maxRotateSpeed;
 
             //record a count and value of the robots
             if(!c[this.name])
