@@ -37,6 +37,9 @@ if($DEVserver){
 }
 echo "\nfirebase.initializeApp(config);var mainFirebase = firebase.database().ref();\n";
 
+//facebook
+echo 'window.b=function(){FB.c({a:"393442104112984",f:!0,version:"v2.6"})};var a,c=document.getElementsByTagName("script")[0];document.getElementById("facebook-jssdk")||(a=document.createElement("script"),a.id="facebook-jssdk",a.src="//connect.facebook.net/en_US/sdk.js",c.parentNode.insertBefore(a,c));'."\n";
+
 
 if($minifiedCode)
     echo "</script>\n";

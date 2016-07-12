@@ -47,11 +47,6 @@ function displayObject(){
                 },
                 rotate: true,
                 position: true,
-                // rotate: 'variables.userAccuracy.rotate',
-                // position: {
-                //     0: 'variables.userAccuracy.position',
-                //     1: 'variables.userAccuracy.position',
-                // },
             }
         },
         leaveArena: function(direction,props){
@@ -73,7 +68,7 @@ function displayObject(){
             //users can only control their own objects
             if(!this.isOwner())                 return;
             if(variables.leaveGame)             return;
-            if(variables.singlePlayerMode)     return;
+            if(variables.singlePlayerMode)		return;
 
             objectsRef.update((function(obj){
                 var x = {};

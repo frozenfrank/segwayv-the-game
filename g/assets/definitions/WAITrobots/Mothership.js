@@ -1,4 +1,3 @@
-var AI; //stupic warnings
 function Mothership(){
     return updateSome(new robot,{
         name: 'Mothership',

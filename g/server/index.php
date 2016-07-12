@@ -11,9 +11,11 @@
 			<button type="button" onclick="gameServer.update({'interactingObjects':null,'messages':null,'whiteList':null})">
 				Reset the Firebase data
 			</button>
+			<!--
 			<button type='button' onclick="gameServer.update({'whiteList/server':true})">
 			    Whitelist the server
 			</button>
+			-->
 			<button type="button" onclick="serverHelper.resizeCanvas({auto:true,target:'canvasSize'})">
 				Update canvas size to match this screen
 			</button>

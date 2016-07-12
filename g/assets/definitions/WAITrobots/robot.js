@@ -1,4 +1,3 @@
-var variables,functions,updateSome,userObject,getStandardAngle,AI; //stupid warnings
 function robot(){
     return updateSome(new userObject, {
         class: 'robot',
@@ -171,7 +170,7 @@ function robot(){
 
             //reset the respawn wait
             g.lastRespawn = v.timeStamp;
-            
+
             //go! place the other robot right on top of us
             var robot = functions.objectFactory(what, {appearance: { position:this.appearance.position }});
 

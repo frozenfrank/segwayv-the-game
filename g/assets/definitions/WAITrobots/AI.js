@@ -1,4 +1,3 @@
-var variables,stopListeningToObjectsRef,$,authObject,functions;
 var AI = {
     user: {
         stateLog: document.getElementById('stateLog'),

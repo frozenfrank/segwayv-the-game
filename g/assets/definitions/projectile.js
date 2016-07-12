@@ -1,5 +1,5 @@
 function projectile(){
-    return updateSome(new displayObject(), {
+    return updateSome(new displayObject, {
         class: 'projectile',
         appearance: {
             sizeScale: {
@@ -85,6 +85,7 @@ function projectile(){
                     var thatpos = otherOBJ.appearance.position;
 
                     var here = pos;
+                    //TODO: make the effect appear at the collision (instead of the center of the projectile...)
                     if(this.name !== 'OnContactEffect'){
                         functions.objectFactory('OnContactEffect',{
                             appearance: {

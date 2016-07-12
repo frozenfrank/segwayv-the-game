@@ -14,14 +14,3 @@ firebase.auth().onAuthStateChanged(function(user){
     }else
         multi.prop('disabled',true);
 });
-function playMultiplayer(){
-    Cookies.set('mode','multiplayer');
-    location.reload();
-}
-function playSingleplayer(){
-    var v = variables;
-    
-    Cookies.set('mode','singleplayer');
-    Cookies.set('sprite',v.interactingObjects[v.activeUser].name);
-    location.reload()
-}

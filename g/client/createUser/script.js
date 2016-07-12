@@ -1,4 +1,3 @@
-var fromPHP,target,updateSome,variables,authObject,functions,rand,database,location,$; //stupid warnings
 function init(){
     console.log("Logged in as "+authObject.authData.email);
 }

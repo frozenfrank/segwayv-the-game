@@ -19,10 +19,10 @@ function readFilesInDir($dir,$noLoadPattern = false){
     foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir)) as $filename){
         if(preg_match($noLoadPattern,$filename) === 1)
             continue;
-    
+
         $toRead = false;
         $toProvideName = false;
-        
+
         switch (findExtension($filename)){
             case "js":
                 $toRead = true;
@@ -43,7 +43,7 @@ function readFilesInDir($dir,$noLoadPattern = false){
             default:
                 echo "Didn't recognize this file: '$filename', with extension: '".findExtension($filename)."'\n";
         }
-        
+
         if($toRead){
             readfile($filename);
             // echo $filename;
@@ -122,7 +122,7 @@ EOT;
 }
 function searchfilereturnline($file,$searchfor){
     $file = realpath($file);
-    
+
     // get the file contents, assuming the file to be readable (and exist)
     $contents = file_get_contents($file);
     // escape special characters in the query
@@ -140,9 +140,32 @@ function searchfilereturnline($file,$searchfor){
 }
 function listallsprites(){
     global $root;
+    global $minifiedCode;
     codecomment("Listing all sprites");
-    // readfilesindir("$root/assets/definitions/WAITuserObjects",'/\/NOLOAD/');
-    readfile("$root/client/min/sprite.js");
+
+    if($minifiedCode)       readfilesindir("$root/assets/definitions/WAITuserObjects",'/\/NOLOAD/');
+    else                    readfile("$root/client/min/sprite.js");
+}
+function includeMainMenuBtn(){
+    global $mode;
+    global $role;
+
+    if($mode)   $from = $mode;
+    else        $from = $role;
+
+	echo "<div id='mainMenuBtn' onclick='location.href=\"/g\"' class='arrow_box'>&#8668; Main Menu <small>from: $from</small></div>";
+}
+function includeClientElements(){
+includeMainMenuBtn();
+echo <<<EOT
+<canvas id="canvas" class='centerAll'></canvas>
+<div id='stateLog'></div>
+<div id='winner' class='centerAll'>Winner!</div>
+<br/>
+<!--<div class="fb-like" data-share="true" data-width="450" data-show-faces="true"></div>-->
+<!--<div id="firechat-wrapper"></div>-->
+
+EOT;
 }
 
 //cookies
@@ -160,8 +183,10 @@ function deleteCookie($name){
 //whatever, just testing
 function sendText($to,$message){
     $domain = 'messaging.sprintpcs.com';
-    mail("$to@$domain", "", $message, "From: James Finlinson <the30clues@gmail.com>\r\n");
-    codeComment("Sent message to '$to@$domain' with message '$message'",'html');
+    $recepient = "$to@$domain";
+
+    mail($recepient, "", $message, "From: James Finlinson <the30clues@gmail.com>\r\n");
+    codeComment("Sent message to '$recepient' with message '$message'",'html');
 }
-// sendText(8014000584,"Testing PHP messge sends");
+// sendText(8014000584,"Testing PHP message sends");
 ?>

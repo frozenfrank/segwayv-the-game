@@ -1,4 +1,3 @@
-var variables,displayObject,updateSome,functions; //stupid error warnings
 function userObject(){
     return updateSome(new displayObject(), {
         class: 'userObject',
@@ -139,12 +138,13 @@ function userObject(){
                 rt = this.isPressed('rt'),
                 sr = this.isPressed('sr'),
                 sl = this.isPressed('sl'),
+                fi = this.isPressed('fi'),
                 speed = 0,i;
 
             //things that only happen on the owner object
             if(this.isOwner()){
                 //disable things when strifing to avoid abuse
-                if(sr + sl === 1 || g.sideThrusting.controlling){
+                if(sr + sl === 1 || (!0 && g.sideThrusting.controlling)){
                     var s = g.sideThrusting;
 
                     //strifing! --> move sideways for a limited time to dodge bullets
@@ -170,11 +170,12 @@ function userObject(){
                         s.burned = true;
                     else if(s.current === 0){
                         if(s.burned){
-                            // s.current = 1;
                             s.burned = false;
                         }
-                        p.velocity = [0,0];
-                        p.userVelocity = [0,0];
+                        if(!fi){
+                            p.velocity = [0,0];
+                            p.userVelocity = [0,0];
+                        }
                     } else
                         //accelerate faster
                         //change the velocity based on the 's.current'. Imitate log based animations
@@ -182,7 +183,6 @@ function userObject(){
 
                     if(s.current !== 0)         s.controlling = true;
                     else                        s.controlling = false;
-
                 } else {
                     //keenan's new userMovent plan
                     //Rotate: only change your rotation with the buttons
@@ -195,45 +195,46 @@ function userObject(){
                         ++ap.rotate;
 
                     //movement: only move towards where you are facing.
+                    //dont move if pressing both btns --> maybe change so that you can 'creep' forward
                     //move slower when backing up
-                    p.userVelocity = [g.speed * (up - dn) * (dn * 0.5 || 1), ap.rotate.toRadians()].toCartesian();
+                    //move slower when firing
+                    p.userVelocity = [g.speed * (up - dn) * (dn * 0.5 || 1) * (fi * 0.5 || 1), ap.rotate.toRadians()].toCartesian();
 
                     //change in size: for each of these, each iteration should move a certain percent
-                    var sss = this.isPressed('ss'), //size smaller
+                    var sm = this.isPressed('ss'), //size smaller
                         sb = this.isPressed('sb');
-                    resize: if(sss + sb === 1){
+
+                    resizing: if(sm + sb === 1){
                         var ss = ap.sizeScale,
                             sizeChangeSpeed = (ss[1] - ss[0]) / g.resizeSpeed;
-                            
+
                         //change size
-                        if(sss) sizeChangeSpeed *= -1;
-                        
+                        if(sm) sizeChangeSpeed *= -1;
+
                         //keep size within limits
-                        if(sss && ss[0] >= ss[2]) break resize;
-                        if(sb  && ss[1] <= ss[2]) break resize;
-                        
+                        if(sm && ss[0] >= ss[2]) break resizing;
+                        if(sb && ss[1] <= ss[2]) break resizing;
+
                         //EFFECTS!
                         //balancing multipliers
                         var hpMultiplier = 25,
                             otherMultiplier = 0.04,
                             hpPercent = g.HP / g.maxHP; //cache this
-                        
+
                         //as you get bigger you also...
-                        ss[2] = (ss[2] + sizeChangeSpeed); //get bigger
-                        g.maxHP             -= sizeChangeSpeed * hpMultiplier; //lose max hp
-                        g.maxShields        -= sizeChangeSpeed * hpMultiplier; //lose max shields
-                        g.shieldRegen       -= sizeChangeSpeed * otherMultiplier * 1.1; //lose shield regen
-                        g.speed             -= sizeChangeSpeed * otherMultiplier * 4; //lose speed
-                        g.damageMultiplier  += sizeChangeSpeed * otherMultiplier; //increase dmg
-                        
-                        g.HP = hpPercent * g.maxHP;
+                        //** work **
+                        ss[2]               += sizeChangeSpeed;                             //get bigger
+                        g.maxHP             -= sizeChangeSpeed * hpMultiplier;              //lose max hp
+                        g.maxShields        -= sizeChangeSpeed * hpMultiplier;              //lose max shields
+                        g.shieldRegen       -= sizeChangeSpeed * otherMultiplier * 1.1;     //lose shield regen
+                        g.speed             -= sizeChangeSpeed * otherMultiplier * 4;       //lose speed
+                        g.damageMultiplier  += sizeChangeSpeed * otherMultiplier;           //increase dmg
+
+                        g.HP = hpPercent * g.maxHP;                                         //keep hp at the same %
                     }
 
-                    //decrease weapon cooldowns
-                    w[0].gamePlay.cooldown--; //only the first one to avoid abuse
-
-                    //launch projectiles
-                    if(this.isPressed('fi') && w[0].gamePlay.cooldown <= 0)
+                    //launch projectiles & decrease weapon cooldowns
+                    if((--w[0].gamePlay.cooldown) <= 0 && fi)
                         this.fireWeapon();
 
                     //swap weapons
@@ -268,9 +269,10 @@ function userObject(){
             return functions.isPressed(bt[code],returnTimestamp);
         },
         draw: function(){
-            functions.renderObject(this.appearance); //render me
+            //render me
+            functions.renderObject(this.appearance);
 
-            //draw our weapon
+            //render my weapon
             functions.renderObject(updateSome(this.gamePlay.weapons[0],{
                 appearance: {
                     //make sure that it is where we are
@@ -287,14 +289,23 @@ function userObject(){
                 barWidth = ctnr.width,
                 bars = [], bar,
                 g = this.gamePlay,
-                s = g.sideThrusting;
+                s = g.sideThrusting,
+                xGive = ctnr.width / 2,
+                yGive = ctnr.y_offset + barHeight * 1.5
+                reposition = [0,0];
 
+            //shift the bars to the center when close to the outside
+            if(pos[0] < xGive)										reposition[0] = +ctnr.x_offset_near_sides;
+            else if(variables.canvas.width - pos[0] < xGive)		reposition[0] = -ctnr.x_offset_near_sides;
+            if(pos[1] < yGive)										reposition[1] = +ctnr.y_offset * 1.9;
+
+            //**work optimize this --> we dont need to set it every time for every object (probably)
             ctx.setFontSize(barHeight+'px');
 
             bars.push({
                 present: ctnr.HPcolor.present,
                 absent: ctnr.HPcolor.absent,
-                percent: g.HP / g.maxHP,
+                percent: g.HP.min(0) / g.maxHP,
                 text: Math.round(g.HP) + " / " + Math.round(g.maxHP),
             }); //HP bar
 
@@ -302,12 +313,12 @@ function userObject(){
             shieldMsg = (g.currentShieldBurnOut > 0 && this.isOwner()) ? //only the owner can see this info
                     //ulterior motive: i didn't want to send g.currentShieldBurnOut over the bandwidth AND it caused bugs
                 "Burned out for: " + Math.ceil(g.currentShieldBurnOut / 10) :
-                shieldMsg = Math.round(g.shields) + " / " + Math.round(g.maxShields);
+                shieldMsg = Math.round(g.shields).min(0) + " / " + Math.round(g.maxShields).min(0);
 
             bars.push({
                 present: ctnr.shieldColor.present,
                 absent: ctnr.shieldColor.absent,
-                percent: g.shields / g.maxShields,
+                percent: g.shields.min(0) / g.maxShields,
                 text: shieldMsg,
             }); //shields bar
 
@@ -339,6 +350,8 @@ function userObject(){
 
             //draw all of the bars based on the array
             ctx.textAlign = 'start';
+
+
             for(var i=0;i<bars.length;i++){
                 /*
                     each array element is stacked on top of the element before it
@@ -352,8 +365,8 @@ function userObject(){
                 bar = bars[i];
                 ctx.fillStyle = bar.absent || 'white';
                 ctx.fillRect(
-                    pos[0] - barWidth / 2,
-                    pos[1] - ctnr.y_offset - barHeight * i, //stack the bars vertically starting at the bottom
+                    pos[0] + reposition[0] - barWidth / 2,
+                    pos[1] + reposition[1] - ctnr.y_offset - barHeight * i, //stack the bars vertically starting at the bottom
                     barWidth,
                     barHeight
                 );
@@ -361,15 +374,15 @@ function userObject(){
                 if(bar.backwards){
                     var width = barWidth * bar.percent;
                     ctx.fillRect(
-                        pos[0] - barWidth / 2 + (barWidth - width),
-                        pos[1] - ctnr.y_offset - barHeight * i,
+                        pos[0] + reposition[0] - barWidth / 2 + (barWidth - width),
+                        pos[1] + reposition[1] - ctnr.y_offset - barHeight * i,
                         width,
                         barHeight
                     );
                 }else{
                     ctx.fillRect(
-                        pos[0] - barWidth / 2,
-                        pos[1] - ctnr.y_offset - barHeight * i, //ditto
+                        pos[0] + reposition[0] - barWidth / 2,
+                        pos[1] + reposition[1] - ctnr.y_offset - barHeight * i, //ditto
                         barWidth * bar.percent, //we only cover up part of it
                         barHeight
                     );
@@ -379,8 +392,8 @@ function userObject(){
                     ctx.fillStyle = vars.usernameColor;
                     ctx.fillText(
                         bar.text,
-                        pos[0] - barWidth / 2 + ctnr.left_pad,
-                        pos[1] - ctnr.y_offset - barHeight * (i - 1) - ctnr.bottom_pad
+                        pos[0] + reposition[0] - barWidth / 2 + ctnr.left_pad,
+                        pos[1] + reposition[1] - ctnr.y_offset - barHeight * (i - 1) - ctnr.bottom_pad
                     );
                     //maybe this could be optimized by going through the loop twice to avoid multiple switches
                 }
@@ -390,8 +403,8 @@ function userObject(){
             ctx.textAlign = 'center';
             ctx.fillText(
                 this.user.username,
-                pos[0],
-                pos[1] - ctnr.y_offset - barHeight * bars.length
+                pos[0] + reposition[0],
+                pos[1] + reposition[1] - ctnr.y_offset - barHeight * bars.length
             );
 
             //draw our profile pic
@@ -401,8 +414,8 @@ function userObject(){
             profileImg.src = this.user.publicProfileImg;
             ctx.drawImage(
                 profileImg,
-                pos[0] + picVar.x_offset,
-                pos[1] - picVar.y_from_HPbar - ctnr.y_offset,
+                pos[0] + reposition[0] + picVar.x_offset,
+                pos[1] + reposition[1] - picVar.y_from_HPbar - ctnr.y_offset,
                 picVar.size,
                 picVar.size);
         },
@@ -417,11 +430,15 @@ function userObject(){
             var pos = this.appearance.position,
                 d = variables.display,
                 bar = d.HPbar,
+                ctnr = bar,
                 xMin = Math.max(bar.width / 2, d.profilePic.x_offset * -1) * -1,
-                //add 1 to account for the space between the username and the bars
-                //then another to account for the text size of username
-                //plus one more for the strifing
-                barCount = 5;
+                //2 for HP and shields
+                //2 to account for the blank space and the username
+                //1 more for the strifing
+                barCount = 5,
+                xGive = bar.width / 2,
+                yGive = bar.y_offset + bar.height * 1.5,
+                reposition = [0,0];
 
             if(this.isOwner() && this.class === 'userObject')
                 barCount++; //account for the cooldown bar
@@ -429,9 +446,14 @@ function userObject(){
             var height = bar.height * barCount;
             var width = xMin * -1 + bar.width / 2;
 
+			//erase from the correct position
+            if(pos[0] < xGive)										reposition[0] = +ctnr.x_offset_near_sides;
+            else if(variables.canvas.width - pos[0] < xGive)		reposition[0] = -ctnr.x_offset_near_sides;
+            if(pos[1] < yGive)										reposition[1] = +ctnr.y_offset * 1.9;
+
             //there was some strange positioning on the y-axis
             //erase the info box above our heads with a 1 px clearance on every side to be safe
-            variables.context.clearRect(xMin + pos[0] - 1,pos[1] - bar.y_offset - (height - bar.height) + 1,width + 2,height + 2);
+            variables.context.clearRect(xMin + pos[0] + reposition[0] - 1,pos[1] + reposition[1] - bar.y_offset - (height - bar.height) + 1,width + 2,height + 2);
         },
         fireWeapon: function(){
             //add in our damage multiplier
@@ -467,6 +489,9 @@ function userObject(){
 
             if(!this.isOwner())
                 return; //for the cross user, dont kill them from another machine
+
+            if(thisSH)
+                console.log("negetive sheilds!");
 
             if(damage <= thisSH && g.currentShieldBurnOut <= 0)
                 thisSH -= damage; //if we can take all of the damage from the shield
@@ -544,6 +569,10 @@ function userObject(){
             this.appearance.rotate = rand(0,360);
             pos[0] = rand(0,variables.canvasSize[0]);
             pos[1] = rand(0,variables.canvasSize[1]);
+
+            //zero out velocity
+            this.physics.velocity = [0,0];
+            this.physics.userVelocity = [0,0];
         },
         onCompleteConstruction: function(){
             var g = this.gamePlay,

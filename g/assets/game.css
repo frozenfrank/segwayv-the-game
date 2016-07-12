@@ -62,3 +62,16 @@ canvas {
     background-color: #FFCCBA;
     background-image: url('/g/assets/images/icons/blue-exclamation.png');
 }
+
+/*common items*/
+#mainMenuBtn {
+    cursor: pointer;
+    width: 207px;
+    padding: 3px;
+    left: 14px;
+    z-index: 1;
+}
+#mainMenuBtn small {
+    color: #3a1637;
+    letter-spacing: -0.2px;
+}

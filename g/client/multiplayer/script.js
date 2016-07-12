@@ -1,8 +1,5 @@
 function modeInit(){
     var clientRequestButton = $('#control_buttons > #client-request');
-        
-    //ask to join the server
-    functions.gameMessage({action:"join",target:"server"},true);
 
     //change the values of the buttons
     clientRequestButton.html("Requested to join the server");
@@ -14,7 +11,7 @@ function modeInit(){
         );
     },20000);
 
-    listenToObjectsRef();
-    waitForWhitelist();
-    // listenToMessages();
+    functions.listenToObjectsRef();
+    client.waitForWhitelist();
+    // client.listenToMessages();
 }

@@ -1,50 +1,35 @@
 <?php
 	$role = 'client';
+	$mode = 'chooserole';
+	$dontclosehead = true;
 	require("../includeJS.php");
+
+	echo "<script>";
+	readfile('chooserole.js');
+	echo "</script></head>";
 ?>
-<body id="client" mode="<?php echo $mode; ?>">
-	<script>//facebook script
-window.b=function(){FB.c({a:"393442104112984",f:!0,version:"v2.6"})};var a,c=document.getElementsByTagName("script")[0];document.getElementById("facebook-jssdk")||(a=document.createElement("script"),a.id="facebook-jssdk",a.src="//connect.facebook.net/en_US/sdk.js",c.parentNode.insertBefore(a,c));</script>
+<body id="client" mode="chooserole">
 	<div id="wrapper">
 		<div id="control_buttons">
-<?php
-if($mode === 'chooserole'){
-includeAuthButtons();
-echo <<<EOT
-			<button type='button' class='gamemode' onclick="playMultiplayer()" disabled='true'>
+<?php includeAuthButtons(); ?>
+			<button type='button' onclick="location='multiplayer'" disabled='true' class='gamemode'>
 				Play Multiplayer
 			</button>
-			<button type='button' class='gamemode' onclick="playSingleplayer()" disabled='true'>
+			<button type='button' onclick="location='singleplayer'" disabled='true' class='gamemode'>
 				Play Singleplayer
 			</button>
 			<button type='button' onclick="location='createUser'">
 				Pick a new user
 			</button>
-
-EOT;
-}elseif($mode === 'multiplayer'){
-echo <<<EOT
-			<button id='client-request' type="button" onclick='functions.gameMessage({action:"join",target:"server"})' disabled='true'>
-				Request to join the server
-			</button>
-EOT;
-// 			<!--
-// 			<button type='button' onclick="location = 'spectator'">
-// 				Choose to Spectate instead
-// 			</button>
-// 			-->
-
-// EOT;
-}
-?>
 		</div>
-		<canvas id="canvas" class='centerAll'></canvas>
-		<div id='stateLog'></div>
-		<div id='winner' class='centerAll'>Winner!</div>
-		<div id='back2chooseRole' onclick='goToMenu()' class='arrow_box'>&#8668; Go Back <small>from: <?php echo $mode; ?></small></div>
-		<br/>
-		<div class="fb-like" data-share="true" data-width="450" data-show-faces="true"></div>
-		<!--<div id="firechat-wrapper"></div>-->
+		<div class='help-tip'>
+			<al>
+				<p>Your goal is to sign into the computer and then pick a mode to play in. Your choice is non-committal, so dont hesitate.</p>
+				<p>Step 1: Sign in. Click <code>Sign in with Google</code> and an auth box will pop up asking you to "sign in with Google".</p>
+				<p>Step 2: It will probably redirect you to a page to pick the user that you want to be and to pick a username.</p>
+				<p>Step 3: Pick a mode to play in. For the sake of the tutorial, please pick singleplayer mode.</p>
+			</al>
+		</div>
 	</div>
 </body>
 </html>

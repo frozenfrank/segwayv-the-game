@@ -141,6 +141,10 @@ function rand(min,max){
     //returns an integer
 	return Math.floor(Math.random()*(max-min))+min;
 }
+function randomHexCode(){
+    // http://www.paulirish.com/2009/random-hex-color-code-snippets/
+    return '#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
+}
 function getFileExtension(fname){
     if(fname.indexOf("?") !== -1)
         fname = fname.substr(0,fname.indexOf("?")); //take off any js flags
