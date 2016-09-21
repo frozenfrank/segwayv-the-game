@@ -1,0 +1,193 @@
+/* -----------------
+    createUser
+------------------ */
+#app.createUser {
+    overflow-y: scroll;
+}
+.createUser.loggedIn #control_buttons {
+	display: none;
+}
+.createUser #mainMenuBtn {
+	position: fixed;
+	width: 67px;
+	padding: 3px;
+	text-align: center;
+	font-size: smaller;
+	transition: all .3s;
+}
+.createUser #mainMenuBtn small {
+	font-size: 0;
+	line-height: 0;
+}
+.createUser #mainMenuBtn.sticky small {
+	font-size: smaller;
+	line-height: normal;
+}
+
+#sprites {
+    text-align: center;
+    padding: 40px 20px;
+}
+#options-wrapper {
+    padding: 10px;
+    padding-bottom: 0;
+}
+#sprites input[type=checkbox] {
+/*hide all of the checkboxes in the checkbox hack*/
+    visibility: hidden;
+    display: none;
+}
+/* parent */
+.userObject {
+    height: 320px;
+    width: 280px;
+    border: 1px solid black;
+    background: #696969;
+    display: inline-block;
+    margin-bottom: 3px;
+    margin-right: 3px;
+    overflow: hidden;
+}
+#app:not(.owner) .private {
+	display: none;
+}
+.title {
+    text-align: center;
+    margin: 0;
+    font-family: 'Ranchers';
+    font-size: 2em;
+    letter-spacing: 2px;
+}
+.stat-bars > div > div {
+    height: 17px;
+    margin-bottom: 4px;
+    font-size: 11px;
+    position: relative;
+}
+.value {
+    padding-left: 3px;
+    bottom: 5px;
+    position: absolute;
+}
+.bar {
+    background: red;
+    height: 4px;
+    bottom: 0;
+    position: absolute;
+}
+.private .bar {
+    background: midnightblue;
+}
+.image {
+    text-align: center;
+}
+.image img {
+    height: 130px;
+}
+.summary {
+    /*position: absolute;*/
+    /*bottom: 0;*/
+    padding: 5px;
+    font-style: italic;
+    text-align: left;
+}
+#usernameField {
+    position: relative;
+    margin-top: 37px;
+    margin-bottom: 8px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    font-size: 36px;
+    line-height: 1.2em;
+    letter-spacing: 1px;
+    border: 1px solid #111;
+    color: #fff;
+    font-family: fantasy, helvetica, sans-serif;
+    background: #444;
+    background: linear-gradient(to bottom, #222, #444);
+    box-shadow: 1px 1px 1px #333;
+}
+#usernameField * {
+	outline: none;
+	border: none;
+    font-size: inherit;
+    color: inherit;
+}
+#usernameField:focus,
+#usernameField:active {
+	outline-color: #C00;
+}
+#usernameField > input {
+    padding: .25em;
+    background: transparent;
+    width: 100%;
+    text-align: center;
+	font-family: inherit;
+}
+#usernameField > button {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    height: 100%;
+    padding: 4px;
+    font-size: 18px;
+    color: #cecece;
+    transition: background .3s .1s;
+}
+#usernameField button[type='trash'] {
+	background: #900404;
+}
+#usernameField button[type='trash']:hover {
+	background: red;
+}
+#usernameField button[type='refresh'] {
+    background: #041690;
+}
+#usernameField > button[type='refresh']:not(:disabled):hover {
+    background: blue;
+}
+#usernameField > button[type='refresh']:not(:disabled):hover i {
+    transform: rotate(180deg);
+}
+#usernameField > button:disabled:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: url('/g/assets/images/no-background-thin-black.png');
+    background-size: 200px;
+    z-index: 1;
+}
+#usernameField > button > i {
+    transition: transform .5s .1s;
+}
+
+/*when things arn't interesting*/
+#sprites:not(.interested) .stat-bars > div > div:not(.important) {
+	/*hide some stat bars for simpleness*/
+    display: none;
+}
+
+.userObject.selected {
+    background: #3B1271;
+    color: white;
+}
+
+/*when things get interesting*/
+.interested .userObject.selected {
+    height: 500px;
+    width: 490px;
+    border-width: 5px;
+}
+.interested .userObject.selected .image img {
+    height: 260px;
+}
+.interested .userObject.selected .title {
+    font-size: 3em;
+}
+.interested .userObject:not(.selected) {
+    display: none;
+}

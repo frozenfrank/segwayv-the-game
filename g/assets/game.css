@@ -2,76 +2,180 @@
     world
 ------------------ */
 body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background: url('/g/assets/images/background.jpg');
-    background-position-x: center;
-    position: relative;
-    height: 100vh;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background: url('/g/assets/images/background.jpg');
+	background-position-x: center;
+	position: relative;
+	height: 100vh;
 }
 canvas {
-    border: 6px solid #0e1f5b;
-    background: rgba(225,225,225,0.4);
+	border: 6px solid #0e1f5b;
+	background: rgba(225, 225, 225, 0.4);
+	z-index: 0;
 }
 .centerAll {
-    /*ensure that the parent is `position: relative;`*/
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-}
-/* -----------------
-    message boxes
------------------ */
-.userMessage {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 13px;
-    border: 1px solid;
-    padding: 15px 10px 15px 50px;
-    background-repeat: no-repeat;
-    background-position: 10px center;
-    position: fixed;
-    bottom: 5px;
-    right: 5px;
-    z-index: 1;
-    display: none; /* hide it to start so we can fade it in*/
-}
-.info {
-    color: #00529B;
-    background-color: #BDE5F8;
-    background-image: url('/g/assets/images/icons/blue-i.png');
-}
-.success {
-    color: #4F8A10;
-    background-color: #DFF2BF;
-    background-image:url('/g/assets/images/icons/green-check.png');
-}
-.warning {
-    color: #9F6000;
-    background-color: #FEEFB3;
-    background-image: url('/g/assets/images/icons/yellow-exclamation.png');
-}
-.error {
-    color: #D8000C;
-    background-color: #FFBABA;
-    background-image: url('/g/assets/images/icons/red-x.png');
-}
-.validation {
-    color: #D63301;
-    background-color: #FFCCBA;
-    background-image: url('/g/assets/images/icons/blue-exclamation.png');
+	/*ensure that the parent is `position: relative;`*/
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
-/*common items*/
-#mainMenuBtn {
-    cursor: pointer;
-    width: 207px;
-    padding: 3px;
-    left: 14px;
-    z-index: 1;
+/*auth buttons*/
+#app:not(.playing) .authBtn {
+	visibility: visible;
+	display: inline-block;
 }
-#mainMenuBtn small {
-    color: #3a1637;
-    letter-spacing: -0.2px;
+.playing #control_buttons {
+	display: none;
+}
+
+/* message boxes */
+.userMessage {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	border: 1px solid;
+	padding: 15px 10px 15px 50px;
+	background-repeat: no-repeat;
+	background-position: 10px center;
+	position: fixed;
+	bottom: 5px;
+	right: 5px;
+	z-index: 1;
+	display: none;
+	/* hide it to start so we can fade it in*/
+}
+.info {
+	color: #00529B;
+	background-color: #BDE5F8;
+	background-image: url('/g/assets/images/icons/blue-i.png');
+}
+.success {
+	color: #4F8A10;
+	background-color: #DFF2BF;
+	background-image: url('/g/assets/images/icons/green-check.png');
+}
+.warning {
+	color: #9F6000;
+	background-color: #FEEFB3;
+	background-image: url('/g/assets/images/icons/yellow-exclamation.png');
+}
+.error {
+	color: #D8000C;
+	background-color: #FFBABA;
+	background-image: url('/g/assets/images/icons/red-x.png');
+}
+.validation {
+	color: #D63301;
+	background-color: #FFCCBA;
+	background-image: url('/g/assets/images/icons/blue-exclamation.png');
+}
+
+/*external*/
+/*http://www.bestcssbuttongenerator.com/*/
+.myButton {
+	box-shadow: 3px 4px 0px 0px #8a2a21;
+	border-radius: 18px;
+	background: linear-gradient(to bottom, #c62d1f 5%, #f24437 100%);
+	border: 1px solid #d02718;
+	display: inline-block;
+	cursor: pointer;
+	color: #ffffff;
+	font-family: Arial;
+	font-size: 17px;
+	padding: 0.45em 2.6em;
+	text-decoration: none;
+	text-shadow: 0px 1px 0px #810e05;
+	margin-bottom: 8px;
+	outline: none;
+}
+.myButton:hover {
+	background: linear-gradient(to bottom, #f24437 5%, #c62d1f 100%);
+}
+.myButton:disabled {
+	background: gray;
+}
+.myButton:active {
+	position: relative;
+	top: 1px;
+}
+
+.bigStartButton {
+	box-shadow:inset 0px 1px 6px 0px #caefab;
+	background:#77d42a;
+	background:linear-gradient(to bottom, #77d42a 5%, #5cb811 100%);
+	border-radius:8px;
+	border:1px solid #268a16;
+	display:inline-block;
+	cursor:pointer;
+	color:#306108;
+	font-family:Arial;
+	font-size:28px;
+	font-weight:bold;
+	padding:32px 0;
+	text-decoration:none;
+	text-shadow:1px 1px 1px #aade7c;
+	width: 400px;
+}
+.bigStartButton:disabled {
+    background: #9bb783;
+    background: linear-gradient(to bottom, #c9dabb 5%, #637f4b 100%);
+    border-color: #12350d;
+    color: #434254;
+}
+.bigStartButton:not(:disabled):hover {
+	background:#5cb811;
+	background:linear-gradient(to bottom, #5cb811 5%, #77d42a 100%);
+}
+.bigStartButton:active {
+	position:relative;
+	top:1px;
+}
+
+
+/*https://codepen.io/css-tricks/pen/mqAHt*/
+.gleaming {
+	vertical-align: middle;
+	position: relative;
+	overflow: hidden;
+	display: inline-block;
+}
+.gleaming:before {
+	content: "";
+	width: 200%;
+	height: 200%;
+	position: absolute;
+	top: -200%;
+	left: -225%;
+	background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+	transition: all 0.3s ease-out;
+}
+.gleaming:not(:disabled):hover:before {
+	top: 200%;
+	left: 200%;
+}
+
+/* cssarrowplease.com */
+.arrow_box {
+	position: relative;
+	background: #ec0035;
+	border-radius: 3px;
+	border-bottom-right-radius: 5px;
+	border-top-right-radius: 5px;
+}
+.arrow_box:after {
+	right: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(255, 240, 0, 0);
+	border-right-color: #ec0035;
+	border-width: 12px;
+	margin-top: -12px;
 }

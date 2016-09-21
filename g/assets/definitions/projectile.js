@@ -51,7 +51,9 @@ function projectile(){
                 //BOOOO!!! //dont delete the locale copy because it will be when the we see its dead in the firebase
                 //update: do delete the locale copy to avoid overextending its range
                     //if it actually should exist then it will come back with the firebase update
-            objectsRef.child(this.uid).remove(); //firebase
+
+        	if(!v.singlePlayerMode)
+                objectsRef.child(this.uid).remove(); //firebase
         },
         leaveArena: function(){
             // console.log(this.name,"left",direction,"arena");

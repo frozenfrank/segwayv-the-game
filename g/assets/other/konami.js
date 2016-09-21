@@ -1,0 +1,10 @@
+/*
+ * Konami-JS ~
+ * Examples: http://www.snaptortoise.com/konami-js
+ * Copyright (c) 2009 George Mandis (georgemandis.com, snaptortoise.com)
+ * Version: 1.4.5 (3/2/2016)
+ */
+var Konami=function(d){var a={addEvent:function(a,b,c,d){a.addEventListener?a.addEventListener(b,c,!1):a.attachEvent&&(a["e"+b+c]=c,a[b+c]=function(){a["e"+b+c](window.event,d)},a.attachEvent("on"+b,a[b+c]))},input:"",pattern:"38384040373937396665",load:function(e){this.addEvent(document,"keydown",function(b,c){c&&(a=c);a.input+=b?b.keyCode:event.keyCode;a.input.length>a.pattern.length&&(a.input=a.input.substr(a.input.length-a.pattern.length));if(a.input==a.pattern)return a.code(e),a.input="",b.preventDefault(),
+!1},this);this.iphone.load(e)},code:function(a){window.location=a},iphone:{start_x:0,start_y:0,stop_x:0,stop_y:0,tap:!1,capture:!1,orig_keys:"",keys:"UP UP DOWN DOWN LEFT RIGHT LEFT RIGHT TAP TAP".split(" "),code:function(e){a.code(e)},load:function(e){this.orig_keys=this.keys;a.addEvent(document,"touchmove",function(b){1==b.touches.length&&1==a.iphone.capture&&(b=b.touches[0],a.iphone.stop_x=b.pageX,a.iphone.stop_y=b.pageY,a.iphone.tap=!1,a.iphone.capture=!1,a.iphone.check_direction())});a.addEvent(document,
+"touchend",function(b){1==a.iphone.tap&&a.iphone.check_direction(e)},!1);a.addEvent(document,"touchstart",function(b){a.iphone.start_x=b.changedTouches[0].pageX;a.iphone.start_y=b.changedTouches[0].pageY;a.iphone.tap=!0;a.iphone.capture=!0})},check_direction:function(a){x_magnitude=Math.abs(this.start_x-this.stop_x);y_magnitude=Math.abs(this.start_y-this.stop_y);x=0>this.start_x-this.stop_x?"RIGHT":"LEFT";y=0>this.start_y-this.stop_y?"DOWN":"UP";result=x_magnitude>y_magnitude?x:y;result=1==this.tap?
+"TAP":result;result==this.keys[0]&&(this.keys=this.keys.slice(1,this.keys.length));0==this.keys.length&&(this.keys=this.orig_keys,this.code(a))}}};"string"===typeof d&&a.load(d);"function"===typeof d&&(a.code=d,a.load());return a};

@@ -1,4 +1,4 @@
-Array.prototype.move = function (oldIndex, newIndex) {
+Array.prototype.move = function(oldIndex, newIndex) {
 	//http://stackoverflow.com/a/5306832
 	while (oldIndex < 0) {
 		oldIndex += this.length;
@@ -13,117 +13,129 @@ Array.prototype.move = function (oldIndex, newIndex) {
 		}
 	}
 	this.splice(newIndex, 0, this.splice(oldIndex, 1)[0]);
-}
-Array.prototype.toPolar = function(format){
-    // [x,y]
-    var radius = Math.sqrt(Math.pow(this[0],2) + Math.pow(this[1],2)),
-        theta = Math.atan(this[1] / this[0]);
-
-    if(format === 'object')
-        return {
-            radius: radius,
-            theta: theta,
-        };
-    else
-        return [radius, theta];
 };
-Array.prototype.toCartesian = function(format){
-    // [radius, theta (radians)]
-    var x = this[0] * Math.cos(this[1]),
-        y = this[0] * Math.sin(this[1]);
-        //x = r * cos( theta ), y = r * sin( theta )
+Array.prototype.remove = function(what,removeAll) {
+	// http://stackoverflow.com/a/9792947/2844859
+	for (var i = this.length - 1; i >= 0; i--)
+		if (this[i] === what) {
+			this.splice(i, 1);
+			if(!removeAll)
+				break;       //<-- Uncomment  if only the last term has to be removed
+		}
 
-    if(format === 'object')
-        return {
-            x: x,
-            y: y,
-        };
-    else
-        return [x, y];
+	return this;
 };
-Number.prototype.toRadians = function(){
+Array.prototype.toPolar = function(format) {
+	// [x,y]
+	var radius = Math.sqrt(Math.pow(this[0], 2) + Math.pow(this[1], 2)),
+		theta = Math.atan(this[1] / this[0]);
+
+	if (format === 'object')
+		return {
+			radius: radius,
+			theta: theta,
+		};
+	else
+		return [radius, theta];
+};
+Array.prototype.toCartesian = function(format) {
+	// [radius, theta (radians)]
+	var x = this[0] * Math.cos(this[1]),
+		y = this[0] * Math.sin(this[1]);
+	//x = r * cos( theta ), y = r * sin( theta )
+
+	if (format === 'object')
+		return {
+			x: x,
+			y: y,
+		};
+	else
+		return [x, y];
+};
+Number.prototype.toRadians = function() {
 	return this * Math.PI / 180;
 }
-Number.prototype.toDegrees = function(){
+Number.prototype.toDegrees = function() {
 	return this * 180 / Math.PI;
 }
-Number.prototype.min = function(minValue){
-    if(this < minValue) return minValue;
-    return this;
+Number.prototype.min = function(minValue) {
+	if (this < minValue) return minValue;
+	return this;
 }
-Number.prototype.max = function(maxValue){
-    if(this > maxValue) return maxValue;
-    return this;
+Number.prototype.max = function(maxValue) {
+	if (this > maxValue) return maxValue;
+	return this;
 }
-Number.prototype.minMax = function(min,max){
-    return this.min(min).max(max);
+Number.prototype.minMax = function(min, max) {
+	return this.min(min).max(max);
 }
-Number.prototype.roundTo = function(multiple){
-	if(!multiple)
+Number.prototype.roundTo = function(multiple) {
+	if (!multiple)
 		multiple = 1;
 
 	return Math.round(this / multiple) * multiple;
 };
-Number.prototype.cleanAngle = function(inRadians){
-    var n = this,
-        base = 360;
-    if(inRadians) base = 2 * Math.PI();
+Number.prototype.cleanAngle = function(inRadians) {
+	var n = this,
+		base = 360;
+	if (inRadians) base = 2 * Math.PI();
 
-    n %= base;
-    if(n < 0) n += base;
-    n %= base;
+	n %= base;
+	if (n < 0) n += base;
+	n %= base;
 
-    return n;
-    //always returns a number that fits: 0 <= n < base
+	return n;
+	//always returns a number that fits: 0 <= n < base
 };
-Number.prototype.steeringAngle = function(){
-    var a = this.cleanAngle();
-    if(a > 180) return a - 360;
-    else        return a;
+Number.prototype.steeringAngle = function() {
+	var a = this.cleanAngle();
+	if (a > 180) return a - 360;
+	else return a;
 };
 CanvasRenderingContext2D.prototype.setFontSize = function(size) {
-    var font = this.font.split(" ");
-    font = font[font.length-1];
-    this.font = size + " " + font;
+	var font = this.font.split(" ");
+	font = font[font.length - 1];
+	this.font = size + " " + font;
 }
 Object.byString = function(objectToRead, stringReference) {
-    //http://stackoverflow.com/a/6491621/2844859
-    //usage: Object.byString(objectToRead, 'part3[0].name');
-    var o = objectToRead, s = stringReference;
-    s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
-    s = s.replace(/^\./, '');           // strip a leading dot
-    var a = s.split('.');
-    for (var i = 0, n = a.length; i < n; ++i) {
-        var k = a[i];
-        if (k in o) {
-            o = o[k];
-        } else {
-            return;
-        }
-    }
-    return o;
+	//http://stackoverflow.com/a/6491621/2844859
+	//usage: Object.byString(objectToRead, 'part3[0].name');
+	var o = objectToRead,
+		s = stringReference;
+	s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+	s = s.replace(/^\./, ''); // strip a leading dot
+	var a = s.split('.');
+	for (var i = 0, n = a.length; i < n; ++i) {
+		var k = a[i];
+		if (k in o) {
+			o = o[k];
+		} else {
+			return;
+		}
+	}
+	return o;
 }
-function rotatePoint(x,y,theta,centerX,centerY){
+function rotatePoint(x, y, theta, centerX, centerY) {
 	var a = {
-		x:arguments[0], //the point to rotate
-		y:arguments[1],
-		theta:arguments[2], //in radians
-		centerX:arguments[3] || 0, // to point to rotate around
-		centerY:arguments[4] || 0,
+		x: arguments[0], //the point to rotate
+		y: arguments[1],
+		theta: arguments[2], //in radians
+		centerX: arguments[3] || 0, // to point to rotate around
+		centerY: arguments[4] || 0,
 	};
 	return {
 		x: a.x * Math.cos(a.theta) - a.y * Math.sin(a.theta) + a.centerX,
 		y: a.x * Math.sin(a.theta) + a.y * Math.cos(a.theta) + a.centerY,
 	};
 }
-function getStandardAngle(x1,y1,x2,y2){
+function getStandardAngle(x1, y1, x2, y2) {
 	//return the angle formed between (y = x1) and the point (x2,y2)
 	x2 = x2 || 0;
 	y2 = y2 || 0;
 	return Math.atan2(y1 - y2, x1 - x2).toDegrees().cleanAngle();
 }
-function getDistance(x1,y1,x2,y2){
-    /*
+function getDistance(x1, y1, x2, y2) {
+	/*
 	if(!x2 && !y2 && Array.isArray(x1) && Array.isArray(y1)){
 		var p1 = x1,
 			p2 = y1;
@@ -137,73 +149,74 @@ function getDistance(x1,y1,x2,y2){
 
 	return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
 }
-function rand(min,max){
-    //returns an integer
-	return Math.floor(Math.random()*(max-min))+min;
+function rand(min, max) {
+	//returns an integer
+	return Math.floor(Math.random() * (max - min)) + min;
 }
-function randomHexCode(){
-    // http://www.paulirish.com/2009/random-hex-color-code-snippets/
-    return '#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
+function randomHexCode() {
+	// http://www.paulirish.com/2009/random-hex-color-code-snippets/
+	return '#' + ('00000' + (Math.random() * (1 << 24) | 0).toString(16)).slice(-6);
 }
-function getFileExtension(fname){
-    if(fname.indexOf("?") !== -1)
-        fname = fname.substr(0,fname.indexOf("?")); //take off any js flags
-    if(fname)
-        return fname.substr((~-fname.lastIndexOf(".") >>> 0) + 2);
+function getFileExtension(fname) {
+	if (fname.indexOf("?") !== -1)
+		fname = fname.substr(0, fname.indexOf("?")); //take off any js flags
+	if (fname)
+		return fname.substr((~-fname.lastIndexOf(".") >>> 0) + 2);
 	console.warn("No file name provided");
 }
-var loadFile = (function(filename,logFile){
-    var filesLoaded = 0,img = new Image();
+var loadFile = (function(filename, logFile) {
+	var filesLoaded = 0,
+		img = new Image();
 
-    return function(){
-        var fileref,
-            filename = arguments[0],
-            filetype = getFileExtension(filename).toLowerCase();
+	return function() {
+		var fileref,
+			filename = arguments[0],
+			filetype = getFileExtension(filename).toLowerCase();
 
-        switch (filetype) {
-            case '':
-                return;
-            case 'js':
-            case 'json':
-                fileref=document.createElement('script');
-                fileref.setAttribute("type","text/javascript");
-                fileref.setAttribute("src", filename);
-                break;
-            case "css":
-                fileref=document.createElement("link");
-                fileref.setAttribute("rel", "stylesheet");
-                fileref.setAttribute("type", "text/css");
-                fileref.setAttribute("href", filename);
-                break;
-            case "jpg":
-            case "jpeg":
-            case 'png':
-            case 'gif':
-                img.src = filename;
-                break;
-            default:
-                console.warn("This file type is not supported: "+filetype);
-                return;
-        }
-        if (typeof fileref !== undefined){
-            $("head").append(fileref);
-            if(logFile)
-                console.log('Loaded file: ' + filename);
-        }
-        filesLoaded++;
-    }
+		switch (filetype) {
+			case '':
+				return;
+			case 'js':
+			case 'json':
+				fileref = document.createElement('script');
+				fileref.setAttribute("type", "text/javascript");
+				fileref.setAttribute("src", filename);
+				break;
+			case "css":
+				fileref = document.createElement("link");
+				fileref.setAttribute("rel", "stylesheet");
+				fileref.setAttribute("type", "text/css");
+				fileref.setAttribute("href", filename);
+				break;
+			case "jpg":
+			case "jpeg":
+			case 'png':
+			case 'gif':
+				img.src = filename;
+				break;
+			default:
+				console.warn("This file type is not supported: " + filetype);
+				return;
+		}
+		if (typeof fileref !== undefined) {
+			$("head").append(fileref);
+			if (logFile)
+				console.log('Loaded file: ' + filename);
+		}
+		filesLoaded++;
+	}
 })();
-function arrayifyArguments(a){
+function arrayifyArguments(a) {
 	var args = [];
-	for(var i = 0; i < a.length; i++)
+	for (var i = 0; i < a.length; i++)
 		args.push(a[i]);
 
 	return args;
 }
-function updateSome(){
+function updateSome() {
 	var y = arrayifyArguments(arguments);
 
-	y.splice(0,0,true); //add true to the begginning to indicate deep
+	y.splice(0, 0, true); //add true to the begginning to indicate deep
 	return jQuery.extend.apply({}, y);
 	//http://stackoverflow.com/a/9455045/2844859
 }
@@ -218,51 +231,51 @@ function updateSome(){
  *    but "incrementing" them by 1 (only in the case of a timestamp collision).
  */
 var generatePushID = (function() {
-  // Modeled after base64 web-safe chars, but ordered by ASCII.
-  var PUSH_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
+	// Modeled after base64 web-safe chars, but ordered by ASCII.
+	var PUSH_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
 
-  // Timestamp of last push, used to prevent local collisions if you push twice in one ms.
-  var lastPushTime = 0;
+	// Timestamp of last push, used to prevent local collisions if you push twice in one ms.
+	var lastPushTime = 0;
 
-  // We generate 72-bits of randomness which get turned into 12 characters and appended to the
-  // timestamp to prevent collisions with other clients.  We store the last characters we
-  // generated because in the event of a collision, we'll use those same characters except
-  // "incremented" by one.
-  var lastRandChars = [];
+	// We generate 72-bits of randomness which get turned into 12 characters and appended to the
+	// timestamp to prevent collisions with other clients.  We store the last characters we
+	// generated because in the event of a collision, we'll use those same characters except
+	// "incremented" by one.
+	var lastRandChars = [];
 
-  return function() {
-    var now = new Date().getTime();
-    var duplicateTime = (now === lastPushTime);
-    lastPushTime = now;
+	return function() {
+		var now = new Date().getTime();
+		var duplicateTime = (now === lastPushTime);
+		lastPushTime = now;
 
-    var timeStampChars = new Array(8);
-    for (var i = 7; i >= 0; i--) {
-      timeStampChars[i] = PUSH_CHARS.charAt(now % 64);
-      // NOTE: Can't use << here because javascript will convert to int and lose the upper bits.
-      now = Math.floor(now / 64);
-    }
-    if (now !== 0) throw new Error('We should have converted the entire timestamp.');
+		var timeStampChars = new Array(8);
+		for (var i = 7; i >= 0; i--) {
+			timeStampChars[i] = PUSH_CHARS.charAt(now % 64);
+			// NOTE: Can't use << here because javascript will convert to int and lose the upper bits.
+			now = Math.floor(now / 64);
+		}
+		if (now !== 0) throw new Error('We should have converted the entire timestamp.');
 
-    var id = timeStampChars.join('');
+		var id = timeStampChars.join('');
 
-    if (!duplicateTime) {
-      for (i = 0; i < 12; i++) {
-        lastRandChars[i] = Math.floor(Math.random() * 64);
-      }
-    } else {
-      // If the timestamp hasn't changed since last push, use the same random number, except incremented by 1.
-      for (i = 11; i >= 0 && lastRandChars[i] === 63; i--) {
-        lastRandChars[i] = 0;
-      }
-      lastRandChars[i]++;
-    }
-    for (i = 0; i < 12; i++) {
-      id += PUSH_CHARS.charAt(lastRandChars[i]);
-    }
-    if(id.length != 20) throw new Error('Length should be 20.');
+		if (!duplicateTime) {
+			for (i = 0; i < 12; i++) {
+				lastRandChars[i] = Math.floor(Math.random() * 64);
+			}
+		} else {
+			// If the timestamp hasn't changed since last push, use the same random number, except incremented by 1.
+			for (i = 11; i >= 0 && lastRandChars[i] === 63; i--) {
+				lastRandChars[i] = 0;
+			}
+			lastRandChars[i]++;
+		}
+		for (i = 0; i < 12; i++) {
+			id += PUSH_CHARS.charAt(lastRandChars[i]);
+		}
+		if (id.length != 20) throw new Error('Length should be 20.');
 
-    return id;
-  };
+		return id;
+	};
 })();
 /*!
  * hoverIntent v1.8.0 // 2014.06.29 // jQuery v1.9.1+
@@ -282,116 +295,121 @@ var generatePushID = (function() {
  * @param b an array of connected points [{x:, y:}, {x:, y:},...] that form a closed polygon
  * @return true if there is any intersection between the 2 polygons, false otherwise
  */
-function doPolygonsIntersect (a, b) {
-    //http://stackoverflow.com/a/12414951/2844859
-    var polygons = [a, b];
-    var minA, maxA, projected, i, i1, j, minB, maxB;
+function doPolygonsIntersect(a, b) {
+	//http://stackoverflow.com/a/12414951/2844859
+	var polygons = [a, b];
+	var minA, maxA, projected, i, i1, j, minB, maxB;
 
-    for (i = 0; i < polygons.length; i++) {
+	for (i = 0; i < polygons.length; i++) {
 
-        // for each polygon, look at each edge of the polygon, and determine if it separates
-        // the two shapes
-        var polygon = polygons[i];
-        for (i1 = 0; i1 < polygon.length; i1++) {
+		// for each polygon, look at each edge of the polygon, and determine if it separates
+		// the two shapes
+		var polygon = polygons[i];
+		for (i1 = 0; i1 < polygon.length; i1++) {
 
-            // grab 2 vertices to create an edge
-            var i2 = (i1 + 1) % polygon.length;
-            var p1 = polygon[i1];
-            var p2 = polygon[i2];
+			// grab 2 vertices to create an edge
+			var i2 = (i1 + 1) % polygon.length;
+			var p1 = polygon[i1];
+			var p2 = polygon[i2];
 
-            // find the line perpendicular to this edge
-            var normal = { x: p2.y - p1.y, y: p1.x - p2.x };
+			// find the line perpendicular to this edge
+			var normal = {
+				x: p2.y - p1.y,
+				y: p1.x - p2.x
+			};
 
-            minA = maxA = undefined;
-            // for each vertex in the first shape, project it onto the line perpendicular to the edge
-            // and keep track of the min and max of these values
-            for (j = 0; j < a.length; j++) {
-                projected = normal.x * a[j].x + normal.y * a[j].y;
-                if (!minA || projected < minA)
-                    minA = projected;
-                if (!maxA || projected > maxA)
-                    maxA = projected;
-            }
+			minA = maxA = undefined;
+			// for each vertex in the first shape, project it onto the line perpendicular to the edge
+			// and keep track of the min and max of these values
+			for (j = 0; j < a.length; j++) {
+				projected = normal.x * a[j].x + normal.y * a[j].y;
+				if (!minA || projected < minA)
+					minA = projected;
+				if (!maxA || projected > maxA)
+					maxA = projected;
+			}
 
-            // for each vertex in the second shape, project it onto the line perpendicular to the edge
-            // and keep track of the min and max of these values
-            minB = maxB = undefined;
-            for (j = 0; j < b.length; j++) {
-                projected = normal.x * b[j].x + normal.y * b[j].y;
-                if (!minB || projected < minB)
-                    minB = projected;
-                if (!maxB || projected > maxB)
-                    maxB = projected;
-            }
+			// for each vertex in the second shape, project it onto the line perpendicular to the edge
+			// and keep track of the min and max of these values
+			minB = maxB = undefined;
+			for (j = 0; j < b.length; j++) {
+				projected = normal.x * b[j].x + normal.y * b[j].y;
+				if (!minB || projected < minB)
+					minB = projected;
+				if (!maxB || projected > maxB)
+					maxB = projected;
+			}
 
-            // if there is no overlap between the projects, the edge we are looking at separates the two
-            // polygons, and we know there is no overlap
-            if (maxA < minB || maxB < minA)
-                return false;
-        }
-    }
-    return true;
+			// if there is no overlap between the projects, the edge we are looking at separates the two
+			// polygons, and we know there is no overlap
+			if (maxA < minB || maxB < minA)
+				return false;
+		}
+	}
+	return true;
 };
-Array.prototype.toPolygonPathForm = function(center,scalar,rotation){
-    //use this for the function above this!
-    var points = [];
-    if(!center) center = [0,0];
-    if(!scalar) scalar = 1;
-    if(!rotation) rotation = 0;
+Array.prototype.toPolygonPathForm = function(center, scalar, rotation) {
+	//use this for the function above this!
+	var points = [];
+	if (!center) center = [0, 0];
+	if (!scalar) scalar = 1;
+	if (!rotation) rotation = 0;
 
-    for(var i=0;i<this.length;i++)
-        points[i] = rotatePoint(this[i][0] * scalar,this[i][1] * scalar,rotation,center[0],center[1]);
+	for (var i = 0; i < this.length; i++)
+		points[i] = rotatePoint(this[i][0] * scalar, this[i][1] * scalar, rotation, center[0], center[1]);
 
-    return points;
+	return points;
 };
 function clone(item) {
-    if (!item) { return item; } // null, undefined values check
+	if (!item) {
+		return item;
+	} // null, undefined values check
 
-    var types = [ Number, String, Boolean ],
-        result;
+	var types = [Number, String, Boolean],
+		result;
 
-    // normalizing primitives if someone did new String('aaa'), or new Number('444');
-    types.forEach(function(type) {
-        if (item instanceof type) {
-            result = type( item );
-        }
-    });
+	// normalizing primitives if someone did new String('aaa'), or new Number('444');
+	types.forEach(function(type) {
+		if (item instanceof type) {
+			result = type(item);
+		}
+	});
 
-    if (typeof result == "undefined") {
-        if (Object.prototype.toString.call( item ) === "[object Array]") {
-            result = [];
-            item.forEach(function(child, index, array) {
-                result[index] = clone( child );
-            });
-        } else if (typeof item == "object") {
-            // testing that this is DOM
-            if (item.nodeType && typeof item.cloneNode == "function") {
-                var result = item.cloneNode( true );
-            } else if (!item.prototype) { // check that this is a literal
-                if (item instanceof Date) {
-                    result = new Date(item);
-                } else {
-                    // it is an object literal
-                    result = {};
-                    for (var i in item) {
-                        result[i] = clone( item[i] ); //James: I found the recusion!
-                    }
-                }
-            } else {
-                // depending what you would like here,
-                // just keep the reference, or create new object
-                if (false && item.constructor) {
-                    // would not advice to do that, reason? Read below
-                    result = new item.constructor();
-                } else {
-                    result = item;
-                }
-            }
-        } else {
-            result = item;
-        }
-    }
-    return result;
+	if (typeof result == "undefined") {
+		if (Object.prototype.toString.call(item) === "[object Array]") {
+			result = [];
+			item.forEach(function(child, index, array) {
+				result[index] = clone(child);
+			});
+		} else if (typeof item == "object") {
+			// testing that this is DOM
+			if (item.nodeType && typeof item.cloneNode == "function") {
+				var result = item.cloneNode(true);
+			} else if (!item.prototype) { // check that this is a literal
+				if (item instanceof Date) {
+					result = new Date(item);
+				} else {
+					// it is an object literal
+					result = {};
+					for (var i in item) {
+						result[i] = clone(item[i]); //James: I found the recusion!
+					}
+				}
+			} else {
+				// depending what you would like here,
+				// just keep the reference, or create new object
+				if (false && item.constructor) {
+					// would not advice to do that, reason? Read below
+					result = new item.constructor();
+				} else {
+					result = item;
+				}
+			}
+		} else {
+			result = item;
+		}
+	}
+	return result;
 }
 /** Function count the occurrences of substring in a string;
  * @param {String} string   Required. The string;
@@ -399,32 +417,32 @@ function clone(item) {
  * @param {Boolean} allowOverlapping    Optional. Default: false;
  * @author Vitim.us http://stackoverflow.com/a/7924240/2844859
  */
-function scrollTo(elementID,duration){
-    $('html, body').animate({
-        scrollTop: $("#" + elementID).offset().top
-    }, duration || 2000);
+function scrollTo(elementID, duration) {
+	$('html, body').animate({
+		scrollTop: $("#" + elementID).offset().top
+	}, duration || 2000);
 }
-function isReallyNaN(a){
-    // http://stackoverflow.com/a/8965463/2844859
-    return a !== a;
+function isReallyNaN(a) {
+	// http://stackoverflow.com/a/8965463/2844859
+	return a !== a;
 };
-var QueryURL = function () {
-  // http://stackoverflow.com/a/979995/2844859
-  // This function is anonymous, is executed immediately and 
-  // the return value is assigned to QueryURL!
-  var query_string = {};
-  var query = window.location.search.substring(1);
-  var vars = query.split("&");
-  for (var i=0;i<vars.length;i++) {
-    var pair = vars[i].split("=");
-    if (typeof query_string[pair[0]] === "undefined") {
-      query_string[pair[0]] = decodeURIComponent(pair[1]);
-    } else if (typeof query_string[pair[0]] === "string") {
-      var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
-      query_string[pair[0]] = arr;
-    } else {
-      query_string[pair[0]].push(decodeURIComponent(pair[1]));
-    }
-  } 
-  return query_string;
+var QueryURL = function() {
+	// http://stackoverflow.com/a/979995/2844859
+	// This function is anonymous, is executed immediately and
+	// the return value is assigned to QueryURL!
+	var query_string = {};
+	var query = window.location.search.substring(1);
+	var vars = query.split("&");
+	for (var i = 0; i < vars.length; i++) {
+		var pair = vars[i].split("=");
+		if (typeof query_string[pair[0]] === "undefined") {
+			query_string[pair[0]] = decodeURIComponent(pair[1]);
+		} else if (typeof query_string[pair[0]] === "string") {
+			var arr = [query_string[pair[0]], decodeURIComponent(pair[1])];
+			query_string[pair[0]] = arr;
+		} else {
+			query_string[pair[0]].push(decodeURIComponent(pair[1]));
+		}
+	}
+	return query_string;
 }();

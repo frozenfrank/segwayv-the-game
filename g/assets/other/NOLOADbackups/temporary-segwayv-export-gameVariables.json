@@ -1,0 +1,52 @@
+{
+  accelerationConst: 7,
+  canvasSize: [ 673, 619 ],
+  cleanUsersFrequency: 60000,
+  debugFlags: {
+    showKeyboardActions: false,
+    showPacketsRecieved: false,
+    showStagesPerformed: false
+  },
+  display: {
+    HPbar: {
+      HPcolor: {
+        absent: "#B21000",
+        present: "#09B256"
+      },
+      bottom_pad: 1.5,
+      height: 12,
+      left_pad: 2,
+      shieldColor: {
+        absent: "#B28400",
+        present: "#003BA8"
+      },
+      dodgeColor: {
+        absent: "#67147F",
+        present: "#FFDB30"
+      },
+      weaponColor: {
+        absent: "#FF6125",
+        present: "#00AB8C"
+      },
+      width: 150,
+      x_offset_near_sides: 50,
+      y_offset: 100,
+      y_offset_at_top: -160
+    },
+    profilePic: {
+      size: 35,
+      x_offset: -120,
+      y_from_HPbar: 22
+    },
+    usernameColor: "#fff"
+  },
+  eraseFullBoardFrequency: 1500,
+  gameSpeed: 20,
+  messageTimeout: 5000,
+  pingAllowance: 10000,
+  pingFrequency: 30000,
+  projectileSaveFrequency: 60,
+  reduceRammingDmg: 8,
+  sizeScale: 100,
+  timeStamp: 0,
+}

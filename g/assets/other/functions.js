@@ -56,8 +56,10 @@ var functions = {
 		*/
 		var rect = variables.canvas.getBoundingClientRect();
 		return {
-			x: (evt.clientX - rect.left).roundTo(variables.userAccuracy.mouse),
-			y: (evt.clientY - rect.top).roundTo(variables.userAccuracy.mouse),
+			// x: (evt.clientX - rect.left).roundTo(1 || variables.userAccuracy.mouse),
+			// y: (evt.clientY - rect.top).roundTo(1 || variables.userAccuracy.mouse),
+			x: evt.clientX - rect.left,
+			y: evt.clientY - rect.top,
 		};
 	},
 	isPressed: function(input, /* user, */ timeStamp) {
@@ -241,6 +243,64 @@ var functions = {
 			delete variables.interactingObjects[snapshot.key]; //remove the locale copy from rendering & calculating
 			snapshot.ref.off(); //remove the event listener
 		});
+	},
+	changeAngular: function(variable, value) {
+		//HACK! debug mode only
+		//TODO: get rid of this before releasing
+		var scope = angular.element($("#app")).scope();
+		scope.$apply(function() {
+			var item = scope[variable];
+			if (typeof item === 'function')
+				item();
+			else if (value)
+				scope[variable] = value;
+			else
+				console.log(variable, ': ', item);
+
+		});
+	},
+	autoResizeCanvasNoSave: function() {
+		if (!variables.singlePlayerMode)
+			return; //HACK!
+		//TODO: remove the resize effect from the source
+
+		//set the canvas to the size of the screen
+		var v = variables,
+			c = v.canvas,
+			fullSizeMultiplier = .95;
+
+		v.canvasSize = [
+			window.innerWidth * fullSizeMultiplier,
+			window.innerHeight * fullSizeMultiplier
+		];
+		c.width = v.canvasSize[0];
+		c.height = v.canvasSize[1];
+
+		return;
+	},
+	generateSprite: function(sprite, username, authData) {
+		var d = authData,
+			f = functions.objectFactory(sprite, {
+				//as much data as I can possibly harvest
+				appearance: undefined,
+				user: {
+					name: d.displayName ? d.displayName : d.email.substr(0, d.email.indexOf('@')),
+					email: d.email,
+					publicProfileImg: d.providerData[0].photoURL,
+					isAnonymous: d.isAnonymous,
+					username: username,
+				},
+				gamePlay: {
+					owner: d.uid,
+					provider: d.providerData[0].providerId,
+				},
+				uid: d.uid,
+			});
+
+		//safetyify it for firebase
+		f = functions.standardizeForFirebase(f, true);
+
+		return database.child(d.uid).set(f);
 	},
 	/*
 	addNumberCircle: function(number, color) {

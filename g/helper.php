@@ -1,4 +1,6 @@
 <?php
+$noLoadPattern = '/game\.js|\/NOLOAD/'; //HELP!!! why is this required?
+
 function countFilesInDir($dir){
     //http://stackoverflow.com/a/12801447/2844859
     // integer starts at 0 before counting
@@ -12,11 +14,13 @@ function countFilesInDir($dir){
     // prints out how many were in the directory
     return $i;
 }
-function readFilesInDir($dir,$noLoadPattern = false){
-    if(!$noLoadPattern)
-        global $noLoadPattern;
+function readFilesInDir($dir,$onlyLoadPattern = '/./'){
+    global $noLoadPattern;
     global $listOtherFiles;
     foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir)) as $filename){
+        if(preg_match($onlyLoadPattern,$filename) !== 1)
+            continue;
+
         if(preg_match($noLoadPattern,$filename) === 1)
             continue;
 
@@ -25,6 +29,7 @@ function readFilesInDir($dir,$noLoadPattern = false){
 
         switch (findExtension($filename)){
             case "js":
+            case "css":
                 $toRead = true;
                 break;
             case "png":
@@ -37,7 +42,6 @@ function readFilesInDir($dir,$noLoadPattern = false){
             case "":
             case " ":
             case 'php':
-            case "css":
                 //do nothing
                 break;
             default:
@@ -111,15 +115,6 @@ function randomLine($file){
 function stripLineBreaks($string){
     return preg_replace( "/\r|\n/", "", $string);
 }
-function includeAuthButtons(){
-
-echo <<<EOT
-<button id='login' type='button' onclick='authObject.login({app:"google"});this.innerHTML="Logging in..."'>Login with Google</button>
-<button id='logout' type='button' onclick='authObject.logout()' disabled='true'>Sign out</button>
-<button id='ownerButton' typer='button' onclick='authObject.ownerLogin()'>Login as Owner</button>
-EOT;
-
-}
 function searchfilereturnline($file,$searchfor){
     $file = realpath($file);
 
@@ -138,55 +133,4 @@ function searchfilereturnline($file,$searchfor){
     //   echo "No matches found";
     }
 }
-function listallsprites(){
-    global $root;
-    global $minifiedCode;
-    codecomment("Listing all sprites");
-
-    if($minifiedCode)       readfilesindir("$root/assets/definitions/WAITuserObjects",'/\/NOLOAD/');
-    else                    readfile("$root/client/min/sprite.js");
-}
-function includeMainMenuBtn(){
-    global $mode;
-    global $role;
-
-    if($mode)   $from = $mode;
-    else        $from = $role;
-
-	echo "<div id='mainMenuBtn' onclick='location.href=\"/g\"' class='arrow_box'>&#8668; Main Menu <small>from: $from</small></div>";
-}
-function includeClientElements(){
-includeMainMenuBtn();
-echo <<<EOT
-<canvas id="canvas" class='centerAll'></canvas>
-<div id='stateLog'></div>
-<div id='winner' class='centerAll'>Winner!</div>
-<br/>
-<!--<div class="fb-like" data-share="true" data-width="450" data-show-faces="true"></div>-->
-<!--<div id="firechat-wrapper"></div>-->
-
-EOT;
-}
-
-//cookies
-function makeCookie($name,$value='',$duration=0){
-    setcookie($name, $value, $duration !== 0 ? time() + (86400 * $duration) : 0, "/");
-}
-function readCookie($name){
-    return $_COOKIE[$name];
-}
-function deleteCookie($name){
-    setcookie($name,'',time() - 1000,"/");
-}
-
-
-//whatever, just testing
-function sendText($to,$message){
-    $domain = 'messaging.sprintpcs.com';
-    $recepient = "$to@$domain";
-
-    mail($recepient, "", $message, "From: James Finlinson <the30clues@gmail.com>\r\n");
-    codeComment("Sent message to '$recepient' with message '$message'",'html');
-}
-// sendText(8014000584,"Testing PHP message sends");
 ?>

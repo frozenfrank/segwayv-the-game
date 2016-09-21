@@ -1,0 +1,302 @@
+/*http://codepen.io/reinislejnieks/pen/Avlqc*/
+/* Variable declaration */
+/* General styling */
+/*
+body {
+	background: #444444;
+	background: url('/g/assets/images/black-diagonal-stripes.jpg');
+}
+#wrapper {
+	margin: 0 auto;
+	margin-top: 100px;
+	width: 320px;
+}
+#overlay {
+	z-index: 5;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+}
+#overlay:before {
+	content: '';
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: #000;
+	opacity: 0.5;
+}
+*/
+/*setup*/
+.dialog:not(.yellow) {
+	display: none;
+}
+.dialog {
+	z-index: 10;
+	position: absolute;
+	margin: auto;
+	outline: none;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	width: 500px;
+	background-color: #777;
+	--main-color: white;
+	--whitish-color: gray;
+	/*TODO: refine this default 'white' value*/
+}
+.dialog > div {
+	float: left;
+}
+.dialog,
+.dialog > div,
+.dialog > div i {
+	height: 100px;
+	text-align: center;
+	line-height: 100px;
+}
+.dialog.red {
+	--main-color: #CC5252;
+	--whitish-color: #dd4141;
+}
+.dialog.yellow {
+	--main-color: #CCCC52;
+	--whitish-color: #dddd41;
+}
+.dialog.blue {
+	--main-color: #52A3CC;
+	--whitish-color: #41a9dd;
+}
+.dialog.green {
+	--main-color: #52CC52;
+	--whitish-color: #41dd41;
+}
+.dialog .ok-dialog {
+	float: right;
+	width: 50px;
+	background: var(--main-color);
+}
+.dialog .ok-dialog i {
+	font-size: 30px;
+	color: #EEE;
+}
+.dialog .ok-dialog:hover {
+	background: var(--whitish-color);
+	cursor: pointer;
+}
+.dialog .body-dialog {
+	width: 350px;
+}
+.dialog .body-dialog > p {
+	display: inline-block;
+	padding: 10px;
+	font: 14px roboto;
+	color: #EEE;
+	vertical-align: middle;
+}
+.dialog .label-dialog {
+	width: 100px;
+	background-color: #444;
+}
+.dialog .label-dialog i {
+	color: var(--main-color);
+	font-size: 60px;
+}
+
+/*animations*/
+/* http://webdesign.tutsplus.com/tutorials/adding-appeal-to-your-animations-on-the-web--cms-23649 */
+#overlay.prep:before {
+	right: 100%;
+	bottom: 100%;
+}
+#overlay.prep .ok-dialog i {
+	font-size: 0;
+}
+#overlay.prep .dialog,
+#overlay.prep .ok-dialog,
+#overlay.prep .label-dialog {
+	width: 0;
+}
+#overlay.prep .label-dialog i,
+#overlay.prep .body-dialog  > p {
+	opacity: 0;
+}
+
+#overlay.show:before {
+	animation: bring-in .3s forwards;
+}
+#overlay.show .dialog {
+	animation: show-dialog-box .6s .2s forwards cubic-bezier(1, 0.58, 0.32, 0.96);
+}
+#overlay.show .body-dialog  > p {
+	animation: fade-in .4s .7s forwards;
+}
+#overlay.show .ok-dialog {
+	animation: show-ok-dialog .9s .7s forwards ease-out;
+}
+#overlay.show .ok-dialog i {
+	animation: pop-in-ok-dialog .6s 1s forwards cubic-bezier(.64, 1.87, .64, .64);
+}
+#overlay.show .label-dialog {
+	animation: show-label-dialog .8s .7s forwards ease-out;
+}
+#overlay.show .label-dialog i {
+	animation: show-icon .6s .6s forwards cubic-bezier(.64, 1.87, .64, .64);
+}
+
+#overlay.hide {
+	/*filter: url('#fancy-blob');*/
+}
+#overlay.hide .dialog {
+	animation: hide-dialog-box .5s forwards cubic-bezier(0.86, -1.15, 0.49, 0.54);;
+}
+#overlay.hide .body-dialog {
+	overflow: hidden;
+	width: calc(100% - 150px);
+	/*full width - the combined size of the ok-dialog and the label-dialog*/
+}
+#overlay.hide .dialog > div:not(:nth-child(2)) {
+	--translate-direction: 50%;
+	--scale-coeffecient: 1;
+	/*animation:*/
+		/*shake 0.22s .48s cubic-bezier(.36, .07, .19, .97) both,*/
+		/*blob-together .6s .7s linear both;*/
+	transform: translate3d(0, 0, 0) translate(var(--translate-direction)) scale(var(--scale-coeffecient));
+	backface-visibility: hidden;
+	perspective: 1000px;
+}
+#overlay.hide .dialog div.label-dialog {
+    --translate-direction: -50%;
+    animation-direction: reverse forwards;
+	/*do the jiggle animation in reverse*/
+}
+
+@keyframes bring-in {
+	to {
+		margin: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		left: 0;
+	}
+}
+@keyframes fade-in {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+@keyframes pop-in-ok-dialog {
+	0% {
+		font-size: 10px;
+		color: black;
+	}
+	40% {
+		opacity: 1;
+	}
+	60% {
+		color: white;
+	}
+	70% {
+		font-size: 37px;
+	}
+	100% {
+		font-size: 30px;
+		color: #EEE;
+	}
+}
+@keyframes show-icon {
+	0% {
+		opacity: 0;
+		transform: rotateZ(-40deg);
+	}
+	100% {
+		opacity: 1;
+		transform: rotateZ(0);
+	}
+}
+@keyframes show-ok-dialog {
+	from {
+		width: 0;
+	}
+	to {
+		width: 50px;
+	}
+}
+@keyframes show-label-dialog {
+	0% {
+		width: 0;
+	}
+	40% {
+		background: var(--main-color);
+	}
+	100% {
+		background: #444;
+		width: 100px;
+	}
+}
+@keyframes show-dialog-box {
+	0% {
+		height: 0;
+		width: 10px;
+	}
+	40% {
+		height: 100px;
+		width: 35px;
+	}
+	100% {
+		width: 500px;
+	}
+}
+
+@keyframes shake {
+	10%,
+	90% {
+		transform: translate3d(-1px, 0, 0);
+	}
+	20%,
+	80% {
+		transform: translate3d(2px, 1px, 0);
+	}
+	30%,
+	50%,
+	70% {
+		transform: translate3d(-4px, 0, 0);
+	}
+	40%,
+	60% {
+		transform: translate3d(4px, -2px, 0);
+	}
+}
+@keyframes sporatic-jiggle {
+	36% {}
+}
+
+@keyframes hide-dialog-box {
+	0% {
+		width: 500px;
+	}
+	100% {
+		width: 150px;
+	}
+}
+@keyframes blob-together {
+	0% {
+	    position: relative;
+		right: var(--translate-direction);
+	}
+	65% {
+		--scale-coeffecient: 1.1;
+	}
+	100% {
+		--scale-coeffecient: 1.5;
+		border-radius: 50%;
+		background: green;
+	}
+}
