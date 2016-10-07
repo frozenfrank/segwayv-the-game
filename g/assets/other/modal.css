@@ -1,21 +1,10 @@
 /*http://codepen.io/reinislejnieks/pen/Avlqc*/
-/* Variable declaration */
-/* General styling */
-/*
-body {
-	background: #444444;
-	background: url('/g/assets/images/black-diagonal-stripes.jpg');
-}
-#wrapper {
-	margin: 0 auto;
-	margin-top: 100px;
-	width: 320px;
-}
+/*setup*/
 #overlay {
 	z-index: 5;
 	position: fixed;
-	top: 0px;
-	left: 0px;
+	top: 0;
+	right: 0;
 	width: 100%;
 	height: 100%;
 }
@@ -27,12 +16,7 @@ body {
 	bottom: 0;
 	left: 0;
 	background-color: #000;
-	opacity: 0.5;
-}
-*/
-/*setup*/
-.dialog:not(.yellow) {
-	display: none;
+	opacity: 0.75;
 }
 .dialog {
 	z-index: 10;
@@ -106,6 +90,16 @@ body {
 	color: var(--main-color);
 	font-size: 60px;
 }
+.dialog:before {
+    content: "";
+    background: transparent;
+    background: linear-gradient(to left,#bbbbbb,transparent);
+    /*width: 40px;*/
+    height: 100%;
+    position: absolute;
+    left: 0%;
+    border-radius: 8px;
+}
 
 /*animations*/
 /* http://webdesign.tutsplus.com/tutorials/adding-appeal-to-your-animations-on-the-web--cms-23649 */
@@ -117,10 +111,12 @@ body {
 	font-size: 0;
 }
 #overlay.prep .dialog,
+#overlay.prep .dialog:before,
 #overlay.prep .ok-dialog,
 #overlay.prep .label-dialog {
 	width: 0;
 }
+#overlay.prep .dialog:before,
 #overlay.prep .label-dialog i,
 #overlay.prep .body-dialog  > p {
 	opacity: 0;
@@ -139,7 +135,7 @@ body {
 	animation: show-ok-dialog .9s .7s forwards ease-out;
 }
 #overlay.show .ok-dialog i {
-	animation: pop-in-ok-dialog .6s 1s forwards cubic-bezier(.64, 1.87, .64, .64);
+	animation: pop-in-ok-dialog .8s 1.25s forwards cubic-bezier(.64, 1.87, .64, .64);
 }
 #overlay.show .label-dialog {
 	animation: show-label-dialog .8s .7s forwards ease-out;
@@ -147,33 +143,50 @@ body {
 #overlay.show .label-dialog i {
 	animation: show-icon .6s .6s forwards cubic-bezier(.64, 1.87, .64, .64);
 }
+#overlay.show .dialog:before {
+	animation: slide-eye-flash .5s .95s forwards ease-in-out;
+}
 
 #overlay.hide {
+	position: fixed;
+	right: -100%;
+	transition: right 0s 1s;
+	/* .7 plus .45 from the pseudo element animation */
+}
+#overlay.hide:before {
 	/*filter: url('#fancy-blob');*/
+	animation: continue-out .8s .51s forwards;
 }
 #overlay.hide .dialog {
-	animation: hide-dialog-box .5s forwards cubic-bezier(0.86, -1.15, 0.49, 0.54);;
+	animation: hide-dialog-box .5s forwards cubic-bezier(0.86, -1.15, 0.49, 0.54),
+		continue-out .7s .45s forwards;
 }
 #overlay.hide .body-dialog {
 	overflow: hidden;
 	width: calc(100% - 150px);
 	/*full width - the combined size of the ok-dialog and the label-dialog*/
 }
+/*
 #overlay.hide .dialog > div:not(:nth-child(2)) {
+	animation: continue-out .7s .45s forwards;
+	position: relative;
 	--translate-direction: 50%;
 	--scale-coeffecient: 1;
-	/*animation:*/
-		/*shake 0.22s .48s cubic-bezier(.36, .07, .19, .97) both,*/
-		/*blob-together .6s .7s linear both;*/
+	animation:
+		shake 0.22s .48s cubic-bezier(.36, .07, .19, .97) both,
+		blob-together .6s .7s linear both;
 	transform: translate3d(0, 0, 0) translate(var(--translate-direction)) scale(var(--scale-coeffecient));
 	backface-visibility: hidden;
 	perspective: 1000px;
 }
 #overlay.hide .dialog div.label-dialog {
     --translate-direction: -50%;
-    animation-direction: reverse forwards;
-	/*do the jiggle animation in reverse*/
+    comment: animation-direction: reverse forwards;
+	comment: do the jiggle animation in reverse
 }
+*/
+
+/*entrance animations*/
 
 @keyframes bring-in {
 	to {
@@ -192,6 +205,37 @@ body {
 		opacity: 1;
 	}
 }
+@keyframes show-icon {
+	0% {
+		opacity: 0;
+		transform: rotateZ(-40deg);
+	}
+	100% {
+		opacity: 1;
+		transform: rotateZ(0);
+	}
+}
+@keyframes show-label-dialog {
+	0% {
+		width: 0;
+		background: black;
+	}
+	40% {
+		background: #dadada;
+	}
+	100% {
+		background: #444;
+		width: 100px;
+	}
+}
+@keyframes show-ok-dialog {
+	from {
+		width: 0;
+	}
+	to {
+		width: 50px;
+	}
+}
 @keyframes pop-in-ok-dialog {
 	0% {
 		font-size: 10px;
@@ -204,41 +248,11 @@ body {
 		color: white;
 	}
 	70% {
-		font-size: 37px;
+		font-size: 42px;
 	}
 	100% {
 		font-size: 30px;
 		color: #EEE;
-	}
-}
-@keyframes show-icon {
-	0% {
-		opacity: 0;
-		transform: rotateZ(-40deg);
-	}
-	100% {
-		opacity: 1;
-		transform: rotateZ(0);
-	}
-}
-@keyframes show-ok-dialog {
-	from {
-		width: 0;
-	}
-	to {
-		width: 50px;
-	}
-}
-@keyframes show-label-dialog {
-	0% {
-		width: 0;
-	}
-	40% {
-		background: var(--main-color);
-	}
-	100% {
-		background: #444;
-		width: 100px;
 	}
 }
 @keyframes show-dialog-box {
@@ -254,7 +268,18 @@ body {
 		width: 500px;
 	}
 }
+@keyframes slide-eye-flash {
+	5%, 95% {
+		width: 40px;
+		opacity: 1;
+	}
+	100% {
+		width: 0;
+		left: calc(100% - 40px);
+	}
+}
 
+/*animations that occure while its on the screen*/
 @keyframes shake {
 	10%,
 	90% {
@@ -278,12 +303,19 @@ body {
 	36% {}
 }
 
+/*exit animations*/
 @keyframes hide-dialog-box {
 	0% {
 		width: 500px;
 	}
 	100% {
 		width: 150px;
+	}
+}
+@keyframes continue-out {
+	100% {
+		left: 150%;
+		top: 150%;
 	}
 }
 @keyframes blob-together {

@@ -68,7 +68,10 @@ function displayObject(){
             //users can only control their own objects
             if(!this.isOwner())                 return;
             if(variables.leaveGame)             return;
-            if(variables.singlePlayerMode)		return;
+            if(variables.singlePlayerMode){
+				variables.interactingObjects[this.uid] = this;
+				return;
+            }
 
             objectsRef.update((function(obj){
                 var x = {};

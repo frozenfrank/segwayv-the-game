@@ -67,7 +67,9 @@ Number.prototype.max = function(maxValue) {
 	return this;
 }
 Number.prototype.minMax = function(min, max) {
-	return this.min(min).max(max);
+	if(this < min) return min;
+	if(this > max) return max;
+	return this;
 }
 Number.prototype.roundTo = function(multiple) {
 	if (!multiple)

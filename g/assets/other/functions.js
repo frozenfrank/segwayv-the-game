@@ -84,16 +84,37 @@ var functions = {
 		}
 		console.warn('wrong input type');
 	},
-	gameMessage: function(input, dontSelfDestruct) {
-		var v = [];
-		if (!typeof input === 'string' && !input.message) {
-			console.warn("no message was included");
-			return;
-		}
+	gameMessage: function() {
+		//arguments:
+		// input (text message | object with data), *required
+		// [server (string) (default -> whatever is in the messageRef],
+		// [dontSelfDestruct (boolean) (default -> false)]
 
-		v.message = typeof input === 'string' ? input : input.message;
+		var v = [], input, server, dontSelfDestruct, j = 1;
+
+		if(typeof arguments[0] === 'string')
+			input = {
+				message: arguments[0],
+			};
+		else if(typeof arguments[0] === 'object')
+			input = arguments[0];
+		else
+			input = {};
+
+		if(typeof arguments[j] === 'string')
+			server = functions.getFirebaseRef(arguments[j++]).child("messages");
+		else if(input.server)
+			server = functions; //**work
+		else
+			server = messageRef;
+
+		if(typeof arguments[j] === 'boolean')
+			dontSelfDestruct = arguments[j++];
+
+		v.message = input.message || '';
 		v.target = input.target || 'all'; //the user that should respond to the message
 		v.action = input.action || 'post'; //[some keyword]: [corresponding action]
+		//join: request to join the server
 		//post: send a txt msg to the target user,
 		//status: reporting status to the server,
 		//response: given when a response was required
@@ -104,12 +125,12 @@ var functions = {
 		// v.gameTimestamp = variables.timeStamp;
 
 		//now actually send the message
-		var sent = messageRef.push(functions.standardizeForFirebase(v));
+		var sent = server.push(functions.standardizeForFirebase(v));
 
 		// automatically remove the message after the timeout period
 		if (!dontSelfDestruct && sent.path.o) {
 			//idk, but sent.path.o looks like a hack --> im looking for a better way to do this
-			var lastMessage = messageRef.child(sent.path.o[sent.path.o.length - 1]);
+			var lastMessage = server.child(sent.path.o[sent.path.o.length - 1]);
 			setTimeout(function() {
 				lastMessage.remove();
 				// console.log(lastMessage.key);
@@ -207,8 +228,9 @@ var functions = {
 			obj.onCompleteConstruction();
 
 			//save it to variables if told
-			if (config.save || config.count)
-				variables.interactingObjects[obj.uid] = obj;
+			if (config.save || config.count){
+				obj.save();
+			}
 		}
 
 		//return it for use
@@ -284,15 +306,15 @@ var functions = {
 				//as much data as I can possibly harvest
 				appearance: undefined,
 				user: {
-					name: d.displayName ? d.displayName : d.email.substr(0, d.email.indexOf('@')),
-					email: d.email,
-					publicProfileImg: d.providerData[0].photoURL,
+					name: d.isAnonymous ? 'John Doe' : d.displayName,
+					email: d.isAnonymous ? 'john@doe.com' : d.email,
+					publicProfileImg: d.photoURL,
 					isAnonymous: d.isAnonymous,
 					username: username,
 				},
 				gamePlay: {
 					owner: d.uid,
-					provider: d.providerData[0].providerId,
+					// provider: d.providerData[0].providerId,
 				},
 				uid: d.uid,
 			});
@@ -300,7 +322,25 @@ var functions = {
 		//safetyify it for firebase
 		f = functions.standardizeForFirebase(f, true);
 
-		return database.child(d.uid).set(f);
+		return database.child(d.uid).set(f).then(function(){
+			client.resetObjects(true);
+		});
+	},
+	removeClass: function(e,c) {
+		// http://stackoverflow.com/a/2155786
+		e.className = e.className.replace( new RegExp('(?:^|\\s)'+c+'(?!\\S)') ,'');
+	},
+	addClass: function(e,c) {
+		//TODO: ensure that the class is not already on the element
+		e.className += " "+c;
+	},
+	getFirebaseRef: function(server) {
+		//TODO: check existance of server
+		return mainFirebase.child('gameServer/' + server);
+	},
+	modalBox: function(data){
+		var s = angular.element('#app').scope();
+		s.$apply(s.$broadcast('launchModalBox',data));
 	},
 	/*
 	addNumberCircle: function(number, color) {

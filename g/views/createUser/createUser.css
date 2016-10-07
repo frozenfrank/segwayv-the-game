@@ -1,29 +1,3 @@
-/* -----------------
-    createUser
------------------- */
-#app.createUser {
-    overflow-y: scroll;
-}
-.createUser.loggedIn #control_buttons {
-	display: none;
-}
-.createUser #mainMenuBtn {
-	position: fixed;
-	width: 67px;
-	padding: 3px;
-	text-align: center;
-	font-size: smaller;
-	transition: all .3s;
-}
-.createUser #mainMenuBtn small {
-	font-size: 0;
-	line-height: 0;
-}
-.createUser #mainMenuBtn.sticky small {
-	font-size: smaller;
-	line-height: normal;
-}
-
 #sprites {
     text-align: center;
     padding: 40px 20px;
@@ -32,11 +6,7 @@
     padding: 10px;
     padding-bottom: 0;
 }
-#sprites input[type=checkbox] {
-/*hide all of the checkboxes in the checkbox hack*/
-    visibility: hidden;
-    display: none;
-}
+
 /* parent */
 .userObject {
     height: 320px;
@@ -103,7 +73,7 @@
     letter-spacing: 1px;
     border: 1px solid #111;
     color: #fff;
-    font-family: fantasy, helvetica, sans-serif;
+    font-family: Electrolize, roboto, arial;
     background: #444;
     background: linear-gradient(to bottom, #222, #444);
     box-shadow: 1px 1px 1px #333;
@@ -119,11 +89,11 @@
 	outline-color: #C00;
 }
 #usernameField > input {
-    padding: .25em;
+    padding-top: .35em;
     background: transparent;
     width: 100%;
     text-align: center;
-	font-family: inherit;
+	font-family: Electrolize, roboto, arial;
 }
 #usernameField > button {
     position: absolute;

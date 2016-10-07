@@ -8,23 +8,26 @@ var client = {
 
         //clear the interactiveObjects first
         v.interactingObjects = {};
+        if(v.singlePlayerMode)
+			AI.count.reset();
 
         if (!hardReset && v.constructedUser)
         //create me from the locale cache
         //return a promise to keep things consistent
-            return new Promise(function(resolve, reject) {
-            v.interactingObjects[v.activeUser] = v.constructedUser;
-            resolve();
-        });
+            return new Promise(function(resolve) {
+            	v.constructedUser.respawn();
+				v.interactingObjects[v.activeUser] = v.constructedUser;
+				resolve();
+			});
         else
         //create me from the database
-            return database.child(v.activeUser).once('value').then(function(snapshot) {
-            var s = snapshot.val();
+			return database.child(v.activeUser).once('value').then(function(snapshot) {
+				var s = snapshot.val();
 
-            v.interactingObjects[v.activeUser] = v.constructedUser = functions.objectFactory(s.name, s, {
-                save: true
-            });
-        });
+				v.interactingObjects[v.activeUser] = v.constructedUser = functions.objectFactory(s.name, s, {
+					save: true
+				});
+			});
     },
     activate: function() {
         //called after we are whiteListed
@@ -34,7 +37,7 @@ var client = {
         if (v.debugFlags.showStagesPerformed)
             console.log(v.activeUser + ": We just got accepted to the game");
 
-        client.resetObjects().then(function() {
+        return client.resetObjects().then(function() {
             //restore the backup if there is one
             if (v.userBackup)
                 v.interactingObjects[v.activeUser] = v.userBackup;
@@ -55,57 +58,13 @@ var client = {
                 if (v.debugFlags.showKeyboardActions)
                     console.log(e.keyCode + ' is released');
             });
-            /* these dont work or aren't used anymore
-            $('body').blur(function(){
-                //I want to stop moving/firing when the window loses focus
-                saveLocation().keyboard = {};
-                if(true || v.debugFlags.showKeyboardActions)
-                    console.log("The window lost focus");
-            });
-            $('body').mousemove(function(e){
-                var pos = functions.getMousePos(e);
-                if([pos.x,pos.y] !== [saveLocation().mouse.x,saveLocation().mouse.y]){
-                    updateSome(saveLocation().mouse, {x:pos.x, y:pos.y});
-                    if(v.debugFlags.showKeyboardActions)
-                        console.log("Mouse is at: " + pos.x + ',' + pos.y);
-                }
-            });
-            $('body').mousedown(function(){
-                updateSome(saveLocation().mouse, {down: true}); //locale copy
-                if(v.debugFlags.showKeyboardActions)
-                    console.log("The mouse is down");
-            });
-            $('body').mouseup(function(){
-                updateSome(saveLocation().mouse, {down: false}); //locale copy
-                if(v.debugFlags.showKeyboardActions)
-                    console.log("The mouse is up");
-            });
-            */
 
-            //take some measures to ensure we dont get multiple of these called at once
-            v.leaveGame = true;
-            setTimeout(function() {
-                v.leaveGame = false;
+            t.clear();
+			gameLoop();
+            t.canvasClearing = setInterval(functions.clearCanvas, v.eraseFullBoardFrequency);
 
-                var me = v.interactingObjects[v.activeUser];
-
-                //initially add our user to the gameServer
-                if (!v.singlePlayerMode)
-                    v.activeUserGameServer.set(
-                        functions.standardizeForFirebase(me, true)
-                    );
-
-                variables.timeouts.clear();
-
-                me.respawn();
-                setTimeout(gameLoop, v.gameSpeed);
-                t.canvasClearing = setInterval(functions.clearCanvas, v.eraseFullBoardFrequency);
-            }, v.gameSpeed * 3);
-            //stoping the game for a few game cycles will force other threads
-            //(for a lack of a better word) to stop running and only have this one going
-
-            //tell the user
-            functions.userMessage("You have been accepted into the game!<br><b>Good Luck :)</b>", 'success');
+			//tell the user
+			functions.userMessage("You have been accepted into the game!<br><b>Good Luck :)</b>", 'success');
         }).catch(function(error) {
             functions.userMessage("Something bad happened while collecting your data :(",'error');
             throw error;
@@ -116,9 +75,6 @@ var client = {
 
         if (v.debugFlags.showStagesPerformed)
             console.log(v.activeUser + ": We were just rejected/ejected from the game");
-
-        //bring back the control buttons
-        document.getElementById("control_buttons").style.display = '';
 
         //leave the game
         v.leaveGame = true; //maybe deprecated now...
@@ -139,37 +95,42 @@ var client = {
         //alert the user
         functions.userMessage("You have been kicked from the game<br><b>Sorry...</b> Play nice next time, you'll make more friends", 'error');
     },
-    join: function() {
+    requestToJoin: function(server) {
         //ask to join the server
+        if(typeof server !== 'string')
+        	console.error('servername is not a string');
+
         functions.gameMessage({
             action: "join",
-            target: "server"
+            target: "server",
+            server: server,
         });
     },
     ping: function() {
         //we now add our own ping time --> instead of telling the server to
         pingsRef.child(variables.activeUser).set(firebase.database.ServerValue.TIMESTAMP);
     },
-    waitForWhitelist: function() {
+    waitForWhitelist: function(server) {
         //send an initial request
-        client.join();
+        client.requestToJoin(server);
 
         //listen for our uid to be added to the whitelist
         //TODO: and not on the blacklist
-        var v = variables;
-        whitelistRef.on('child_added', function(snapshot) {
+        var v = variables,
+			ref = functions.getFirebaseRef(server).child("whiteList");
+        ref.on('child_added', function(snapshot) {
             if (snapshot.key === v.activeUser)
                 if (snapshot.val() === true) client.activate();
                 else if (snapshot.val() === false) client.deactivate();
             else console.warn("Weird value in the firebase");
         });
-        whitelistRef.on('child_changed', function(snapshot) {
+        ref.on('child_changed', function(snapshot) {
             if (snapshot.key === v.activeUser)
                 if (snapshot.val() === true) client.activate();
                 else if (snapshot.val() === false) client.deactivate();
             else console.warn("Weird data value in the firebase");
         });
-        whitelistRef.on('child_removed', function(snapshot) {
+        ref.on('child_removed', function(snapshot) {
             if (snapshot.key === v.activeUser) client.deactivate();
         });
     },
@@ -205,6 +166,8 @@ var client = {
 
         client.leaveGameServer();
 
+        console.log('joining server:',serverName);
+
         gameServer = mainFirebase.child("gameServer/" + serverName);
 
         whitelistRef = gameServer.child('whiteList');
@@ -213,6 +176,10 @@ var client = {
         messageRef = gameServer.child('messages');
 
         v.activeUserGameServer = objectsRef.child(v.activeUser);
+        v.interactingObjects[v.activeUser].respawn();
+        v.activeUserGameServer.set(
+            functions.standardizeForFirebase(v.interactingObjects[v.activeUser], true)
+        ); //add me to the server to start
 
         //start pinging
         v.timeouts.ping = setInterval(client.ping, v.pingFrequency);
@@ -238,7 +205,7 @@ var client = {
         */
 
         console.log('TODO: cleanup');
-    }
+	},
 };
 var serverHelper = {
     resizeCanvas: function(v) {

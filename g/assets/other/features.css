@@ -1,48 +1,120 @@
 /* my stuff */
-#mainMenuBtn {
-	cursor: pointer;
-	width: 207px;
-	padding: 3px;
-	left: 14px;
-	z-index: 1;
+#gameTitle {
+	font-family: 'Ranchers';
+	font-size: 3.5em;
+	text-align: center;
+	background: orange;
+	border-radius: 50%;
+	padding: 16px 72px;
+	display: block;
+	position: fixed;
+	margin-top: 30px;
+	margin-left: 50%;
+	transform: translate(-50%);
+	transition: font-size 1s;
 }
-#mainMenuBtn small {
-	color: #3a1637;
-	letter-spacing: -0.2px;
+#app:not(.mainMenu) #gameTitle {
+    font-size: 2em;
 }
+
+/*top left features*/
+#top-left-features {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 3;
+}
+#top-left-features > * {
+    /*display: inline-block;*/
+    margin: 5px;
+}
+
 #stateLog {
 	background: #859bc3;
 	background: rgba(28, 83, 183, 0.77);
-	position: fixed;
+	position: relative;
 	padding: 5px;
 	color: #dde7f7;
 	font-size: 12px;
 	right: 2px;
 	top: 2px;
 }
-#winner {
-	display: none;
-	background: green;
-	font-size: 10vw;
-	font-family: 'Righteous', cursive;
-	padding: 2vw;
+
+#userInfo {
+	position: relative;
+	padding: 5px;
+	background: gray;
+	width: 200px;
+	height: 60px;
 }
-.fb-like {
+#userInfo img {
+	height: 60px;
+}
+#userInfo span {
+	width: calc(100% - 75px);
+	height: calc(100% - 10px);
 	position: absolute;
-	bottom: 2px;
-	left: 2px;
-	width: 96px;
-	overflow: hidden;
+	right: 5px;
+}
+#userInfo h2 {
+	font-family: 'Ranchers';
+	line-height: 1;
+	font-size: 1.1em;
+	text-align: center;
+	width: 100%;
+	float: right;
+	margin: 6px 0 0 0;
+}
+#userInfo button {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	background: orange;
+	border: none;
+	padding: 3px;
+	font-family: Electrolize, roboto, arial;
 }
 
-/*-------------------------
-	Inline help tip
-	http://tutorialzine.com/2014/07/css-inline-help-tips/
---------------------------*/
-.help-tip {
-	position: absolute;
-	top: 18px;
-	right: 18px;
+.signedOut > h2 {
+    letter-spacing: 2px;
+    transition: all .35s;
+}
+.signedOut > div {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    left: 5px;
+    text-align: center;
+}
+.loginOption {
+    display: inline-block;
+    font-size: 20px;
+    padding: 0 2px;
+}
+.loginOption p {
+    display: none;
+}
+.loginOption i {
+    padding: 5px;
+    background: orange;
+    transition: all .35s .1s;
+    transition-delay: 0s;
+    cursor: pointer;
+    position: relative;
+}
+.loginOption i:hover {
+    background: #e09100;
+    color: white;
+    top: 3px;
+}
+#userInfo:hover .signedOut > h2 {
+    letter-spacing: 13px;
+}
+
+/* http://tutorialzine.com/2014/07/css-inline-help-tips */
+#help-tip {
+	position: relative;
+	float: right;
 	text-align: center;
 	background-color: #1f33af;
 	border-radius: 50%;
@@ -51,22 +123,22 @@
 	font-size: 21px;
 	line-height: 40px;
 	cursor: default;
-	z-index: 1;
+	z-index: 2;
+	font-family: Electrolize, roboto, sans-serif;
 }
-.help-tip:before {
+#help-tip:before {
 	content: '?';
 	font-weight: bold;
 	color: #fff;
 }
-.help-tip:hover> al,
-.help-tip[hover]> al {
-	max-height: calc(100vh - 110px);
+#help-tip:hover> al {
+	max-height: calc(100vh - 180px);
 	overflow-y: scroll;
 	display: block;
 	transform-origin: 100% 0%;
 	animation: fadeIn 0.3s ease-in-out;
 }
-.help-tip> al {
+#help-tip> al {
 	display: none;
 	text-align: left;
 	background-color: #1E2021;
@@ -81,7 +153,7 @@
 	font-family: sans-serif;
 	line-height: 1.4;
 }
-.help-tip> al:before {
+#help-tip> al:before {
 	position: absolute;
 	content: '';
 	width: 0;
@@ -91,7 +163,7 @@
 	right: 10px;
 	top: -12px;
 }
-.help-tip> al:after {
+#help-tip> al:after {
 	width: 100%;
 	height: 40px;
 	content: '';
@@ -108,43 +180,41 @@
 	}
 }
 
-/*-----
-    my css styling
------*/
-.help-tip td {
+/* my css styling */
+#help-tip td {
 	padding: 2px;
 	/*were not robots*/
 }
-.help-tip tr:hover td:not([colspan]) {
+#help-tip tr:hover td:not([colspan]) {
 	background: #5f0918;
 	/*add a hovering effect*/
 }
-.help-tip td:first-child:not(:last-child) {
+#help-tip td:first-child:not(:last-child) {
 	color: #ff4a4a;
 	font-size: 1.3em;
 	font-family: monospace;
 	letter-spacing: -.1ch;
 	/*the first column (with the key strokes) should look different*/
 }
-.help-tip td:not(:first-child) {
+#help-tip td:not(:first-child) {
 	padding-left: 6px;
 	/*add space between columns*/
 }
-.help-tip tr:not(:first-child) td[hint] {
+#help-tip tr:not(:first-child) td[hint] {
 	padding-top: 10px;
 	/*add visual space between sets of rules*/
 }
-.help-tip td[hint] {
+#help-tip td[hint] {
 	color: #0b8e28;
 	/*green version of the same color as a heading*/
 	font-size: large;
 	padding-left: 34px;
 }
-.help-tip bracket {
+#help-tip bracket {
 	font-family: sans-serif;
 	/*try to reduce the wasted space*/
 }
-.help-tip code {
+#help-tip code {
 	background: gray;
 	border-radius: 5px;
 	padding: 3px;
@@ -152,138 +222,108 @@
 	margin-left: 2px;
 	margin-right: 2px;
 }
-.help-tip a {
+#help-tip a {
 	color: #6e6ec3;
 }
-.help-tip h1,
-.help-tip h2,
-.help-tip h3,
-.help-tip h4,
-.help-tip h5,
-.help-tip h6 {
+#help-tip h1,
+#help-tip h2,
+#help-tip h3,
+#help-tip h4,
+#help-tip h5,
+#help-tip h6 {
 	color: #fd2f2f;
 }
-.help-tip b {
-	color: #117711;
+#help-tip b {
+	/*color: #117711;*/
+	color: #1ab71a;
 }
-.help-tip big {
+#help-tip big {
 	line-height: 1em;
 }
-
-/*originally from: http://stackoverflow.com/a/4861306/2844859*/
-.numberCircle {
-	--main-color: maroon;
-	background: var(--main-color);
-	color: var(--main-color);
-	border-color: var(--main-color);
-	visibility: hidden;
-}
-.numberCircle> div {
-	position: relative;
-	visibility: visible;
-	border-radius: 50%;
-	width: 36px;
-	height: 36px;
-	padding: 8px;
-	background: inherit;
-	border: 2px solid;
-	color: inherit;
-	text-align: center;
-	font: 32px Arial, sans-serif;
-	line-height: 36px;
-	border-color: inherit;
-	-webkit-filter: hue-rotate(15deg) saturate(94%);
-}
-.numberCircle[digits='3']> div> p {
-	font-size: 25px;
-	margin-left: -2px;
-}
-.numberCircle[digits='4']> div> p {
-	font-size: 20px;
-	margin-left: -4px;
-}
-.numberCircle[digits='5']> div> p {
-	font-size: 17px;
-	margin-left: -5px;
-}
-.numberCircle[digits='6']> div> p {
-	font-size: 15px;
-	margin-left: -6px;
-}
-.numberCircle[digits='7']> div> p {
-	font-size: 12px;
-	margin-left: -6px;
-}
-.numberCircle[digits='8']> div> p {
-	font-size: 11px;
-	margin-left: -6px;
-}
-.numberCircle> div> p {
-	margin: 0;
-	font-weight: 700;
-	-webkit-filter: hue-rotate(245deg) invert(100%) saturate(300%);
-}
-.numberCircle> div:after {
-	content: "";
-	background: inherit;
-	width: 50px;
-	height: 50px;
-	position: absolute;
-	border-radius: 50%;
-	-webkit-filter: hue-rotate(-42deg) saturate(250%);
-	top: 1px;
-	left: 1px;
-	z-index: -1;
-}
-.numberCircle> div:before {
-	content: "";
-	background: transparent;
-	width: 69px;
-	height: 69px;
-	position: absolute;
-	top: -13px;
-	left: -13px;
-	border: inherit;
-	border-width: 5px;
-	-webkit-filter: hue-rotate(200deg) invert(100%) blur(5px) opacity(100%);
-	-webkit-animation: 15s rock linear infinite;
-}
-@-webkit-keyframes rock {
-	0% {
-		-webkit-transform: rotate(0deg);
-	}
-	66% {
-		-webkit-transform: rotate(180deg);
-	}
-	100% {
-		-webkit-transform: rotate(450deg);
-	}
+#help-tip h2 .fa-fw {
+    padding-right: 5px;
 }
 
-/*http://stackoverflow.com/a/19065024/2844859*/
-.popup-box {
-	display: none;
-	position: absolute;
-	top: 25%;
-	left: 25%;
-	width: 50%;
-	height: 50%;
-	padding: 16px;
-	border: 16px solid orange;
-	background-color: white;
-	z-index: 1002;
-	overflow: auto;
+#mainMenuBtn {
+	cursor: pointer;
+	width: 207px;
+	padding: 3px;
+	left: 14px;
+	z-index: 1;
 }
-.popup-box:before {
+#mainMenuBtn small {
+	color: #3a1637;
+	letter-spacing: -0.2px;
+}
+
+#winner {
 	display: none;
+	background: green;
+	font-size: 10vw;
+	font-family: 'Ranchers', cursive;
+	padding: 2vw;
+	z-index: 1;
+	border-radius: 25px;
+}
+
+.fb-like {
 	position: absolute;
-	top: 0%;
-	left: 0%;
-	width: 100%;
-	height: 100%;
-	background-color: black;
-	z-index: 1001;
-	opacity: .80;
+	bottom: 2px;
+	left: 2px;
+	width: 96px;
+	overflow: hidden;
+}
+
+#social-bar {
+    --size: 43px;
+    position: fixed;
+    transform: translateY(-50%);
+    right: 0;
+    top: 50%;
+    width: var(--size);
+    z-index: 1;
+}
+#social-bar * {
+    width: var(--size);
+    height: var(--size);
+    line-height: var(--size);
+    font-size: calc(var(--size) * .75 );
+    text-align: center;
+    color: black;
+    display: block;
+    text-decoration: none;
+    transition: all .5s .05s;
+    position: relative;
+}
+#social-bar a:before {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: black;
+	opacity: 0;
+	transition: all .5s .05s;
+}
+#social-bar a:hover:before {
+	opacity: .45;
+}
+#social-bar i:hover {
+	/*font-size: calc(var(--size) * .9);*/
+    color: white;
+}
+#social-bar .instagram {
+	background: #8a3ab9;
+}
+#social-bar .twitter {
+	background: #00aced;
+}
+#social-bar .facebook {
+	background: #3b5998;
+}
+#social-bar .google {
+	background: #d34836;
 }
 
 /* scroll bar */

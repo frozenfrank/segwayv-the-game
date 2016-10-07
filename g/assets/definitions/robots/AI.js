@@ -25,7 +25,7 @@ var AI = {
                 angleToGetThere = ap.rotate - angleToUser;
 
             //*** can't use updateSome because it wont delete the extra stack states ****
-            // u.user = uobj;
+            u.user = uobj; //why did i comment this out?
             u.me = me;
             u.userHP =                  this.breakDown(r.health,    ug.HP / ug.maxHP * 100);
             u.userShields =             this.breakDown(r.health,    ug.shields / ug.maxShields * 100);
@@ -77,8 +77,8 @@ var AI = {
             });
         },
         wander: function(){
-            if(AI.user.distanceToUser.isLow)        AI.steering.flee();
-            else                                    AI.steering.wander();
+			//wander randomly unless close to user, then just run!
+			AI.steering[AI.user.distanceToUser.isMedium ? 'flee' : 'wander']();
         },
         flee: function(){
             //RUN!
@@ -91,10 +91,14 @@ var AI = {
         nimble: function(){
             //use the new dodging to avoid bullets
         },
+        userIsDead: function(){
+        	AI.states.wander();
+        },
     },
     steering: {
         //steering methods
         faceUser: function(){
+            // [desiredAngle relative to user], [callback when close to the angle [, '' but when medium [, '' but when far]]]
             //arguments
             var args = arrayifyArguments(arguments);
             if(typeof args[0] !== 'number')
@@ -122,6 +126,10 @@ var AI = {
             }
         },
         facePoint: function(){
+        	// xCoordinate, yCoordinate, [callback when close [, callback when medium]]
+        	// --or--
+        	// array ([xCoord, yCoord]), [calllback [, callback]]
+
             //arguments
             var args = arrayifyArguments(arguments);
             if(typeof args[0] === 'number'){
@@ -179,7 +187,7 @@ var AI = {
                     max: Infinity,
                 };
 
-            //arguments --> fit the specc
+            //arguments --> fit the spec
             if(typeof args[1] === 'function')           args.splice(1,0,false);
             else if(typeof args[0] === 'function')      args.splice(0,0,0,false);
 
@@ -275,20 +283,18 @@ var AI = {
             var me = AI.user.me,
                 g = me.gamePlay,
                 w = g.wander,
-                v = variables,
-                cw = v.canvas.width,
-                ch = v.canvas.height;
+                v = variables;
 
             function calculate(){
                 g.wander = {
-                    destination: [rand(0,cw),rand(0,ch)],
+                    destination: [rand(0,v.canvas.width),rand(0,v.canvas.height)],
                 };
-                w = g.wander;
+                w = g.wander; //TODO: get rid of this workaround
             }
 
             if(!w) calculate();
 
-            this.toPoint(w.destination,'low',calculate);
+            this.toPoint(w.destination,'medium',calculate);
         },
     },
     config: {
@@ -304,7 +310,7 @@ var AI = {
                 //re configure
                 //pixels
                 low: 200,
-                medium: 470,
+                medium: 430, //470
                 high: 880,
                 tolerance: 25,
             },
@@ -322,16 +328,33 @@ var AI = {
                 tolerance: 3,
             },
         },
-        maxRobots: 5,
+        maxRobots: 4,
         maxValue: 28,
     },
     count: {
         total: 0,
         totalValue: 0,
         lastRespawn: 0,
+        reset: function(){
+			var c = AI.count;
+			for(var tally in c)
+				if(typeof c[tally] === 'number')
+					c[tally] = 0;
+
+			console.log('robot tally reset');
+        }
     },
     win: function(){
         //the user won
-        $('#winner').show().delay(3000).fadeOut('slow');
+        functions.modalBox({
+			color: 'green',
+			modal: true,
+			message: "Good Job! You're a winner!",
+			icon: 'trophy',
+			onclick: function($scope){
+				$scope.changeMode('lobby');
+			},
+        });
+        // $('#winner').show().delay(3000).fadeOut('slow');
     },
 };

@@ -9,7 +9,7 @@ function Sentry(){
         },
         gamePlay: {
             weaponKeywords: ['Lazer'],
-            robotValue: 5,
+            robotValue: 6,
             damageMultiplier: .5,
             shieldBurnOut: 150,
             rotateSpeed: 6,

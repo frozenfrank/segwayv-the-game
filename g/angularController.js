@@ -1,4 +1,4 @@
-var app = angular.module('segwayv', ["firebase"]);
+var app = angular.module('segwayv', ["firebase", 'ngSanitize']);
 app.factory("Auth", ["$firebaseAuth",
 	function($firebaseAuth) {
 		var config = {
@@ -15,7 +15,6 @@ app.controller('angularController', function($scope, $timeout, Auth) {
 	'use strict';
 
 	$scope.currentMode = "mainMenu";
-	$scope.isPlaying = false;
 	$scope.changeMode = function(to) {
 		var mode = $scope.modes[$scope.currentMode];
 
@@ -28,9 +27,6 @@ app.controller('angularController', function($scope, $timeout, Auth) {
 
 		if (mode && mode.start)
 			mode.start();
-
-		$scope.isPlaying = mode ? (mode.isPlaying ? true : false) : false;
-		variables.leaveGame = !$scope.isPlaying;
 	};
 	$scope.mainMenu = function() {
 		//shortcut
@@ -39,7 +35,6 @@ app.controller('angularController', function($scope, $timeout, Auth) {
 	$scope.modes = {
 		//TODO: be able to seperate these into files
 		singleplayer: {
-			isPlaying: true,
 			start: function() {
 				var v = variables;
 
@@ -57,21 +52,18 @@ app.controller('angularController', function($scope, $timeout, Auth) {
 					save: true
 				});
 
+				//show the arena screen
+				$scope.changeMode('arena');
+
 				//resize the canvas to fit the screen
 				functions.autoResizeCanvasNoSave();
 				$(window).resize(functions.autoResizeCanvasNoSave);
 			},
-			stop: function() {
-				variables.singlePlayerMode = false;
-
-				//TODO: kill the window.resize event
-			}
 		},
 		multiplayer: {
-			requestDisabled: true,
 			joinStatus: 'Request to join the server',
-			isPlaying: true,
 			start: function() {
+				/*
 				var gameServer = 'chrome',
 					m = $scope.modes.multiplayer;
 				//TODO: ask the user
@@ -83,40 +75,38 @@ app.controller('angularController', function($scope, $timeout, Auth) {
 				m.joinStatus = "Joining server: " + gameServer;
 
 				//let the user re-request after a period of time
-				$timeout(function(){
+				$timeout(function() {
 					m.joinStatus = "The request has timed out. Request again...";
 					m.requestDisabled = false;
-				},20000);
-
+				}, 20000);
 				functions.listenToObjectsRef();
 				client.waitForWhitelist();
+*/
 				// client.listenToMessages();
 			},
+		},
+		arena: {
+			start: function() {
+				variables.leaveGame = false;
+			},
 			stop: function() {
-				//TODO: cleanup
+				//do the clean up of both modes
+				variables.leaveGame = true;
+				variables.singlePlayerMode = false;
+
+				//TODO: other multiplayer cleanup
 				client.leaveGameServer();
+
+				//TODO: kill the window.resize event from singleplayer[start]
 			},
 		},
 		createUser: {
 			start: function() {
-				/*
-				// Cache selectors outside callback for performance.
-				// **work
-				var $window = $(window),
-					$mainMenuBtn = $('#mainMenuBtn'),
-					topOffset = $mainMenuBtn.offset().top;
-
-				$window.scroll(function() {
-					if (variables.currentMode !== 'createUser')
-						return;
-					$mainMenuBtn.toggleClass('sticky', $window.scrollTop() > topOffset);
-				});
-				*/
+				$scope.$broadcast('generateStats');
 			},
 		},
 	};
 	$scope.authObject = {
-		loginStatus: 'Login with Google',
 		canvas: "canvas",
 		owner: {
 			serverPassword: 'big5',
@@ -156,7 +146,6 @@ app.controller('angularController', function($scope, $timeout, Auth) {
 				return false; //we're not signed in as an owner
 			},
 			isOwnerLoggedIn: function() {
-				//TODO: run this once on load and never again
 				var password = Cookies.get('ServerPassword');
 				if (password === this.serverPassword || password === 'KONAMI') {
 					this.isOwner = true;
@@ -166,12 +155,50 @@ app.controller('angularController', function($scope, $timeout, Auth) {
 				return false;
 			},
 		},
+		authData: null,
+		name: function() {
+			var d = $scope.authObject.authData;
+			if (!d)
+				return "No User";
+			if(d.isAnonymous)
+				return 'Anonymous User';
+			return d.displayName || d.providerData[0].displayName || "Missing Value";
+		},
 		login: function(v) {
 			//check to login with an app or without
-			if (v.app) {
-				$scope.authObject.loginStatus = 'Logging in...';
-				var provider = new firebase.auth.GoogleAuthProvider;
-				firebase.auth().signInWithPopup(provider);
+			var provider;
+			if (v && v.app) {
+				switch (v.app) {
+					case 'google':
+						provider = new firebase.auth.GoogleAuthProvider;
+						break;
+					case 'facebook':
+						provider = new firebase.auth.FacebookAuthProvider;
+						provider.addScope('email');
+						// provider.addScope('user_location');
+						break;
+					case 'twitter':
+						provider = new firebase.auth.TwitterAuthProvider;
+						//TODO: get twitter email
+						break;
+					case 'github':
+						provider = new firebase.auth.GithubAuthProvider;
+						provider.addScope('user:email');
+						break;
+				}
+				if($scope.authObject.authData)
+					firebase.auth().currentUser.linkWithPopup(provider);
+					//TODO: add some user alerts
+				else
+					firebase.auth().signInWithPopup(provider).catch(function(error){
+						console.warn(error);
+						firebase.auth().currentUser.linkWithPopup(provider);
+					});
+			}else if(v === 'anonymous')
+				firebase.auth().signInAnonymously();
+			else{
+				//box with sign in options
+				// scratch that! were movning into the userInfo box
 			}
 		},
 		logout: function() {
@@ -183,6 +210,9 @@ app.controller('angularController', function($scope, $timeout, Auth) {
 				$scope.authObject.owner.login('KONAMI');
 			});
 		},
+	};
+	$scope.readExternal = function(what){
+		return window[what];
 	};
 
 	$scope.auth = Auth;
@@ -196,18 +226,21 @@ app.controller('angularController', function($scope, $timeout, Auth) {
 
 			//check for a pre-existing sprite that has been created
 			database.child(user.uid).once("value").then(function(snapshot) {
-				if (!snapshot.exists())
-					$scope.changeMode('createUser');
-				else
-				//update the last login value
-					snapshot.ref.child("user/stats/lastLogin").set(firebase.database.ServerValue.TIMESTAMP);
+				$timeout(function(){
+					if (!snapshot.exists())
+						$scope.changeMode('createUser');
+					else{
+						//update the last login value
+						snapshot.ref.child("user/stats/lastLogin").set(firebase.database.ServerValue.TIMESTAMP);
+						$scope.changeMode('lobby');
+					}
+					console.log("Authenticated successfully with payload:", user);
+				});
 			});
 
-			console.log("Authenticated successfully with payload:", user);
-			$scope.authObject.loginStatus = "Logged in as " + user.displayName;
 		} else {
 			console.log("Signed out :(");
-			$scope.authObject.loginStatus = 'Login with Google';
+			$scope.mainMenu();
 		}
 	});
 
@@ -225,6 +258,69 @@ app.controller('angularController', function($scope, $timeout, Auth) {
 
 	//set up the konami cheat code
 	new Konami($scope.authObject.onKonamiCode);
+});
+app.controller('modalController', function($scope, $timeout) {
+	updateSome($scope, {
+		// red | green | blue | yellow
+		color: 'red',
+
+		// star | anchor | beaker | bug (or something else in the font-awesome library)
+		icon: 'code',
+
+		// true  --> must click on checkmark
+		// false --> can click on the overlay also
+		modal: false,
+
+		// message to display
+		message: 'Lorem ipsum dolor sit amet.<br>broken<b>HUMAN</b>',
+
+		//function to be called when it closes
+		onclick: function(){},
+		stage: {
+			current: 0,
+			//0 - hidden
+			//1 - shown
+			show: function() {
+				if ($scope.stage.current === 1)
+					return;
+
+				$scope.stage.current = 1;
+				functions.removeClass($scope.overlay, 'hide');
+				functions.addClass($scope.overlay, 'prep');
+				functions.addClass($scope.overlay, 'show');
+			},
+			hide: function() {
+				if ($scope.stage.current === 0)
+					return;
+
+				$scope.stage.current = 0;
+				functions.removeClass($scope.overlay, 'prep');
+				functions.removeClass($scope.overlay, 'show');
+				functions.addClass($scope.overlay, 'hide');
+
+				if($scope.onclick && typeof $scope.onclick === 'function')
+					//call a customized callback with the scope object
+					$timeout(function(){
+						$scope.onclick($scope);
+					});
+			},
+		},
+	});
+
+	$scope.$on('launchModalBox', function(event, data) {
+		updateSome($scope, {
+			//default this every time
+			onclick: function(){},
+		}, data);
+		$scope.stage.show();
+	});
+
+	$scope.overlay = document.getElementById('overlay');
+});
+app.controller('multiplayerController', function($scope, $timeout){
+	$scope.requestToJoin = function(server){
+		client.requestToJoin(server);
+	};
 });
 app.controller('spriteController', function($scope, $timeout, $http) {
 	$scope.interested = false;
@@ -264,24 +360,21 @@ app.controller('spriteController', function($scope, $timeout, $http) {
 		}
 
 		//make it easy to change
-		if(objectsRef)
-			objectsRef.child(authObject.authData.uid).remove();
-
-		if(variables.debugFlags.showStagesPerformed)
-			console.log("Generating:", selectedSprites[0], username);
+		if (objectsRef)
+			objectsRef.child($scope.authObject.authData.uid).remove();
 
 		//save and get the promise back to show a message
 		functions.generateSprite(selectedSprites[0], username, $scope.authObject.authData).then(function() {
-			//success message
-			functions.userMessage("Successfully named your <b>" + selectedSprites[0] +
-				"</b> as <b>" + username + "</b>.</br>Redirecting you back to the game", 'success');
-
-			//delayed redirecting back to the game to read the message
 			$timeout(function() {
-				$scope.changeMode('mainMenu');
 				$scope.interested = false;
 				$scope.selectedSprites = [];
-			}, 2000);
+				$scope.$parent.changeMode('lobby');
+
+				//success message
+				functions.userMessage("<b>" + $scope.authObject.name() + "</b> has chosen to fly the <b>" + selectedSprites[0] +
+					"</b> under the alias of <b>" + username + "</b>", 'success');
+				// functions.userMessage("Successfully named your <b>" + selectedSprites[0] + "</b> as <b>" + username + "</b>", 'success');
+			});
 		}).catch(function(error) {
 			functions.userMessage('<b>Failure!</b>: <br>Something went fatally wrong', 'error');
 			console.error(error);
@@ -330,51 +423,51 @@ app.controller('spriteController', function($scope, $timeout, $http) {
 				important: true,
 			},
 		],
-		hasRun: false,
-		run: function() {
-			var g = $scope.generation,
-				stats = g.stats,
-				sprites = g.sprites;
+		generated: false,
+	};
+	$scope.$on('generateStats', function() {
+		var g = $scope.generation,
+			stats = g.stats,
+			sprites = g.sprites;
 
-			if (!g.hasRun) {
-				g.hasRun = true;
-				//finish constructing the stats
-				for (var i = 0; i < stats.length; i++) {
-					stats[i].min = +Infinity;
-					stats[i].max = -Infinity;
-					// stats[i].sum = 0;
-					// stats[i].count = 0;
-					// stats[i].avg = function(){
-					//     return this.sum / this.count;
-					// };
+		//only run once
+		if (g.generated)
+			return;
+		g.generated = true;
+
+		//finish constructing the stats
+		for (var i = 0; i < stats.length; i++) {
+			stats[i].min = +Infinity;
+			stats[i].max = -Infinity;
+			// stats[i].sum = 0;
+			// stats[i].count = 0;
+			// stats[i].avg = function(){
+			//     return this.sum / this.count;
+			// };
+		}
+
+		//record the stats in all of the areas of interest
+		var v, sprite, ii, ss, savedV;
+		for (i = 0; i < sprites.length; i++) {
+			sprite = sprites[i] = functions.objectFactory(sprites[i]);
+			savedV = sprites[i].values = {};
+
+			for (ii = 0; ii < stats.length; ii++) {
+				ss = stats[ii]; //statSet
+				v = Object.byString(sprite, ss.pathInSprite); //value in this sprite
+
+				//save it for later --> i actually need this, idk y
+				savedV[ss.displayName] = v;
+
+				if (sprite.user.availableToPublic) {
+					ss.min = v < ss.min ? v : ss.min;
+					ss.max = v > ss.max ? v : ss.max;
+					// ss.sum += v;
+					// ss.count++;
 				}
-
-				//record the stats in all of the areas of interest
-				var v, sprite, ii, ss, savedV;
-				for (i = 0; i < sprites.length; i++) {
-					sprite = sprites[i] = functions.objectFactory(sprites[i]);
-					savedV = sprites[i].values = {};
-
-					for (ii = 0; ii < stats.length; ii++) {
-						ss = stats[ii], //statSet
-							v = Object.byString(sprite, ss.pathInSprite); //value in this sprite
-
-						//save it for later
-						savedV[ss.displayName] = v;
-
-						if (sprite.user.availableToPublic) {
-							ss.min = v < ss.min ? v : ss.min;
-							ss.max = v > ss.max ? v : ss.max;
-							// ss.sum += v;
-							// ss.count++;
-						}
-					}
-				}
-
-				g.stats = stats;
 			}
-		},
-	}
+		}
+	});
 
 	// randomUsername section
 	$scope.values = ['brokenHUMAN'];

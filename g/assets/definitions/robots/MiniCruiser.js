@@ -12,7 +12,7 @@ function MiniCruiser(){
         },
         gamePlay: {
             weaponKeywords: ['LittleSister'],
-            robotValue: 1,
+            robotValue: 3,
             speed: 13,
             rotateSpeed: 9,
             damageMultiplier: .20,

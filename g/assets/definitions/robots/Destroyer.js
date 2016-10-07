@@ -10,7 +10,7 @@ function Destroyer(){
         gamePlay: {
             rotateSpeed: 4,
             weaponKeywords: ['Lazer','LittleSister'],
-            robotValue: 7,
+            robotValue: 8,
             damageMultiplier: .8,
             shieldBurnOut: 150,
             attackRange: 700,

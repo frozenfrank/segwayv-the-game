@@ -93,15 +93,13 @@ function Mothership(){
             },
         },
         fireWeapon: function(){
-            //add in our damage multiplier
-            var bonuses = {
+            this.gamePlay.weapons[0].fire({
+            	//additional bonuses
                 damage: this.gamePlay.damageMultiplier,
                 speed: this.gamePlay.projectileSpeed,
                 immuneTo: ['robot'],
                 //TODO: also add in a bonus from our upgrades
-            };
-
-            this.gamePlay.weapons[0].fire(bonuses);
+            });
 
             //stop attacking --> important
             this.ai.removeState();

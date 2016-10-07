@@ -41,6 +41,7 @@ function userObject() {
 			damageMultiplier: 1,
 			projectileSpeed: 1,
 			weaponKeywords: ['Sniper', 'Sword', 'GrenadeLauncher', 'TestWeapon', 'Lazer'],
+			isDead: false,
 		},
 		physics: {
 			mass: 300,
@@ -114,6 +115,9 @@ function userObject() {
 		},
 		gameCycle: function() {
 			//wrapper to allow robots to use it also
+			if(this.gamePlay.isDead)
+				return; //stop doing everything while dead
+
 			this.applyGameLogic();
 
 			if (this.isOwner())
@@ -254,6 +258,9 @@ function userObject() {
 			return functions.isPressed(bt[code], returnTimestamp);
 		},
 		draw: function() {
+			if(this.gamePlay.isDead)
+				return; //stop drawing while dead
+
 			//render me
 			functions.renderObject(this.appearance);
 
@@ -291,7 +298,7 @@ function userObject() {
 			bars.push({
 				present: ctnr.HPcolor.present,
 				absent: ctnr.HPcolor.absent,
-				percent: g.HP.min(0) / g.maxHP,
+				percent: g.HP / g.maxHP,
 				text: Math.round(g.HP) + " / " + Math.round(g.maxHP),
 			}); //HP bar
 
@@ -304,7 +311,7 @@ function userObject() {
 			bars.push({
 				present: ctnr.shieldColor.present,
 				absent: ctnr.shieldColor.absent,
-				percent: g.shields.min(0) / g.maxShields,
+				percent: g.shields / g.maxShields,
 				text: shieldMsg,
 			}); //shields bar
 
@@ -346,7 +353,7 @@ function userObject() {
 				        absent:     the color to be where the missing stuff is
 				        present:    the color to be everywhere else
 				        percent:    percent of the full bar that should be covered up
-				        text:       optional: text to be displayed in the bar
+				        text:       text to be displayed in the bar
 				        backwards:  optional: start the bar from the right side. default: false
 				*/
 				bar = bars[i];
@@ -359,7 +366,7 @@ function userObject() {
 				);
 				ctx.fillStyle = bar.present || 'black';
 				if (bar.backwards) {
-					var width = barWidth * bar.percent;
+					var width = barWidth * bar.percent.minMax(0, 100);
 					ctx.fillRect(
 						pos[0] + reposition[0] - barWidth / 2 + (barWidth - width),
 						pos[1] + reposition[1] - ctnr.y_offset - barHeight * i,
@@ -370,7 +377,7 @@ function userObject() {
 					ctx.fillRect(
 						pos[0] + reposition[0] - barWidth / 2,
 						pos[1] + reposition[1] - ctnr.y_offset - barHeight * i, //ditto
-						barWidth * bar.percent, //we only cover up part of it
+						barWidth * bar.percent.minMax(0, 100), //we only cover up part of it
 						barHeight
 					);
 				}
@@ -530,9 +537,6 @@ function userObject() {
 			}
 		},
 		die: function() {
-			var g = this.gamePlay,
-				pos = this.appearance.position;
-
 			//de-clutter the screen
 			this.erase();
 
@@ -540,15 +544,27 @@ function userObject() {
 			if (!this.isOwner())
 				return;
 
-			//make the other changes after alerting so that the opponents do know where we are before we finish
-			functions.userMessage('You just died!', 'error');
+			//mark as dead
+			this.gamePlay.isDead = true;
 
-			//respawn
-			this.respawn();
+			//tell the user
+			functions.modalBox({
+				color: 'red',
+				modal: true,
+				icon: 'life-saver',
+				message: "You just died! Respawn...",
+				onclick: function(){
+					variables.interactingObjects[variables.activeUser].respawn();
+					//TODO: force a time period to pass
+				},
+			});
 		},
 		respawn: function() {
 			var g = this.gamePlay,
 				pos = this.appearance.position;
+
+			//unmark as dead
+			g.isDead = false;
 
 			//reset your shields
 			g.HP = g.maxHP;
@@ -556,6 +572,7 @@ function userObject() {
 			g.currentShieldBurnOut = 0;
 
 			//respawn somewhere else
+			//TODO: dont spawn near enemies, maybe means making ships smaller
 			this.appearance.rotate = rand(0, 360);
 			pos[0] = rand(0, variables.canvasSize[0]);
 			pos[1] = rand(0, variables.canvasSize[1]);

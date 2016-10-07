@@ -7,6 +7,7 @@
     if(!$root)      	$root = realpath('');
     //allow the these to be predefined
 
+	//where are these now?
 	// Initialize Firebase
 		//temporary segwayv -- or -- segwayv v1!0
 		// if($DEVserver)		echo 'var config={apiKey:"AIzaSyD_P5MwG5tcTtel2k7R0ROC19QclAvTwQE",authDomain:"temporary-segwayv.firebaseapp.com",databaseURL:"https://temporary-segwayv.firebaseio.com",storageBucket:"",};'."\n";
