@@ -8,7 +8,7 @@ function ShotgunBullet(){
 		},
 		appearance: {
 			shape: ['v2.1',{
-				src: '/g/assets/images/projectiles/blue-lazer.png',
+				src: 'assets/images/projectiles/blue-lazer.png',
 			}],
 		},
 		leaveArena: function(){

@@ -62,6 +62,7 @@
     text-align: left;
 }
 #usernameField {
+	/*http://cssdeck.com/labs/dark-theme-form*/
     position: relative;
     margin-top: 37px;
     margin-bottom: 8px;
@@ -127,7 +128,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: url('/g/assets/images/no-background-thin-black.png');
+    background: url('assets/images/no-background-thin-black.png');
     background-size: 200px;
     z-index: 1;
 }

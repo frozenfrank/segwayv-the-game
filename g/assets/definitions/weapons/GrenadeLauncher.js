@@ -7,7 +7,7 @@ function GrenadeLauncher(){
 		},
 		appearance: {
 			shape: ['v2.1',{
-				src:'/g/assets/images/projectiles/' +
+				src:'assets/images/projectiles/' +
 					'missle-gray2.png',
 			}],
 		}

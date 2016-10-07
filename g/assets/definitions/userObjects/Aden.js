@@ -3,7 +3,7 @@ function Aden(){
         name: 'Aden',
         appearance: {
             shape: ['v2.1',{
-                src:'/g/assets/images/sprites/' +
+                src:'assets/images/sprites/' +
                     '5concepts-blue.png',
             }],
             displayName: 'FTLS Gulf of Aden',

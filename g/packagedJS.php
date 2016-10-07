@@ -38,6 +38,7 @@
     codeComment("Common Files");
     readfilesindir("$root/assets","/js$/");
 
-    codecomment("case specific files");
-    readfilesindir("$root/views","/js$/");
+	// I removed that folder
+    // codecomment("case specific files");
+    // readfilesindir("$root/views","/js$/");
 ?>

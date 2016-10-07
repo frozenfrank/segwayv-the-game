@@ -3,7 +3,7 @@ function Scorpio(){
         name: 'Scorpio',
         appearance: {
             shape: ['v2.1',{
-                src:'/g/assets/images/sprites/' +
+                src:'assets/images/sprites/' +
                     'aliensh.png',
             }],
             displayName: 'JFF Scorpio',

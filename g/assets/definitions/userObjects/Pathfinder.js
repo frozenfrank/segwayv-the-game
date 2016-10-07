@@ -3,7 +3,7 @@ function Pathfinder(){
         name: 'Pathfinder',
         appearance: {
             shape: ['v2.1',{
-                src:'/g/assets/images/sprites/' +
+                src:'assets/images/sprites/' +
                     '5concepts-orange.png',
             }],
             displayName: 'HMS Pathfinder',

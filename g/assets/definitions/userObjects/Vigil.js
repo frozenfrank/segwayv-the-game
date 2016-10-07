@@ -3,7 +3,7 @@ function Vigil(){
         name: 'Vigil',
         appearance: {
             shape: ['v2.1',{
-                src:'/g/assets/images/sprites/' +
+                src:'assets/images/sprites/' +
                     '5concepts-red.png',
             }],
             displayName: 'EFS Vigil',

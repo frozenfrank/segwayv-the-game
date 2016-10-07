@@ -23,15 +23,9 @@
 
 	<!--firebase 3.2.0-->
 	<script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
-	<!--<script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>-->
-	<!--<script src="https://apis.google.com/js/platform.js" async defer></script>-->
 
 	<!-- AngularFire 2.0.1 -->
 	<script src="https://cdn.firebase.com/libs/angularfire/2.0.1/angularfire.min.js"></script>
-
-	<!--Firechat-->
-	<!--<link rel='stylesheet' href='https://cdn.firebase.com/libs/firechat/2.0.1/firechat.min.css'/>-->
-	<!--<script src='https://cdn.firebase.com/libs/firechat/2.0.1/firechat.min.js'></script>-->
 
 	<!--tracking scripts-->
 	<script>
@@ -40,12 +34,6 @@
 		(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return;}
 		js=d.createElement(s); js.id = id;js.src = "//connect.facebook.net/en_US/sdk.js";
 		fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'));
-
-		//segwayv (minimized) facebook
-		window.b=function(){FB.c({a:"393442104112984",f:!0,version:"v2.6"})};var a,c=
-		document.getElementsByTagName("script")[0];document.getElementById("facebook-jssdk")
-		||(a=document.createElement("script"),a.id="facebook-jssdk",
-		a.src="//connect.facebook.net/en_US/sdk.js",c.parentNode.insertBefore(a,c));
 
 		//google analytics
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -90,12 +78,12 @@
 						</span>
 					</div>
 				</div>
-				<div id='help-tip' ng-hide='authObject.owner.isOwner' modes='mainMenu arena multiplayer createUser'>
+				<div id='help-tip' ng-hide='authObject.owner.isOwner' modes='mainMenu lobby arena multiplayer createUser'>
 					<al modes='mainMenu'>
-						<p>Your goal is to sign into the computer and then pick a mode to play in. Your choice is non-committal, so dont hesitate.</p>
-						<p>Step 1: Sign in. Click <code>Sign in with Google</code> and an auth box will pop up asking you to "sign in with Google".</p>
-						<p>Step 2: It will probably redirect you to a page to pick the user that you want to be and to pick a username.</p>
-						<p>Step 3: Pick a mode to play in. For the sake of the tutorial, please pick singleplayer mode.</p>
+						<h2>Sign in</h2>
+						<p>Pick any authentication service to perform this operation. We currently offer <b>Google</b>, <b>Facebook</b>, <b>Twitter</b>, <b>Github</b> and <b>Anonymouse</b> as options.</p>
+						<h2>Why?</h2>
+						<p>This app is depentant on the <b>UID</b> that we receive when you sign in. If your worried about us spying on your information, we offer the ability to sign in as an anonymous user (without any information), but this is not a recommended choice.</p>
 					</al>
 					<al modes='arena'>
 						<h2><i class='fa fa-paper-plane fa-fw'></i>You, your goal &amp; your ship</h2>
@@ -126,9 +114,19 @@
 						</tbody></table>
 					</al>
 					<al modes='createUser'>
-						<p>This screen is designed to help you choose the space ship that you like the best and will give you the best fit to your personality. In a perfect world, they are all equal in the end. But the world is not perfect and I'm only a HS student so there are a few that need to be altered.</p>
-						<p>Click on a few sprites to "select them". They will turn purple. If you already know which one you want, you can select <b>exactly one</b> and then continue. If not, select a few and then click the button at the top. This will hide all of the sprites that you didn't select and give you more detail on the one that you did. At this point, <b>deselect</b> the sprites that you don't want (process of elimination) until you have <b>one</b> sprite. Now continue.</p>
+						<p>This screen is designed to help you choose the space ship that you like the best and will give you the best fit for your personality. In a perfect world, they are all equal in the end. But the world is not perfect and I'm only a HS student so there are a few that need to be altered.</p>
+						<p>Click on a few sprites to "select" them. They will turn purple. If you already know which one you want, you can select <b>exactly one</b> and then continue. If not, select a few and then click the button at the top. This will hide all of the sprites that you didn't select and give you more detail on the one that you did. At this point, <b>deselect</b> the sprites that you don't want (process of elimination) until you have <b>one</b> sprite. Now continue.</p>
 						<p>Now type your favorite username. A random on is provided as a placeholder, but you are not obligated to use it. Now just click continue!</p>
+					</al>
+					<al modes='lobby'>
+						<h2>FAQ</h2>
+						<ul>
+							<li><b>Why is Multiplayer Mode disabled?</b> Because I didn't finish the work that need to happen but I still wanted to push out the latest release with an enhanced UI and many bug fixes.</li>
+							<li><b>Why can I never beat the game?</b> Because the ships arn't balanced correctly.</li>
+							<ul>
+								<li><b>Possible solution:</b> send me your suggestions on how they could be more fair or add more variety. I'm a solo developer, but I'd love some community support!</li>
+							</ul>
+						</ul>
 					</al>
 					<al modes='multiplayer'>
 						<h2>Explaination</h2>
@@ -202,7 +200,7 @@
 		</credits>
 		<div modes='lobby'>
 			<div class='menuButtons'>
-				<button ng-click='changeMode("multiplayer")' class='half primary gleaming'>
+				<button ng-click='changeMode("multiplayer")' disabled class='half primary gleaming'>
 					<span class='intro'>Play</span>Multiplayer
 				</button>
 				<button ng-click='changeMode("singleplayer")' class='half primary gleaming'>
@@ -235,6 +233,27 @@
 						</tr>
 					</tbody>
 				</table>
+			</div>
+		</div>
+		<div modes='host'>
+			<button id='start' type="button" onclick="initiateWorld()">
+				Start the Server!
+			</button>
+			<button type="button" onclick="gameServer.update({'interactingObjects':null,'messages':null,'whiteList':null})">
+				Reset the Firebase data
+			</button>
+			<button type='button' onclick="gameServer.update({'whiteList/server':true})">
+			    Whitelist the server
+			</button>
+			<button type="button" onclick="serverHelper.resizeCanvas({auto:true,target:'canvasSize'})">
+				Update canvas size to match this screen
+			</button>
+			<div id="canvasSize">
+				X: <input type='number' id="width"/>
+				Y: <input type="number" id="height"/>
+				<button type='button' onclick="serverHelper.resizeCanvas({target:'canvasSize'});">
+					Submit size declarations
+				</button>
 			</div>
 		</div>
 		<div modes='createUser' ng-controller='spriteController'>
@@ -286,35 +305,6 @@
 				</div>
 			</form>
 		</div>
-		<p>
-		<!--
-		<div id="control_buttons">
-			<span modes='host'>
-				<button id='start' type="button" onclick="initiateWorld()">
-					Start the Server!
-				</button>
-				<button type="button" onclick="gameServer.update({'interactingObjects':null,'messages':null,'whiteList':null})">
-					Reset the Firebase data
-				</button>
-				<!--
-				<button type='button' onclick="gameServer.update({'whiteList/server':true})">
-				    Whitelist the server
-				</button>
-				--><!--
-				<button type="button" onclick="serverHelper.resizeCanvas({auto:true,target:'canvasSize'})">
-					Update canvas size to match this screen
-				</button>
-				<div id="canvasSize">
-					X: <input type='number' id="width"/>
-					Y: <input type="number" id="height"/>
-					<button type='button' onclick="serverHelper.resizeCanvas({target:'canvasSize'});">
-						Submit size declarations
-					</button>
-				</div>
-			</span>
-		</div>
-		-->
-		</p>
 		<div id="overlay" ng-controller='modalController' ng-click='modal ? "" : stage.hide()' class='hide'>
 			<div class="dialog {{ color }}{{ modal ? ' modal' : '' }}">
 				<div class="label-dialog"><i class="fa-{{ icon }} icon-{{ icon }}"></i></div>
@@ -336,16 +326,16 @@
 		}
 		[modes~='{{ currentMode }}']{
 			/*maybe the this part isnt required*/
-			visibility: visible;
+			/*visibility: visible;*/
 		}
 		/*todo: fix this!*/
 		#app[noscroll~='{{ currentMode }}']{
-			overflow: hidden;
+			overflow-y: hidden;
 		}
 	</style>
 	<script src="angularController.js"></script>
 
-	<link type='text/css' rel='stylesheet' href='/g/packagedCSS.php'/>
-	<script type="text/javascript" src="/g/packagedJS.php"></script>
+	<link type='text/css' rel='stylesheet' href='packagedCSS.php'/>
+	<script type="text/javascript" src="packagedJS.php"></script>
 </body>
 </html>

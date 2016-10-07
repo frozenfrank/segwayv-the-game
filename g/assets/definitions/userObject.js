@@ -68,7 +68,7 @@ function userObject() {
 			username: 'J. Appleseed',
 			xp: 0,
 			xpNeeded: 4000,
-			publicProfileImg: '/g/assets/images/defaultProfilePic.png',
+			publicProfileImg: 'assets/images/defaultProfilePic.png',
 			availableToPublic: true,
 			summary: function() {
 				return "This is a very fast ship with moderate sheilds, but damage to destroy all enemies forever!";

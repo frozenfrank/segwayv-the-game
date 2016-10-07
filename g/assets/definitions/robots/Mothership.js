@@ -3,7 +3,7 @@ function Mothership(){
         name: 'Mothership',
         appearance: {
             shape: ['v2.1',{
-                src: '/g/assets/images/robots/' +
+                src: 'assets/images/robots/' +
                     'orange/tribase3.png',
             }],
             rotateAdjust: -15, //not working

@@ -8,7 +8,7 @@ function Bullet(){
 		},
 		appearance: {
 			shape: ['v2.1',{
-				src: '/g/assets/images/projectiles/8bit-green.png',
+				src: 'assets/images/projectiles/8bit-green.png',
 			}],
 		},
 		physics: {

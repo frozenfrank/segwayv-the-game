@@ -3,7 +3,7 @@ function Trident(){
         name: 'Trident',
         appearance: {
             shape: ['v2.1',{
-                src:'/g/assets/images/sprites/' +
+                src:'assets/images/sprites/' +
                     '5c2-teal.png',
             }],
             displayName: 'HSV Trident',

@@ -3,7 +3,7 @@ function Sentry(){
         name: 'Sentry',
         appearance: {
             shape: ['v2.1',{
-                src: '/g/assets/images/robots/' +
+                src: 'assets/images/robots/' +
                     'orange/tribase2.png',
             }],
         },
@@ -27,7 +27,7 @@ function Sentry(){
                     var u = AI.user;
 
                     //act
-                    u.me.appearance.shape[1].src = '/g/assets/images/robots/orange/tribase2.png';
+                    u.me.appearance.shape[1].src = 'assets/images/robots/orange/tribase2.png';
 
                     //transition
                     if(u.myShields.isLow)
@@ -38,7 +38,7 @@ function Sentry(){
                     var u = AI.user;
 
                     //act
-                    u.me.appearance.shape[1].src = '/g/assets/images/robots/orange/tribase1.png';
+                    u.me.appearance.shape[1].src = 'assets/images/robots/orange/tribase1.png';
 
                     //transition
                     if(u.myShields.isMassive)
@@ -49,7 +49,7 @@ function Sentry(){
                     var u = AI.user;
 
                     //act
-                    u.me.appearance.shape[1].src = '/g/assets/images/robots/orange/tribase2.png';
+                    u.me.appearance.shape[1].src = 'assets/images/robots/orange/tribase2.png';
 
                     //transition
                     if(u.myShields.isHigh){

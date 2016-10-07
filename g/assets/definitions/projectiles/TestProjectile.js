@@ -9,7 +9,7 @@ function TestProjectile(){
 		},
 		appearance: {
 			shape: ['v2.1',{
-				src: '/g/assets/images/projectiles/missle-darkgray2.png',
+				src: 'assets/images/projectiles/missle-darkgray2.png',
 			}],
 			sizeScale: {
 				2: .85 * variables.sizeScale,

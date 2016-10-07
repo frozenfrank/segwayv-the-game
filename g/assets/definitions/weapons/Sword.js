@@ -9,7 +9,7 @@ function Sword(){
 		},
 		appearance: {
 			shape: ['v2.1',{
-				src: '/g/assets/images/weapons/Arthas_sword.png',
+				src: 'assets/images/weapons/Arthas_sword.png',
 			}],
 		},
 	});

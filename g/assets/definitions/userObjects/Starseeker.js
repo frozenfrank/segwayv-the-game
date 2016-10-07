@@ -3,7 +3,7 @@ function Starseeker(){
         name: 'Starseeker',
         appearance: {
             shape: ['v2.1',{
-                src:'/g/assets/images/sprites/' +
+                src:'assets/images/sprites/' +
                     '5c2-blue.png',
             }],
             displayName: 'UES Starseeker',

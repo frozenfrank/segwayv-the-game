@@ -3,7 +3,7 @@ function Destroyer(){
         name: 'Destroyer',
         appearance: {
             shape: ['v2.1',{
-                src: '/g/assets/images/robots/' +
+                src: 'assets/images/robots/' +
                     'orange/destroyer.png',
             }],
         },

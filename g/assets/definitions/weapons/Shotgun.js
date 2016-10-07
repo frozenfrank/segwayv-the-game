@@ -10,7 +10,7 @@ function Shotgun(){
 		},
 		appearance: {
 			shape: ['v2.1',{
-				src:'/g/assets/images/weapons/shotgun.png',
+				src:'assets/images/weapons/shotgun.png',
 			}],
 		},
 	});

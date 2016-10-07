@@ -10,7 +10,7 @@ function displayObject(){
         },
         appearance: {
             shape: ['v2.1',{
-                src: '/g/assets/images/icons/missing.gif',
+                src: 'assets/images/icons/missing.gif',
             }],
             rotate: 0,
             sizeScale: {

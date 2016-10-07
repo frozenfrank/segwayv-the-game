@@ -9,7 +9,7 @@ function Sniper(){
 		},
 		appearance: {
 			shape:['v2.1',{
-				src: '/g/assets/images/weapons/pulse_rifle.png',
+				src: 'assets/images/weapons/pulse_rifle.png',
 			}],
 		}
 	});

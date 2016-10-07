@@ -8,7 +8,7 @@ function LazerBeam(){
 		},
 		appearance: {
 			shape: ['v2.1',{
-				src:'/g/assets/images/projectiles/solid-red-lazer.jpg',
+				src:'assets/images/projectiles/solid-red-lazer.jpg',
 			}],
 			sizeScale: {
 				2: .9 * variables.sizeScale,
@@ -26,7 +26,7 @@ function LazerBeam(){
 				return true;
 
 			g.HP = 22;
-			a.shape[1].src = '/g/assets/images/projectiles/blue-lazer.png';
+			a.shape[1].src = 'assets/images/projectiles/blue-lazer.png';
 			a.sizeScale[2] /= 4;
 			g.speed *= 3;
 			g.damageMultiplier *= 3;

@@ -3,7 +3,7 @@ function Basilisk(){
         name: 'Basilisk',
         appearance: {
             shape: ['v2.1',{
-                src:'/g/assets/images/sprites/' +
+                src:'assets/images/sprites/' +
                     '5c2-orange.png',
             }],
             displayName: 'CSS Basilisk',

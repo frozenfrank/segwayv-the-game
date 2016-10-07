@@ -3,7 +3,7 @@ function Allegiance(){
         name: 'Allegiance',
         appearance: {
             shape: ['v2.1',{
-                src:'/g/assets/images/sprites/' +
+                src:'assets/images/sprites/' +
                     '5concepts-purple.png',
             }],
             displayName: 'EFS Allegiance',

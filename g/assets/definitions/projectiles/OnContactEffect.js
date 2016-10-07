@@ -7,7 +7,7 @@ function OnContactEffect(){
 		},
 		appearance: {
 			shape:['v2.1',{
-				src:'/g/assets/images/projectiles/'+
+				src:'assets/images/projectiles/'+
 					'on-contact-effect.png',
 			}],
 			sizeScale: {

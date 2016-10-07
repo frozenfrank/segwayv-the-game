@@ -41,7 +41,7 @@ function robot() {
 			level: 1, //use this to upgrade robot
 			availableToPublic: false,
 			username: 'Temporary Battle Prototype',
-			publicProfileImg: '/g/assets/images/robots/profilePic.jpg',
+			publicProfileImg: 'assets/images/robots/profilePic.jpg',
 		},
 		ai: {
 			stateStack: ['attack'],

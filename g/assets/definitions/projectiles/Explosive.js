@@ -12,7 +12,7 @@ function Explosive(){
                 2: 0.7 * variables.sizeScale,
             },
             shape: ['v2.1',{
-            	src: "/g/assets/images/projectiles/orbs/circular-lazer-shot.png",
+            	src: "assets/images/projectiles/orbs/circular-lazer-shot.png",
             }],
 		},
 		physics: {

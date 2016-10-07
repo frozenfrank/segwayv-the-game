@@ -8,7 +8,7 @@ function SisterShell(){
 		},
 		appearance: {
 			shape: ['v2.1',{
-				src: '/g/assets/images/projectiles/orbs/Dream_Smoke_Ball_Sprite.png',
+				src: 'assets/images/projectiles/orbs/Dream_Smoke_Ball_Sprite.png',
 			}],
 		},
 	});

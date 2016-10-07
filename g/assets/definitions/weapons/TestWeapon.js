@@ -8,7 +8,7 @@ function TestWeapon(){
 		},
 		appearance: {
 			shape: ['v2.1', {
-				src: '/g/assets/images/weapons/purple_dominator.png',
+				src: 'assets/images/weapons/purple_dominator.png',
 			}],
 		},
 	});

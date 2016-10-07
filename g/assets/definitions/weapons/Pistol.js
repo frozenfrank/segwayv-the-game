@@ -7,7 +7,7 @@ function Pistol(){
 		},
 		appearance: {
 			shape: ['v2.1',{
-				src:'/g/assets/images/projectiles/missle-gray1.png',
+				src:'assets/images/projectiles/missle-gray1.png',
 			}],
 		}
 	});

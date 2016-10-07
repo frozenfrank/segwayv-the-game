@@ -8,7 +8,7 @@ function Lazer(){
 		},
 		appearance: {
 			shape: ['v2.1',{
-				src: '/g/assets/images/weapons/kraad.png',
+				src: 'assets/images/weapons/kraad.png',
 			}],
 		},
 	});

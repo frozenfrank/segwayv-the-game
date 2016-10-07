@@ -7,7 +7,7 @@ function LittleSister(){
 		},
 		appearance: {
 			shape:['v2.1',{
-				src: '/g/assets/images/weapons/Type-31_Rifle.png',
+				src: 'assets/images/weapons/Type-31_Rifle.png',
 			}],
 		}
 	});
