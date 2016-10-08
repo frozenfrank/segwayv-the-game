@@ -168,6 +168,11 @@
 						About Me
 					</button>
 				</a>
+				<a href='http://eepurl.com/cjaEo5' target='_blank'>
+					<button>
+						Join my Mailing List&mdash; Please!
+					</button>
+				</a>
 				<button ng-click='changeMode("credits")'>
 					Credits
 				</button>

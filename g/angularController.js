@@ -1,12 +1,21 @@
 var app = angular.module('segwayv', ["firebase", 'ngSanitize']);
 app.factory("Auth", ["$firebaseAuth",
 	function($firebaseAuth) {
-		var config = {
-			apiKey: "AIzaSyD_P5MwG5tcTtel2k7R0ROC19QclAvTwQE",
-			authDomain: "temporary-segwayv.firebaseapp.com",
-			databaseURL: "https://temporary-segwayv.firebaseio.com",
-			storageBucket: "temporary-segwayv.appspot.com",
-		};
+		var config;
+		if(true) //devserver! remember to change when releasing
+			config = {
+				apiKey: "AIzaSyD_P5MwG5tcTtel2k7R0ROC19QclAvTwQE",
+				authDomain: "temporary-segwayv.firebaseapp.com",
+				databaseURL: "https://temporary-segwayv.firebaseio.com",
+				storageBucket: "",
+			};
+		else
+			config = {
+				apiKey: "AIzaSyDgeXBDGiUXgwFHyvZdE1xBK-PljmSi6xY",
+				authDomain: "segwayv-the-game-v10.firebaseapp.com",
+				databaseURL: "https://segwayv-the-game-v10.firebaseio.com",
+				storageBucket:"",
+			};
 		firebase.initializeApp(config);
 		return $firebaseAuth();
 	}
@@ -191,8 +200,17 @@ app.controller('angularController', function($scope, $timeout, Auth) {
 					//TODO: add some user alerts
 				else
 					firebase.auth().signInWithPopup(provider).catch(function(error){
-						console.warn(error);
-						firebase.auth().currentUser.linkWithPopup(provider);
+						if(error.code === "auth/account-exists-with-different-credential")
+							functions.modalBox({
+								color: 'yellow',
+								icon: 'exclamation-triangle',
+								modal: false,
+								message: 'It look\'s like you have already signed in to the application use a different service that is associated with <b>the same email address</b>.<br/> Try using a differnt provider...',
+							});
+						else {
+							console.warn(error);
+							firebase.auth().currentUser.linkWithPopup(provider);
+						}
 					});
 			}else if(v === 'anonymous')
 				firebase.auth().signInAnonymously();

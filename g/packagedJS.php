@@ -6,15 +6,6 @@
     $otherSourcesToLoad = array();
     if(!$root)      	$root = realpath('');
     //allow the these to be predefined
-
-	//where are these now?
-	// Initialize Firebase
-		//temporary segwayv -- or -- segwayv v1!0
-		// if($DEVserver)		echo 'var config={apiKey:"AIzaSyD_P5MwG5tcTtel2k7R0ROC19QclAvTwQE",authDomain:"temporary-segwayv.firebaseapp.com",databaseURL:"https://temporary-segwayv.firebaseio.com",storageBucket:"",};'."\n";
-		// else				echo 'var config={apiKey:"AIzaSyDgeXBDGiUXgwFHyvZdE1xBK-PljmSi6xY",authDomain:"segwayv-the-game-v10.firebaseapp.com",databaseURL:"https://segwayv-the-game-v10.firebaseio.com",storageBucket:"",};'."\n";
-
-
-	// firebase.initializeApp(config);var mainFirebase = firebase.database().ref();
 ?>
 	var fromPHP = {};fromPHP.userObjects = [<?php
 		foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator("$root/assets/definitions/userObjects")) as $filename){
