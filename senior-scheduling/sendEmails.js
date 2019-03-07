@@ -1,4 +1,4 @@
-var API_KEY, DOMAIN, SANDBOX = false, TESTMODE = true;
+var API_KEY, DOMAIN, SANDBOX = true, TESTMODE = true;
 if(SANDBOX){
 	//sandbox domain
 	API_KEY = "8e67ea148709bf4af104229a6ad0aae9-c9270c97-a18ce204";

@@ -299,9 +299,9 @@ app.controller('angularController', ($scope, $window, firebaseDb, studentIds) =>
 
     //special functions
     $scope.hardResetDatabase = () => {
-      var days = ["Monday, November 5th", "Wednesday, November 7th", "Thursday, November 8th"];
-      var times = "4:00,4:20,4:40,5:00,5:20,5:40,6:00,6:20,6:40".split(',').map(t => t + " pm");
-      var maximumSlots = 5;
+      var days = ["Wednesday, March 13th", "Thursday, March 14th"];
+      var times = "4:00,4:20,4:40,5:00,5:20,5:40,6:00,6:20".split(',').map(t => t + " pm");
+      var maximumSlots = 7;
 
       var data = {
         days: {
