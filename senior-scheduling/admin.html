@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<!-- Scheduling App: James Finlinson 2018 -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Admin Senior Presentation</title>
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-75806746-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+	<link rel="stylesheet" href="styles.css"/>
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+</head>
+<body ng-app='seniorScheduling' ng-controller='angularController' id="app" class="admin">
+	<div ng-class="{loaded: strings.projectTitle}" id="loadingBib"></div>
+	<div id="content">
+		<form name="newUserForm" ng-submit="addNewUser()">
+			<label>
+				Student ID:
+				<input ng-model="newUser.id" required/>
+			</label>
+			<label>
+				First Name:
+				<input ng-model="newUserData.firstName" required/>
+			</label>
+			<label>
+				Last Name:
+				<input ng-model="newUserData.lastName" required/>
+			</label>
+			<label>
+				Advisor:
+				<input ng-model="newUserData.advisor"/>
+			</label>
+			<label>
+				Advisor Room Number:
+				<input ng-model="newUserData.advisorRoomNumber"/>
+			</label>
+			<label>
+				Allowed to Schedule:
+				<input type="checkbox" ng-model="newUserData.valid"/>
+			</label>
+			<button type="submit">Add Student</button>
+		</form>
+
+		<div id="timeSelector">
+			<h3 class="hint">{{ ::strings.hint3 }}</h3>
+			<div>
+				<div ng-repeat="(dayKey, day) in days" class="day">
+					<h3>{{ ::day.displayTitle }}</h3>
+					<div ng-repeat="(timeKey, time) in day.times" class="timeContainer" ng-class="getTimeStatus(time)">
+						<p class="time">{{ ::time.displayTime }}<span>{{ getSlotStatus(time) }}</span></p>
+						<p ng-repeat="(slotKey, slot) in time.slots" class="student">{{ getStudentName(slot.studentId) }}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<h1>ADMIN: {{ ::strings.projectTitle }}</h1>
+
+		<div id="hasntScheduled">
+			<h2>Unscheduled, validated students:</h2>
+			<div>
+				<p ng-repeat="(id, student) in validUsers()" ng-show="userHasNotRequested(id) && student.valid">{{ student.firstName +" "+ student.lastName }}</p>
+			</div>
+		</div>
+
+		<div id="adminFunctions">
+			<button ng-if="true" ng-click="assignRoomNumbers()">Assign Room Numbers</button>
+			<button ng-if="true" ng-click="generateEmailList()">Generate Email List</button>
+			<form name="resetDatabaseForm" ng-submit="hardResetDatabase()">
+
+				<button type="submit" id="resetDatabase">{{ ::strings.hardResetButton }}</button>
+			</form>
+		</div>
+	</div>
+
+	<!--<input type="number" ng-model="pageNum" value="1"/>-->
+	<div id="printable" ng-if="false">
+		<!--ng-show="(6 * pageNum) < $index &amp;&amp; $index < (6 * (pageNum + 1))"-->
+		<div ng-repeat="(studentId, user) in validUsers()" class="presentation"
+		     ng-if="hasUserRequested(studentId)"
+			 style="order: {{ getPresentationRoom(studentId) }}" room="{{ getPresentationRoom(studentId) }}">
+			<table>
+				<tbody>
+					<tr>
+						<td>Presentation Date &amp; Time</td>
+						<td>{{ getPresentationDate(studentId) }}</td>
+					</tr>
+					<tr>
+						<td>Presentation Room</td>
+						<td>{{ getPresentationRoom(studentId) }}</td>
+					</tr>
+					<tr>
+						<td>Student</td>
+						<td>{{ user.firstName + " " + user.lastName }}</td>
+					</tr>
+					<tr>
+						<td>Project Title</td>
+						<td>{{ getProjectTitle(studentId) }}</td>
+					</tr>
+					<tr>
+						<td>Adviser</td>
+						<td>{{ user.advisor + " (" + user.advisorRoomNumber + ")" }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+
+	<!--angularJS 1.7.5 -->
+	<!--angular: ngRoute-->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular-route.js"></script>
+
+	<!--firebase 5.5.5-->
+	<script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-database.js"></script>
+
+	<!-- AngularFire 2.3.0 -->
+	<script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
+
+	<!-- AngularController -->
+	<script>window.admin = true;</script>
+	<script src="angularController.js"></script>
+</body>
+</html>

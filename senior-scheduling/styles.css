@@ -1,0 +1,381 @@
+body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: "Source Sans Pro", sans-serif;
+    /*     background: #673AB7; */
+    overflow: visible;
+}
+select {
+    font-family: inherit;
+    font-size: .8em;
+}
+#content {
+    max-width: 750px;
+    margin: 50px auto;
+    text-align: center;
+    padding: 30px;
+    background: #00BCD4;
+    border-radius: 70px;
+}
+#content h1 {
+    margin-top: 0;
+    margin-bottom: 1.5em;
+}
+
+.hint {
+    width: 100%;
+}
+#loadingBib {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background: #009688;
+    z-index: 100;
+    transition: top .55s cubic-bezier(0.47, 0, 0.75, 0.72);
+}
+#loadingBib.loaded {
+    top: 100%;
+}
+
+button {
+    font-family: inherit;
+    border: none;
+    background: white;
+    border-radius: 5px;
+}
+form input {
+    padding: 4px;
+    font-family: inherit;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid;
+    font-size: .8em;
+}
+input[maxlength="1"] {
+    width: 20px;
+    text-align: center;
+}
+form button[type="submit"] {
+    display: block;
+    margin-top: 100px;
+    max-width: 150px;
+    margin: auto;
+    font-size: 1em;
+    padding: 8px;
+    border-radius: 6px;
+    background: #FF9800;
+    cursor: pointer;
+}
+form button[type="submit"] span {
+    font-size: 1.2em;
+}
+
+#timeSelector {
+    margin-top: 70px;
+    padding: 10px;
+    background: white;
+    border-radius: 32px;
+}
+#timeSelector h3.hint {
+    font-size: 2em;
+    margin: .1em;
+    display: none;
+}
+
+#timeSelector  > div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+    background: #2196F3;
+    background: white;
+    border-radius: 32px;
+    padding: 13px;
+}
+ng-form {
+    display: inherit;
+    flex-direction: inherit;
+    align-items: center;
+    justify-content: center;
+}
+ng-form[name="studentId"] {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+ng-form[name="extraInfo"] {
+    background: #CDDC39;
+    border-radius: 24px;
+    padding: 20px;
+    margin-top: 40px;
+}
+ng-form[name="extraInfo"] .ng-invalid.ng-touched {
+    color: #F44336;
+}
+ng-form[name="studentId"] label:first-of-type {
+    width: 100%;
+
+}
+p.error {
+    color: #FFC107;
+    background: #FF5722;
+    border-radius: 5px;
+    margin: 0;
+    margin-top: 5px;
+    font-size: .8em;
+}
+
+div.error {
+    background: #FF5722;
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 400px;
+    margin: 14px auto;
+}
+div.error.alt {
+    background: #FF9800;
+}
+
+.timeContainer p {
+    margin: 0;
+    text-align: left;
+}
+
+.timeContainer button {
+    position: absolute;
+    right: 7px;
+    top: 7px;
+    bottom: 7px;
+    border-radius: 7px;
+    transition: opacity .35s, background .35s;
+}
+.timeContainer button:not(:disabled):hover {
+    background: #FFEB3B;
+}
+.timeContainer .time {
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+.timeContainer {
+    position: relative;
+    width: 174px;
+    margin: 8px auto;
+    border: 2px solid;
+    padding: 2px 7px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #4CAF50;
+    transition: background .3s, color .3s;
+}
+.timeContainer.lowSlots {
+    background: #FFC107;
+}
+.timeContainer.noSlots {
+    background: #9E9E9E;
+    color: #585858;
+}
+.timeContainer.noSlots button {
+    opacity: 0;
+}
+
+#app.admin .timeContainer {
+    background: #B39DDB;
+    color: black;
+}
+#app.admin .timeContainer.lowSlots {
+    background: #80CBC4;
+}
+#app.admin .timeContainer.noSlots {
+    background: #DCE775;
+}
+#app.admin .timeContainer .time span {
+    font-size: .65em;
+    padding-left: .2em;
+}
+
+form label {
+    margin: 6px;
+    font-size: 24px;
+}
+
+#selectionSuccess {
+    border-radius: 32px;
+    margin-top: 50px;
+    padding: 20px;
+    background: #FFEB3B;
+}
+.selectionInfo {
+    background: white;
+    border-radius: 24px;
+    background: #FF9800;
+    max-width: 400px;
+    margin: auto;
+    padding: 29px 50px;
+}
+.selectionInfo h2 {
+    padding: 5px 6px;
+}
+.selectionInfo h2,
+.selectionInfo p {
+    display: inline-block;
+    margin: 0;
+}
+.selectionInfo button {
+    background: #9E9E9E;
+    font-size: 1.2em;
+    margin: 12px auto;
+    border: 2px solid;
+    border-radius: 6px;
+    transition: background .3s ease-out;
+    display: block;
+}
+.selectionInfo button:hover {
+    background: red;
+}
+.selectionInfo > *:last-child {
+    margin-bottom: 0;
+}
+
+#resetDatabase {
+    background: #EF9A9A;
+    color: black;
+    font-size: 1em;
+    transition: all .15s linear;
+    margin: 10px;
+}
+#resetDatabase:hover {
+    background: #E53935;
+    color: white;
+}
+
+#hasntScheduled {
+    background: #FFC107;
+    border-radius: 32px;
+    padding: 15px;
+    margin-top: 30px;
+}
+#hasntScheduled h2 {
+    margin-top: 0;
+}
+#hasntScheduled div {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 5px 0px;
+}
+#hasntScheduled p {
+    margin: 0;
+    padding: 0;
+}
+
+#volunteers {
+    background: #7986CB;
+    padding: 10px;
+    margin: 20px auto;
+    max-width: 550px;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.volunteer {
+    order: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.volunteer.roomLeader {
+    order: 1;
+    background: #EF5350;
+    max-width: 150px;
+    border-radius: 5px;
+    height: 100%;
+    padding: 3px 50px;
+    margin-bottom: 10px;
+    align-self: center;
+    /* border-bottom: 3px solid #FF5722; */
+}
+.volunteer.roomLeader::before {
+    content: "Room Leader";
+    width: 100%;
+}
+.roomLeader .name {
+    margin: auto;
+}
+.volunteer:not(.roomLeader) .name {
+    width: calc(50% - 5px);
+    text-align: right;
+    padding-right: 5px;
+    margin: 0;
+}
+.volunteer:not(.roomLeader) .email {
+    margin: 0;
+    padding-left: 5px;
+    width: calc(50% - 5px);
+    text-align: left;
+}
+
+.assignment {
+    background: #D4E157;
+    padding: 10px;
+    margin: 20px auto;
+    border-radius: 24px;
+    max-width: 300px;
+    box-shadow: 1px 2px 4px 0px #00000085;
+}
+.assignment h2 {
+    margin: 0;
+}
+.assignment .student {
+    margin: .4em 0 0;
+}
+.assignment .projectTitle {
+    font-style: italic;
+}
+
+@media (max-width: 800px) {
+    #content {
+        border-radius: 0;
+        margin: 0;
+        min-height: calc(100vh - 60px);
+    }
+}
+
+#printable {
+    display: flex;
+    flex-direction: column;
+    display: block;
+}
+
+
+.presentation {
+    background: lightgray;
+    border: 1px solid;
+    margin: 20px 5px;
+    border-radius: 10px;
+    padding: 2px;
+    page-break-inside: avoid;
+    page-break-after: auto;
+}
+.presentation:nth-child(6n) {
+    /*color: red;*/
+    /*page-break-after: always;*/
+}
+
+.presentation td {
+    padding: 1px 5px;
+}
+
+.presentation td:nth-child(2) {
+    font-style: italic;
+}
+.presentation:not([room="224"]) {
+     display: none;
+}

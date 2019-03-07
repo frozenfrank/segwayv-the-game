@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<!-- Scheduling App: James Finlinson 2018 -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Schedule your Senior Presentation</title>
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-75806746-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+	<link rel="stylesheet" href="styles.css"/>
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+</head>
+<body ng-app='seniorScheduling' ng-controller='angularController' id="app">
+	<div ng-class="{loaded: strings.projectTitle}" id="loadingBib"></div>
+	<div id="content">
+		<h1>{{ ::strings.projectTitle }}</h1>
+		<form name="userInfoForm" ng-hide="settings.schedulingClosed">
+			<ng-form name="studentId" ng-hide="userInfoForm.studentId.$error.time">
+				<p class="hint" ng-show="!userInfoForm.studentId.$valid">{{ ::strings.hint1 }}</p>
+
+				<label>
+					{{ ::strings.form.studentIdLabel }}
+					<input type="text" ng-model="student.id" required student-id validate-on="student.firstInitial,student.lastInitial"/>
+				</label>
+				<label>
+					{{ ::strings.form.firstInitialLabel }}
+					<input type="text" ng-model="student.firstInitial" required maxlength="1"/>
+				</label>
+				<label>
+					{{ ::strings.form.lastInitialLabel }}
+					<input type="text" ng-model="student.lastInitial" required maxlength="1"/>
+				</label>
+			</ng-form>
+
+
+			<div ng-show="userInfoForm.studentId.$valid && !student._loaded" class="loading">{{ ::strings.loading }}</div>
+			<ng-form name="extraInfo" ng-show="userInfoForm.studentId.$valid && student._loaded && !hasUserRequested()">
+				<p class="hint" ng-show="extraInfo.$invalid">{{ ::strings.hint2 }}</p>
+				<label>
+					{{ ::strings.form.nameLabel }}
+					<input type="name" ng-model="user.name" required/>
+				</label>
+				<label>
+					{{ ::strings.form.emailLabel }}
+					<input type="email" ng-model="user.email" name="uemail" required/>
+					<p ng-if="extraInfo.uemail.$touched && extraInfo.uemail.$invalid" class="error">{{ ::strings.form.emailError }}</p>
+				</label>
+				<label>
+					{{ ::strings.form.projectTitleLabel }}
+					<input type="text" ng-model="user.projectTitle" required/>
+				</label>
+				<label>
+					{{ ::strings.form.advisorLabel }}
+					<input type="text" ng-model="user.advisor" required/>
+				</label>
+				<!--<button type="submit" ng-show="extraInfo.$valid && !hasUserRequested()">I am a <b>Senior</b> at <span>IFHS</span></button>-->
+				<button type="submit" ng-show="extraInfo.$valid && !hasUserRequested()">{{ ::strings.form.pledge }}</button>
+			</ng-form>
+
+			<div ng-show="!userInfoForm.studentId.$error.exists && userInfoForm.studentId.$error.authorized" class="error alt">
+				{{ ::strings.form.notAuthorized }}
+			</div>
+			<div ng-show="!userInfoForm.studentId.$error.required && userInfoForm.studentId.$error.exists" class="error">
+				{{ ::strings.form.notRecognized }}
+			</div>
+			<div ng-show="userInfoForm.studentId.$error.time" class="error">
+				{{ ::strings.form.timeNotMet }}
+			</div>
+		</form>
+		<div ng-show="settings.schedulingClosed" class="error">
+			{{ ::strings.schedulingClosed }}
+		</div>
+
+		<div ng-if="userInfoForm.$valid && userInfoForm.$submitted && !hasUserRequested()" id="timeSelector">
+			<h3 class="hint">{{ ::strings.hint3 }}</h3>
+			<div>
+				<div ng-repeat="(dayKey, day) in days" class="day">
+					<h3>{{ ::day.displayTitle }}</h3>
+					<div ng-repeat="(timeKey, time) in day.times" class="timeContainer" ng-class="getTimeStatus(time)">
+						<p class="time">{{ ::time.displayTime }}</p>
+						<p class="available">{{ strings.timeSelector.available + " " + getTimeStatus(time).availableSlots }}</p>
+						<button type="submit" ng-click="selectTime(dayKey, timeKey)" ng-disabled="getTimeStatus(time).noSlots">{{ ::strings.timeSelector.choose }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div ng-if="userInfoForm.studentId.$valid && hasUserRequested()" id="selectionSuccess">
+			<h1>{{ ::strings.success.message }}</h1>
+			<div class="selectionInfo">
+				<p>{{ ::strings.success.intro }}</p>
+				<h2>{{ getSelectedSlotInfo().day }}</h2>
+				<p>{{ ::strings.success.connector }}</p>
+				<h2>{{ getSelectedSlotInfo().time }}</h2>
+				<button ng-click="unselectTimes()">{{ ::strings.success.cancel }}</button>
+				<p style="color: #8a5200" ng-if="::strings.success.outro">{{ ::strings.success.outro }}</p>
+			</div>
+			<h3>{{ ::strings.success.farewell }}</h3>
+		</div>
+	</div>
+
+
+	<!--angularJS 1.7.5 -->
+	<!--angular: ngRoute-->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular-route.js"></script>
+
+	<!--firebase 5.5.5-->
+	<script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-database.js"></script>
+
+	<!-- AngularFire 2.3.0 -->
+	<script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
+
+	<!-- AngularController -->
+	<script>window.student = true;</script>
+	<script src="angularController.js"></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<!-- Scheduling App: James Finlinson 2018 -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Volunteer: Senior Presentations</title>
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-75806746-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+	<link rel="stylesheet" href="styles.css"/>
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+</head>
+<body ng-app='seniorScheduling' ng-controller='angularController' id="app" class="volunteerPage">
+	<div ng-class="{loaded: strings.projectTitle}" id="loadingBib"></div>
+	<div id="content">
+		<h1>Volunteer: {{ ::strings.projectTitle }}</h1>
+
+		<form name="roomSelectionForm">
+			<label>
+				Presentation day:
+				<select ng-options="day as day.displayTitle for day in days" ng-model="presentationDay"></select>
+			</label>
+			<label ng-show="presentationDay">
+				Room Number:
+				<select ng-options="room as room.roomNumber for room in presentationDay.rooms" ng-model="presentationRoom"></select>
+			</label>
+		</form>
+
+		<div id="volunteers" ng-show="presentationRoom">
+			<div ng-repeat="volunteer in presentationRoom.volunteers" class="volunteer {{ volunteer.roomLeader ? 'roomLeader' : '' }}">
+				<h3 class="name">{{ volunteer.name }}</h3>
+				<p class='email' ng-show="volunteer.email">{{ volunteer.email }}</p>
+			</div>
+		</div>
+
+		<div id="assignment" ng-show="presentationRoom">
+			<div ng-repeat="assignment in arrayFromObject(presentationRoom.assignments) | orderBy:'timeKey'" class="assignment">
+				<h2 class="time">{{ getTime(assignment).displayTime }}</h2>
+				<p class="student">
+					{{ getOfficialStudent(assignment).firstName + " " + getOfficialStudent(assignment).lastName }}
+					<br/>
+					<i>{{ getStudent(assignment).projectTitle }}</i>
+				</p>
+			</div>
+		</div>
+	</div>
+
+
+	<!--angularJS 1.7.5 -->
+	<!--angular: ngRoute-->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular-route.js"></script>
+
+	<!--firebase 5.5.5-->
+	<script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-database.js"></script>
+
+	<!-- AngularFire 2.3.0 -->
+	<script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
+
+	<!-- AngularController -->
+	<script>window.volunteer = true;</script>
+	<script src="angularController.js"></script>
+</body>
+</html>
