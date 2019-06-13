@@ -40,7 +40,8 @@ function userObject() {
 			speed: 15,
 			damageMultiplier: 1,
 			projectileSpeed: 1,
-			weaponKeywords: ['Sniper', 'Sword', 'GrenadeLauncher', 'TestWeapon', 'Lazer'],
+			// weaponKeywords: ['Sniper', 'Sword', 'GrenadeLauncher', 'TestWeapon', 'Lazer'],
+			weaponKeywords: ['Sniper', 'Sword'],
 			isDead: false,
 		},
 		physics: {
@@ -555,7 +556,7 @@ function userObject() {
 				message: "You just died! Respawn...",
 				onclick: function(){
 					variables.interactingObjects[variables.activeUser].respawn();
-					//TODO: force a time period to pass
+					//TODO: force a time period to pass --> achieved with the modal box animation
 				},
 			});
 		},

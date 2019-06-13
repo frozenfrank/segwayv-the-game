@@ -77,17 +77,28 @@ app.factory('studentIds', (firebaseDb) => {
     },
 
     getInfo: id =>  validStudentIds[id] || false, //warning: data security issue
-    getIds: () => validStudentIds,
+    getIds: () => {
+      if(!validStudentIds || !validStudentIds.$resolved)
+        return;
+
+      var studentIds = {};
+      validStudentIds.forEach((student, id) => {
+        studentIds[id] = student;
+      });
+
+      return studentIds;
+    },
   };
 
   return studentIds;
 });
 
-app.directive('studentId', (studentIds) => {
+app.directive('studentId', (studentIds, $rootScope) => {
   return {
     require: 'ngModel',
     link: (scope, elm, attrs, ctrl) => {
       //TODO: eliminate this hard-coded time; also use a server time to prevent easy get-arounds
+      ctrl.$validators.closed     = (modelValue, displayValue) => !$rootScope.isSchedulingClosed();
       ctrl.$validators.time       = (modelValue, displayValue) => Date.now() >= new Date("October 29, 2018 09:29:00");
       ctrl.$validators.exists     = (modelValue, displayValue) => studentIds.isStudent(modelValue, scope.student.firstInitial, scope.student.lastInitial);
       ctrl.$validators.authorized = (modelValue, displayValue) => studentIds.isStudentAuthorized(modelValue, scope.student.firstInitial, scope.student.lastInitial);
@@ -104,10 +115,12 @@ app.directive('validateOn', () => {
     };
 });
 
-app.controller('angularController', ($scope, $window, firebaseDb, studentIds) => {
+app.controller('angularController', ($scope, $window, firebaseDb, studentIds, $rootScope) => {
   $scope.days = firebaseDb.$child("data/days");
   $scope.strings = firebaseDb.$child("config/strings");
   $scope.settings = firebaseDb.$child("config/settings");
+
+  $rootScope.isSchedulingClosed = () => !!$scope.settings.schedulingClosed;
 
   if($window.student){
     $scope.student = {
@@ -299,9 +312,12 @@ app.controller('angularController', ($scope, $window, firebaseDb, studentIds) =>
 
     //special functions
     $scope.hardResetDatabase = () => {
+      if(!confirm("Reset the database by overwriting all old data?"))
+        return;
+
       var days = ["Wednesday, March 13th", "Thursday, March 14th"];
       var times = "4:00,4:20,4:40,5:00,5:20,5:40,6:00,6:20".split(',').map(t => t + " pm");
-      var maximumSlots = 7;
+      var maximumSlots = 8;
 
       var data = {
         days: {
@@ -367,7 +383,8 @@ app.controller('angularController', ($scope, $window, firebaseDb, studentIds) =>
         }
       }
 
-      firebaseDb.rootRef.child('data').set(data).then(snap => {
+
+      firebaseDb.set('data', data).then(snap => {
         console.log("Hard reset the datbase");
         // $scope.$apply();
       });
@@ -739,13 +756,6 @@ app.controller('angularController', ($scope, $window, firebaseDb, studentIds) =>
     }
 
 
-    $scope.validUsers = studentIds.getIds;
-    $scope.userHasNotRequested = id => {
-      var user = users[id];
-      if(!user || !user.requestedSlots) return true;
-      return Object.keys(user.requestedSlots).length === 0;
-    };
-
     $scope.getPresentationRoom = id => {
       let request = Object.values(users[id].requestedSlots)[0];
       let room = $scope.days[request.dayKey].rooms[request.roomKey];
@@ -761,6 +771,104 @@ app.controller('angularController', ($scope, $window, firebaseDb, studentIds) =>
     }
     $scope.getProjectTitle = id => {
       return users[id].projectTitle;
+    }
+
+    $scope.updateNumberOfSlots = (dayKey, timeKey) => {
+      if(!dayKey || !timeKey)
+        console.error("dayKey or timeKey is not defined");
+
+      let day = $scope.days[dayKey],
+          time = day.times[timeKey];
+
+      let response = prompt(`How many slots should be allowed on ${day.displayTitle} at ${time.displayTime}?`),
+          numberOfSlots = parseInt(response, 10);
+
+      if(response == null || response == "")
+        return;
+      if(isNaN(numberOfSlots)){
+        alert(`Sorry, '${response}' is not a number.`);
+        return;
+      }else if(numberOfSlots < 0){
+        alert(`The number must be at least zero.`);
+        return;
+      }
+
+      let scheduledSlots = time.slots ? Object.keys(time.slots).length : 0;
+      if(numberOfSlots < scheduledSlots){
+        alert(`Cannot lower the available slots to ${numberOfSlots} because at least that many people have already selected it.`);
+        return;
+      }
+
+      firebaseDb.set(`data/days/${dayKey}/times/${timeKey}/maximumSlots`, numberOfSlots, () => {
+        console.log("Time slots successfully updated");
+      });
+    };
+    $scope.toggleScheduling = () => firebaseDb.set("config/settings/schedulingClosed", $rootScope.isSchedulingClosed() ? false : true);
+
+    $scope.getUnscheduledStudents = () => {
+      var studentNames = [],
+          users = studentIds.getIds();
+
+      if(!users)
+        return;
+
+      for(let studentId in users){
+        let student = users[studentId];
+        if(student.valid === true && !$scope.hasUserRequested(studentId))
+          studentNames.push(student.firstName + " " + student.lastName);
+      }
+
+      studentNames.sort((a, b) => a.localeCompare(b));
+      return studentNames;
+    }
+    $scope.importValidatedStudents = () => {
+      console.log("Importing csv file");
+      let file = document.getElementById("acceptedStudentsCSV").files[0];
+        /*
+        validStudentIds: {
+          "studentId": {
+            advisor: "",
+            advisorRoomNumber: 0,
+            firstName: "",
+            lastName: "",
+            valid: true,
+          }
+        }
+        */
+        /** Parsing notes!
+        the first row, a header row will be skipped
+        the columns must appear in this order
+          - last name
+          - first name
+          - student id
+          - advisor
+          - advisor room number
+        **/
+
+      Papa.parse(file, {
+        complete: results => {
+          var validStudentIds = {};
+          for(let i=1;i<results.data.length;i++){
+            let line = results.data[i];
+            let studentObj =  {
+              lastName: line[0],
+              firstName: line[1],
+              valid: true,
+            };
+
+            if(line[3])
+              studentObj.advisor = line[3];
+            if(line[4])
+              studentObj.advisorRoomNumber = line[4];
+
+            validStudentIds[line[2]] = studentObj;
+          }
+
+          firebaseDb.set("config/validStudentIds", validStudentIds).then(snapshot => {
+            console.log("Finished saving student Id's:", snapshot);
+          });
+        }
+      });
     }
   }
 

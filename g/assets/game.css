@@ -3,7 +3,7 @@ body {
 	margin: 0;
 	padding: 0;
 	overflow-y: scroll;
-	background: url('assets/images/background.jpg');
+	/*background: url('assets/images/background.jpg');*/
 	background-position-x: center;
 	position: relative;
 	height: 100vh;
@@ -235,6 +235,7 @@ credits {
     justify-content: center;
     align-items: center;
     text-align: center;
+    font-family: monospace;
     background: black;
     color: white;
     font-size: 1.25em;
@@ -244,22 +245,21 @@ credits {
     right: 0;
     left: 0;
 }
-credits h1, credits h2 {
-    margin: 0;
-    margin-top: 23px;
-    color: rebeccapurple;
-}
-credits p {
-    margin: 0;
-}
-credits h1 + h2 {
-    margin-top: 10px;
-}
-credits {
-    font-family: monospace;
+credits * {
+	display: block;
+	margin: 0;
 }
 credits h1 {
     color: orangered;
+}
+credits group:first-of-type {
+    margin-top: -5px;
+}
+credits group p:first-child {
+    margin-top: 18px;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: rebeccapurple;
 }
 
 #serverList {

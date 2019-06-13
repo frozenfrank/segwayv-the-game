@@ -3,7 +3,7 @@ body {
     padding: 0;
     border: 0;
     font-family: "Source Sans Pro", sans-serif;
-    /*     background: #673AB7; */
+    background: #673AB7;
     overflow: visible;
 }
 select {
@@ -162,6 +162,9 @@ div.error.alt {
 .timeContainer .time {
     font-size: 1.4em;
     font-weight: bold;
+}
+.timeContainer .timeStatus {
+    cursor: pointer;
 }
 
 .timeContainer {

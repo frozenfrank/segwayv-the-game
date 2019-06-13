@@ -1,0 +1,660 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<title>Kirkman's Schoolgirl Problem</title>
+	<!--<script type="text/javascript" src="strint.js"></script>-->
+	<script full type="text/javascript">
+		console.log("YOU PROBABLY CARE ABOUT THIS SECTION OF CODE");
+		//<=========>
+		// (unrelated) Helper library
+		//<=========>
+
+		function permutation(string, start) {
+			start = start || "";
+
+			//base case
+			if ( string.length == 1 ) {
+				return [ start + string ];
+			} else {
+				var returnResult = [];
+				var result, i, j;
+
+				for (i=0; i < string.length; i++) {
+					result = permutation (string.substr(0, i) + string.substr(i+1),string[i]); //recursive
+					for (j=0; j<result.length; j++) {
+						returnResult.push(start + result[j]);
+					}
+				}
+
+				return returnResult;
+				//number of possibilites is the factorial of the length of the string ~~ factorial(string.length) [pseudocode]
+			}
+		}
+		Array.prototype.contains = String.prototype.contains = function(string){
+			return this.indexOf(string) > -1;
+		}
+		String.prototype.reverse = function(){
+			return this.split("").reverse().join("");
+		}
+		String.prototype.replaceAll = function(search, replacement) {
+			var target = this;
+			return target.replace(new RegExp(search, 'g'), replacement);
+		};
+		function generateLetters(howMany){
+			var result = "",
+				i = 0;
+
+			while(i < howMany){
+				result += String.fromCharCode(97 + (i++));
+			}
+
+			return result;
+		}
+		function time(test,params){
+			var startTime = new Date;
+			var result = test.apply(window,params);
+			var finishTime = new Date;
+
+			if(result)
+				console.log(result);
+
+			return finishTime - startTime;
+		}
+		function timeTrials(test,trials,params){
+			var startTime = new Date;
+
+			for(var i=0;i<trials;i++)
+				test.apply(window,params);
+
+			var finishTime = new Date;
+			return (finishTime - startTime) / i; //avg time
+		}
+		var fMemory = [];
+		function factorial (n) {
+			if (n == 0 || n == 1)
+				return 1;
+			if (fMemory[n] > 0)
+				return fMemory[n];
+			return fMemory[n] = factorial(n-1) * n;
+		}
+		function isUniqueElements(arr) {
+			var uniqOb = {};
+			/* create object attribute with name=value in array, this will not keep dupes*/
+			for (var i=0;i<arr.length;i++)
+				uniqOb[arr[i]] = "";
+
+			/* if object's attributes match array, then no dupes! */
+			if (arr.length == Object.keys(uniqOb).length)
+				return true;
+
+			return false;
+		}
+		function dupes(arr) {
+			var r = new Array();
+			o: for (var i = 0, n = arr.length; i < n; i++) {
+				for (var x = 0, y = r.length; x < y; x++) {
+					if (r[x] == arr[i]) {
+						//duplicate
+						return i+1; //special modifications
+						continue o;
+					}
+				}
+				r[r.length] = arr[i];
+			}
+			return false; //there were no duplicates
+			return r; //this would return the unique items
+		}
+
+		//<=========>
+		// Helper library
+		//<=========>
+
+		function count(rows,columns){
+			if(columns > rows) return 1;
+			if(columns === 1) return 1;
+
+			return Math.floor((rows*columns-1)/(columns-1));
+		}
+		Array.prototype.check = function(poss,autoAdd){
+			// this: ["abc","ade","afg"] etc
+			// poss: ['a','b','c'] ==> possibility
+			// autoAdd: anything that registers as true will add the new solution to the existing ones
+			var flag,
+				that = this,
+				invalid = false;
+
+			invalid = this.some(function(combo){
+				flag = false;
+				return poss.some(function(letter){
+					if(combo.indexOf(letter) > -1){
+						if(flag)
+							return invalid = true;
+						flag = true;
+					}
+				});
+			});
+
+			if(invalid)
+				return false;
+			else{
+				if(autoAdd)
+					that.push((function(){
+						//add the new combo to the existing ones
+						var a = "";
+						poss.every(function(l){
+							return a += l;
+						});
+						return a;
+					})());
+
+				return this;
+			}
+		}
+		Array.prototype.print = function(del,del2){
+			//delimiter & delimiter2
+			var str="";
+			if(arguments.length === 0)
+				del = "", del2 = "\n";
+			else if(arguments.length === 1)
+				del2 = "\n";
+
+			if(this[0][0] === undefined) return;
+			this.forEach(function(i){
+				i.forEach(function(ii){
+					str += ii + del;
+				});
+				str += del2;
+			});
+			console.log(str);
+		}
+		function timeTest(test,trials){
+			trials = trials || 2;
+			var columns = 2;
+			var i,sum;
+
+			var name, testFunction, reportFunction;
+			switch(test){
+				case 2:
+					name = 'progressive';
+					testFunction = progressive;
+					reportFunction = function(rows,columns){
+						var maxSolutions = Math.max(Math.ceil((Math.pow(rows*columns-1,rows*columns -1) - Math.pow(rows*columns -1,rows*columns -2))/(rows*columns)*2), 1);
+						return 'Tested < '+maxSolutions+' ops per trial';
+					}
+					break;
+				case 1:
+				default:
+					name = 'bruteForce';
+					testFunction = bruteForce;
+					reportFunction = function(rows,columns){
+						return 'Required ~'+factorial(rows*columns-1)+' ops per trial'
+					};
+			}
+
+			console.log('Testing: ' + name);
+
+			for(var rows = 1;rows <= 5;rows++){
+				sum = 0;
+				for(i=0;i<trials;i++){
+					sum += time(testFunction,[rows,columns,0])
+				}
+				console.log('Avg runtime with input [',rows,',',columns,']: ',Math.round(sum / i),' ms. '+reportFunction(rows,columns));
+			}
+			console.log('Completed test');
+		}
+		function increment(string,radix){
+			//input: 'aaa'
+			//output: 'aab'
+
+			//convert the string to base 10,
+			//add 1,
+			//convert it back to its base,
+			//deal with 0s by replacing with 'a',
+			//and only return the same number of digits as the original, taken from the end
+			radix = radix || 10 + string.length;
+			if(string.length > 8){
+				if(string[0] !== 'a')
+					throw "I can't increment this: "+string;
+
+				var breakpoint = 6,
+				    subset = string.substr(-breakpoint);
+
+				return string.substr(0,string.length - breakpoint) + increment(subset,radix);
+
+			}else{
+				return (parseInt(string,radix)+1).toString(radix).replaceAll('0','a').slice(-string.length);
+			}
+		}
+		function incrementDigit(string,digit,radix){
+			//input: 'aaaaaa', 2
+			//output: 'aaaaba'
+			radix = radix || 10 + string.length;
+			return (parseInt(string,radix)+Math.pow(radix,digit-1)).toString(radix).replaceAll('0','a').slice(-string.length);
+		}
+		function jumpToIncrement(string,digitsFromLeft){
+			//input: 'abcdefgh', 3
+			//output: 'abdaaaaa'
+			var significant = increment(string.substr(0,digitsFromLeft), 10 + string.length);
+			return significant.length >= string.length ? significant : significant + new Array(string.length - digitsFromLeft + 1).join('b');
+		}
+		function report(data){
+			/*
+			Required
+				results: ['abcd','adbc','acbd'] etc
+				rows: number
+
+			Optional
+				mode: 0-3
+				viewed: number
+				checked: number
+				numSolutions: number
+
+			*/
+			var mode = data.mode,
+				results = data.results,
+				rows = data.rows,
+				columns = results[0].length / rows;
+
+			if(mode === 0)
+				return;
+			else if(mode === 3)
+				return results;
+
+			//convert the string results into arrays
+			var prettyResults = [];
+			results.forEach(function(result){
+				var prettyResult = [];
+				for(var i=0;i<rows;i++){
+					prettyResult.push(result.substr(i * columns,columns).split(''));
+				}
+				prettyResults.push(prettyResult);
+				if(mode === 2)
+					prettyResult.print();
+			});
+
+			if(mode === 1){
+				if(data.viewed)
+					console.log('Viewed',data.viewed,'total permutations');
+				if(data.checked)
+					console.log('Checked',data.checked,'total permutations');
+				console.log("Found"+(data.numSolutions > 0 && results.length === data.numSolutions ? " ALL" : ""),results.length,'solutions!');
+				if(data.viewed > 1000000)
+					return results; //return the results anyway, because we did a lot of work to find them
+			}else if(mode === undefined)
+				return prettyResults;
+		}
+
+		//<=========>
+		// Working Code
+		//<=========>
+
+		function arrangements(rows,columns,debugMode){
+			var results = [],
+				number = count(rows, columns),
+				letters = generateLetters(rows*columns),
+				rLetters = letters.reverse(),
+				newSolutionsProbablyExist = true, flag,
+				lettersUsed,lettersInRow,letter,current,currentRow,i,combos=[],currentCombos;
+
+			if(debugMode)
+				console.log('Looking for',number,'solutions');
+
+			while(results.length < number && newSolutionsProbablyExist){ //for every solution
+				current = [];
+				lettersUsed = "";
+				currentCombos = [];
+				flag = 0;
+
+				while(current.length < rows){ //for every row
+					currentRow = [];
+					lettersInRow = "";
+					i=0;
+
+					while(currentRow.length < columns){ //generate letters until we have filled up the column, make sure that we don't use a letter that we've already used
+							//nor a letter that would violate the combinations policy
+						letter = letters[i++];
+						// letter = (flag % 2 === 0 ? letters : rLetters)[i++];
+
+						if(letter == undefined){
+							//we ran out of letters ==> delete all letters and start over with a new begginning
+							if(flag++ > 50){
+								console.warn('Found',results.length,'results. Expected',number,'though... Possible error in formula');
+								return results; //exit early
+							}
+
+							current = [];
+							currentCombos = [];
+							lettersUsed = "";
+							i = 0;
+
+							continue;
+						}
+
+						if(lettersInRow.contains(letter)) continue;
+						if(lettersUsed.contains(letter))  continue;
+						if(!combos.check(currentRow.concat(letter))) continue;
+						if(!currentCombos.check(currentRow.concat(letter))) continue;
+
+						lettersInRow += letter;
+						currentRow.push(letter);
+					}
+
+					currentCombos.push((function(){
+						//add the new combo to the existing ones
+						var a = "";
+						currentRow.every(function(l){
+							return a += l;
+						});
+						return a;
+					})());
+					current.push(currentRow);
+					lettersUsed += lettersInRow;
+				}
+
+				currentCombos.splice(0,0,0,0); //add some parameters to the array before using it to call on the actual combos
+				combos.splice.apply(combos,currentCombos);
+				current.print();
+				results.push(current);
+			}
+
+			return report({
+				rows: rows,
+				results: results,
+				mode: debugMode,
+				numSolutions: numSolutions,
+			});
+		}
+		function bruteForce(rows,columns,mode){
+			/* mode key:
+				default:     return the list of solutions
+				0:           return/print nothing
+				1:           debugMode: state how many solutions were looking for and when we've finished
+				2:           print out the solutions
+				3:           return the string solutions
+			*/
+			var numSolutions = count(rows, columns);
+
+			//We don't have enough computational power to do the work
+			if(rows * columns > 11 && numSolutions > 1)
+				/*
+					I timed the function while it evaluated different inputs [rows, columns]. Here is the data:
+					EDIT: I've made an optimization and have decreased the possible solutions. Here is new data:
+
+					[1,2]: 0      miliseconds             [1,2]: 0      miliseconds
+					[2,2]: 1      milisecond              [2,2]: 1      milisecond
+					[3,2]: 1      milisecond      ===>    [3,2]: 1      milisecond
+					[4,2]: 47     miliseconds             [4,2]: 33     miliseconds
+					[5,2]: 5500   miliseconds             [5,2]: 2608   miliseconds
+					[6,2]: 726000 miliseconds             [6,2]: 286000 miliseconds
+
+				I converted this into operations per milisecond in order to exprapolate to the desired test case of [5,3].
+				This is the estimated time required to solve [5,3] with my function. I also had to change the units:
+
+					23 days: 22 hours: 33 minutes  ===>   8 days: 5 hours: 30 minutes
+
+				For this reason, I have place a hard limit on the total letters that this function will work with: 10 letters.
+				If you have 23 days to figure out the 15 letters that the desired problem requires,
+				feel free to change that number in the sourcecode and try it.
+
+				Look a the projections yourself with this formula where xxx is the number of operations required:
+					old:    new Date(5500 / factorial(10) * factorial(xxx) + 1000 * 60 * 60 * 7);
+					NEW:    new Date(2600 / factorial(9) * factorial(xxx - 1) + 1000 * 60 * 60 * 7);
+				*/
+				return 0;
+
+			if(mode === 1)
+				console.log('Looking for',numSolutions,'solutions');
+
+			var results = [], //will be stored as strings, then converted to arrays
+				letters = generateLetters(rows * columns),
+				combos = [], possibilitesChecked = 0;
+
+			if(numSolutions > 1){
+				if(mode === 1)
+					console.log('Started creating permutations at '+(new Date).toLocaleTimeString())
+				permutations = permutation(letters.substr(1),'a');
+				if(mode === 1)
+					console.log('Finished creating permutations at '+(new Date).toLocaleTimeString())
+				//because all of the combos can have 'a' as the first letter, we can skip some permutations
+				//length is equal to (rows * columns)! ~~ Factorial(rows * columns),
+			}else
+				permutations = [letters];
+				//we can solve it if there is one solution
+
+			if(mode === 1)
+				console.log('Checking',permutations.length,'permutations');
+
+			permutations.some(function(solution){
+				possibilitesChecked++; //we checked it
+
+				if(mode === 1 && possibilitesChecked % 1000000 === 0)
+					console.log("Viewed",possibilitesChecked/1000000,'M possibilites.'
+						+' Found',results.length,'solutions.'
+						+' solution: '+solution
+						+' Timestamp: '+(new Date).toLocaleTimeString());
+
+				//try to discredit the solution
+				var row, currentCombos = [];
+				for(var i = 0;i<rows;i++){
+					row = solution.substr(i * columns,columns).split(""); //take the letters in the row and make them into an array
+
+					if(!combos.check(row) || !currentCombos.check(row, true)){
+						return false; //this solution doesn't work
+					}
+				}
+
+				//if it works
+				results.push(solution);
+				currentCombos.forEach(function(combo){
+					combos.push(combo); //add all of the combos to the parent holder
+				})
+				return results.length >= numSolutions; //this will exit as soon as we find all the solutions
+			});
+
+			return report({
+				rows: rows,
+				mode: mode,
+				results: results,
+				checked: possibilitesChecked,
+				numSolutions: numSolutions,
+			});
+		}
+		function progressive(rows,columns,mode){
+			// return; //not finished yet
+			var numSolutions = count(rows, columns),
+				letters = generateLetters(rows * columns),
+				combos = [],results = [],row,flag, currentCombos = [],
+				possibilitesViewed = 0, possibilitesChecked = 0,
+				maxSolutions = Math.max(Math.ceil((Math.pow(rows*columns-1,rows*columns -1) - Math.pow(rows*columns -1,rows*columns -2))), 1);
+					//divide by **some number** because we probably don't search that many
+					//minimize it at one, for the corner cases
+
+			if(mode === 1){
+				console.log('Looking for',numSolutions,'solutions');
+				console.log('Searching among',maxSolutions,'possible solutions');
+			}
+
+			var testCase = letters;
+
+			try{
+				while(results.length < numSolutions && testCase[0] === 'a'){
+					if(mode === 1 && possibilitesViewed % 1000000 === 0){
+						console.log("Viewed",possibilitesViewed/1000000,'M possibilites.'
+							+' Checked',possibilitesChecked,'possibilites.'
+							+' Found',results.length,'solutions.'
+							+' testCase: '+testCase
+							+' '+(new Date).toLocaleTimeString()); //timestamp
+					}
+
+					possibilitesViewed++;
+					flag = false;
+					currentCombos = [];
+
+					//safety net
+					if(possibilitesViewed > maxSolutions){
+						console.log('Safety Net caught us!');
+						return results;
+					}
+
+					if(columns > 2 && combos.check([testCase[0],testCase[1]]) === false){
+						//compare just the first two digits, this is especially helpful with columns > 2
+						testCase = jumpToIncrement(testCase, 2);
+					}else if((flag=dupes(testCase)) > 0){
+						//unique error, increment starting from the first duplicate
+						testCase = jumpToIncrement(testCase,flag);
+					}else{
+						possibilitesChecked++;
+						for(row=0;row<rows;row++){
+							currentCombos.push(testCase.substr(row * columns,columns));
+
+							if(combos.check(currentCombos[currentCombos.length-1].split('')) === false){
+								//it violated some rule, and isn't a solution
+								flag = 'combo';
+								break;
+							}
+						}
+
+						if(flag){
+							testCase = jumpToIncrement(testCase, columns * (row + 1)); //offendingDigit: columns * (row + 1): the digit that we should increase in hopes of getting a valid string
+						}else{
+							//it was a valid test case
+							results.push(testCase);
+							currentCombos.forEach(function(combo){
+								combos.push(combo); //add all of the combos to the parent holder
+							});
+							testCase = jumpToIncrement(testCase, 2);
+								//we may as well increment the second letter right now so we don't check the same solution
+						}
+					}
+				}
+			}catch(e){
+				console.error(e);
+				console.log(results);
+			}
+
+			return report({
+				viewed: possibilitesViewed,
+				checked: possibilitesChecked,
+				results: results,
+				mode: mode,
+				rows: rows,
+				numSolutions: numSolutions,
+			});
+		}
+		function construction(rows,columns,mode){
+			var numSolutions = count(rows,columns),
+				letters = generateLetters(rows * columns),
+				results = [], pairings = {},
+				oldLength, index,
+				i, ii, iii, lettersUsed, currentRow, currentSolution, letter, pair, primaryPair;
+
+			if(mode === 1)
+				console.log('Looking for',numSolutions,'solutions');
+
+			//generate possible pairings
+			for(i=0;i<letters.length;i++){
+				//for every letter
+				pairings[letters[i]] = [];
+				for(ii=letters.length - 1;ii>=0;ii--){
+					//add each letter that isn't itself to its list of possibilities, in reverse order
+					if(i == ii) // if(letters[i] === letters[ii])
+						continue;
+
+					pairings[letters[i]].push(letters[ii]);
+				}
+			}
+
+			//now do logic on them
+			try{
+			while(results.length < numSolutions){
+				//for every solutions
+				currentSolution = "";
+				lettersUsed = "";
+				index = 0;
+
+				while(currentSolution.length < rows * columns){
+					//pick letters for the entire row
+
+					//pick the first letter of the row from the unused letters
+					i=0;
+					while(i<letters.length){
+						currentRow = letters[i++];
+						if(lettersUsed.indexOf(currentRow) > -1)
+							continue;
+						break;
+					}
+					lettersUsed += currentRow;
+					primaryPair = pairings[currentRow];
+
+					//pick the rest from the possible combinations of the first letter
+					while(currentRow.length < columns){
+						//we can't use the letter if it is already in the solution
+							//or already paired with another letter in the row
+							//or if it will prevent us from finding the next solution
+
+						oldLength = currentRow.length;
+						letterLoop: for(i=0;i<letters.length;i++){
+							letter = primaryPair[index]; //assign the letter
+							index = (index+1)%(rows*columns-1); //and increment i, keeping it within pairings array size
+
+							if(letter == '@' || lettersUsed.indexOf(letter) > -1)
+								continue letterLoop; //our placeholder can't be a letter, or we already used it
+
+							for(ii=0;ii<currentRow.length;ii++){
+								if(pairings[letter].indexOf(currentRow[ii]) === -1)
+									continue letterLoop; //it has already been paired with this letter
+							}
+
+							//TODO: insert predictive logic to prevent us from getting stranded on an island of isolation
+
+							//we need to remove the used pairings after success
+							for(ii=0;ii<currentRow.length;ii++){
+								//remove from both pairings;
+								pair = pairings[currentRow[ii]];
+								pair.splice(pair.indexOf(letter),1,'@'); //we need to leave them the same length
+
+								pair = pairings[letter];
+								pair.splice(pair.indexOf(currentRow[ii]),1,'@');
+							}
+
+							currentRow += letter;
+							lettersUsed += letter;
+							break letterLoop; //no sense checking the other letters
+						}
+
+						if(oldLength == currentRow.length)
+							throw "We didn't find the next solution";
+
+					}
+
+					//we found a row that works
+					currentSolution += currentRow;
+				}
+				//this is a solution
+				results.push(currentSolution);
+			}
+			}catch(e){
+				console.error(e);
+				console.log('Partial solution:',currentSolution);
+				return results;
+			}
+
+			return report({
+				results: results,
+				mode: mode,
+				rows: rows,
+				numSolutions: numSolutions,
+			});
+		}
+
+		console.log('Invoke `arrangements(2,2)` to begin exploring the ***amazon rain forest of danger*** :)');
+		console.log('Invoke `bruteForce(2,2)` to find solutions with < 11 letters');
+		console.log('Invoke `progressive(2,2)` to find solutions with more letters');
+		console.log('Invoke `construction(2,2)` to generate combinations in a super-optimized way');
+	</script>
+</head>
+<body>
+	<p><code>Ctrl + Shift + i</code> to view the console</p>
+</body>
+</html>

@@ -17,14 +17,14 @@
 		ga('send', 'pageview');
 	</script>
 
-	<link rel="stylesheet" href="styles.css"/>
+	<link rel="stylesheet" href="styles.css?v=2"/>
 	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 </head>
 <body ng-app='seniorScheduling' ng-controller='angularController' id="app">
 	<div ng-class="{loaded: strings.projectTitle}" id="loadingBib"></div>
 	<div id="content">
 		<h1>{{ ::strings.projectTitle }}</h1>
-		<form name="userInfoForm" ng-hide="settings.schedulingClosed">
+		<form name="userInfoForm" ng-hide="isSchedulingClosed()">
 			<ng-form name="studentId" ng-hide="userInfoForm.studentId.$error.time">
 				<p class="hint" ng-show="!userInfoForm.studentId.$valid">{{ ::strings.hint1 }}</p>
 
@@ -77,11 +77,11 @@
 				{{ ::strings.form.timeNotMet }}
 			</div>
 		</form>
-		<div ng-show="settings.schedulingClosed" class="error">
+		<div ng-show="isSchedulingClosed()" class="error">
 			{{ ::strings.schedulingClosed }}
 		</div>
 
-		<div ng-if="userInfoForm.$valid && userInfoForm.$submitted && !hasUserRequested()" id="timeSelector">
+		<div ng-if="userInfoForm.$valid && userInfoForm.$submitted && !isSchedulingClosed() && !hasUserRequested()" id="timeSelector">
 			<h3 class="hint">{{ ::strings.hint3 }}</h3>
 			<div>
 				<div ng-repeat="(dayKey, day) in days" class="day">
@@ -124,6 +124,6 @@
 
 	<!-- AngularController -->
 	<script>window.student = true;</script>
-	<script src="angularController.js"></script>
+	<script src="angularController.js?v=2"></script>
 </body>
 </html>

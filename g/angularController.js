@@ -114,6 +114,37 @@ app.controller('angularController', function($scope, $timeout, Auth) {
 				$scope.$broadcast('generateStats');
 			},
 		},
+		mainMenu: {
+			socialServices: [
+				["instagram.com/frozenfrank7","#8a3ab9","instagram"],
+				["twitter.com/frozenfrank7","#00aced","twitter"],
+				["facebook.com/frozenfrank77","#3b5998","facebook"],
+				["plus.google.com/u/0/+JamesFinlinson","#d34836","google-plus-circle"]],
+		},
+		credits: {
+			data: [
+				["Written by:",
+				"James Finlinson 2016"],
+				['Images:',
+				'millionthvector',
+				'Font Awesome',
+				'Google Fonts',
+				'pickywallpapers.com'],
+				['Minified with:',
+				'MinifyCode.com',
+				'Google Closure Compiler Service'],
+				['Third party libraries:',
+				'Firebase',
+				'Angular',
+				'jQuery',
+				'AngularFire'],
+				['Special thanks to:',
+				'My Family',
+				'Chris Woods',
+				'Brett Simms',
+				'Cloud9 IDE']
+			],
+		},
 	};
 	$scope.authObject = {
 		canvas: "canvas",
@@ -194,27 +225,38 @@ app.controller('angularController', function($scope, $timeout, Auth) {
 						provider = new firebase.auth.GithubAuthProvider;
 						provider.addScope('user:email');
 						break;
+					case 'anonymous':
+						firebase.auth().signInAnonymously();
+						break;
 				}
-				if($scope.authObject.authData)
-					firebase.auth().currentUser.linkWithPopup(provider);
-					//TODO: add some user alerts
-				else
-					firebase.auth().signInWithPopup(provider).catch(function(error){
-						if(error.code === "auth/account-exists-with-different-credential")
-							functions.modalBox({
-								color: 'yellow',
-								icon: 'exclamation-triangle',
-								modal: false,
-								message: 'It look\'s like you have already signed in to the application use a different service that is associated with <b>the same email address</b>.<br/> Try using a differnt provider...',
-							});
-						else {
-							console.warn(error);
-							firebase.auth().currentUser.linkWithPopup(provider);
-						}
-					});
-			}else if(v === 'anonymous')
-				firebase.auth().signInAnonymously();
-			else{
+				if(provider){
+					if($scope.authObject.authData)
+						firebase.auth().currentUser.linkWithPopup(provider);
+						//TODO: add some user alerts
+					else
+						firebase.auth().signInWithPopup(provider).catch(function(error){
+							switch (error.code) {
+								case "auth/popup-closed-by-user":
+								case "auth/cancelled-popup-request":
+									console.log('The OAuth box was closed');
+									functions.userMessage("You closed the OAuth Box!",'warning');
+									break;
+								case "auth/account-exists-with-different-credential":
+									//TODO: lookup what account it already exists on and perform the correct sign-in, then automatically link the two accounts
+									functions.modalBox({
+										color: 'yellow',
+										icon: 'exclamation-triangle',
+										modal: false,
+										message: 'It look\'s like you have already signed in to the application use a different service that is associated with <b>the same email address</b>.<br/> Try using a differnt provider...',
+									});
+									break;
+								default:
+									console.warn(error);
+									firebase.auth().currentUser.linkWithPopup(provider);
+							}
+						});
+				}
+			}else{
 				//box with sign in options
 				// scratch that! were movning into the userInfo box
 			}

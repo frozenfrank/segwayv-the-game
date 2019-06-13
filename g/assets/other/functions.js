@@ -266,21 +266,6 @@ var functions = {
 			snapshot.ref.off(); //remove the event listener
 		});
 	},
-	changeAngular: function(variable, value) {
-		//HACK! debug mode only
-		//TODO: get rid of this before releasing
-		var scope = angular.element($("#app")).scope();
-		scope.$apply(function() {
-			var item = scope[variable];
-			if (typeof item === 'function')
-				item();
-			else if (value)
-				scope[variable] = value;
-			else
-				console.log(variable, ': ', item);
-
-		});
-	},
 	autoResizeCanvasNoSave: function() {
 		if (!variables.singlePlayerMode)
 			return; //HACK!

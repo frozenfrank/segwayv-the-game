@@ -61,10 +61,8 @@
 					<div ng-hide='authObject.authData' class='signedOut'>
 						<h2>Login</h2>
 						<div>
-							<!-- [name to pass to login [, fa icon to use]] -->
 							<div ng-repeat='authService in [["google"],["facebook"],["twitter"],["github"],["anonymous","user-secret"]] track by $index' ng-click='authObject.login({app:authService[0]})' class='loginOption'>
-								<i class='fa fa-fw fa-{{ authService[1] || authService[0] }}'></i>
-								<p>{{ authService[0] }}</p>
+								<i class='fa fa-fw fa-{{ authService[1] || authService[0] }}' title='{{ authService[0] }}'></i>
 							</div>
 						</div>
 					</div>
@@ -144,17 +142,8 @@
 			<div id='winner' class='centerAll' modes='arena'>Winner!</div>
 			<div class="fb-like" modes='mainMenu' data-share="true" data-width="450" data-show-faces="true"></div>
 			<div id='social-bar' modes='mainMenu credits lobby createUser'>
-				<a href='https://www.instagram.com/frozenfrank7/' target='_blank' class='instagram'>
-					<i class='fa fa-instagram'></i>
-				</a>
-				<a href='https://twitter.com/frozenfrank7' target='_blank' class='twitter'>
-					<i class='fa fa-twitter'></i>
-				</a>
-				<a href='https://www.facebook.com/frozenfrank77' target='_blank' class='facebook'>
-					<i class='fa fa-facebook'></i>
-				</a>
-				<a href='https://plus.google.com/u/0/+JamesFinlinson' target='_blank' class='google'>
-					<i class='fa fa-google-plus-circle'></i>
+				<a ng-repeat='socialSite in modes.mainMenu.socialServices track by $index' target='_blank' href='https://{{ socialSite[0] }}' style='background:{{ socialSite[1] }}'>
+					<i class='fa fa-{{ socialSite[2] }}'></i>
 				</a>
 			</div>
 		</div>
@@ -181,26 +170,9 @@
 		<credits modes='credits'>
 			<span>
 				<h1>Segwayv the Game</h1>
-				<h2>Written by:</h2>
-				<p>James Finlinson 2016</p>
-				<h2>Images:</h2>
-				<p>millionthvector</p>
-				<p>Font Awesome</p>
-				<p>Google Fonts</p>
-				<p>pickywallpapers.com</p>
-				<h2>Minified with:</h2>
-				<p>MinifyCode.com</p>
-				<p>Google Closure Compiler Service</p>
-				<h2>Third party libraries</h2>
-				<p>Firebase</p>
-				<p>Angular</p>
-				<p>jQuery</p>
-				<p>AngularFire</p>
-				<h2>Special thanks to:</h2>
-				<p>My Family</p>
-				<p>Chris Woods</p>
-				<p>Brett Simms</p>
-				<p>Cloud9 IDE</p>
+				<group ng-repeat='group in modes.credits.data track by $index'>
+					<p ng-repeat='line in group'>{{ line }}</p>
+				</group>
 			</span>
 		</credits>
 		<div modes='lobby'>

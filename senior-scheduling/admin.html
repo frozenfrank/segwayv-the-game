@@ -17,12 +17,13 @@
 		ga('send', 'pageview');
 	</script>
 
-	<link rel="stylesheet" href="styles.css"/>
+	<link rel="stylesheet" href="styles.css?v=2"/>
 	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 </head>
 <body ng-app='seniorScheduling' ng-controller='angularController' id="app" class="admin">
 	<div ng-class="{loaded: strings.projectTitle}" id="loadingBib"></div>
 	<div id="content">
+		<h1>ADMIN: {{ ::strings.projectTitle }}</h1>
 		<form name="newUserForm" ng-submit="addNewUser()">
 			<label>
 				Student ID:
@@ -51,33 +52,44 @@
 			<button type="submit">Add Student</button>
 		</form>
 
-		<div id="timeSelector">
+		<div id="timeSelector" ng-show="days">
 			<h3 class="hint">{{ ::strings.hint3 }}</h3>
 			<div>
 				<div ng-repeat="(dayKey, day) in days" class="day">
 					<h3>{{ ::day.displayTitle }}</h3>
 					<div ng-repeat="(timeKey, time) in day.times" class="timeContainer" ng-class="getTimeStatus(time)">
-						<p class="time">{{ ::time.displayTime }}<span>{{ getSlotStatus(time) }}</span></p>
+						<p class="time">{{ ::time.displayTime }}
+							<span ng-click="updateNumberOfSlots(dayKey, timeKey)" class="timeStatus">{{ getSlotStatus(time) }}</span>
+						</p>
 						<p ng-repeat="(slotKey, slot) in time.slots" class="student">{{ getStudentName(slot.studentId) }}</p>
 					</div>
 				</div>
 			</div>
 		</div>
-		<h1>ADMIN: {{ ::strings.projectTitle }}</h1>
 
 		<div id="hasntScheduled">
 			<h2>Unscheduled, validated students:</h2>
 			<div>
-				<p ng-repeat="(id, student) in validUsers()" ng-show="userHasNotRequested(id) && student.valid">{{ student.firstName +" "+ student.lastName }}</p>
+				<p ng-repeat="student in getUnscheduledStudents()">{{ student }}</p>
 			</div>
 		</div>
 
 		<div id="adminFunctions">
-			<button ng-if="true" ng-click="assignRoomNumbers()">Assign Room Numbers</button>
-			<button ng-if="true" ng-click="generateEmailList()">Generate Email List</button>
-			<form name="resetDatabaseForm" ng-submit="hardResetDatabase()">
+			<button ng-if="settings.adminEnabledFunctions.assignRoomNumbers" ng-click="assignRoomNumbers()">Assign Room Numbers</button>
+			<button ng-if="settings.adminEnabledFunctions.generateEmailList" ng-click="generateEmailList()">Generate Email List</button>
+			<button ng-if="settings.adminEnabledFunctions.toggleScheduling" ng-click="toggleScheduling()" id="toggleScheduling" class='{{ settings.schedulingClosed ? "off" : "on" }}'>
+				Scheduling is currently turned {{ settings.schedulingClosed ? "off" : "on" }}. Toggle?
+			</button>
 
-				<button type="submit" id="resetDatabase">{{ ::strings.hardResetButton }}</button>
+			<!--
+			<form name="resetDatabaseForm" ng-submit="hardResetDatabase()">
+				<h3>Create structure</h3>
+			</form>
+			-->
+			<button type="submit" id="resetDatabase" ng-if="settings.adminEnabledFunctions.resetDatabase" ng-click="hardResetDatabase()">{{ ::strings.hardResetButton }}</button>
+			<form ng-submit="importValidatedStudents()">
+				<input type="file" id="acceptedStudentsCSV" accept=".csv"/>
+				<button type="submit">Import Validated Students</button>
 			</form>
 		</div>
 	</div>
@@ -128,8 +140,11 @@
 	<!-- AngularFire 2.3.0 -->
 	<script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
 
+	<!-- para-parse 4.6.0 -->
+	<script src="papa-parse.min.js"></script>
+
 	<!-- AngularController -->
 	<script>window.admin = true;</script>
-	<script src="angularController.js"></script>
+	<script src="angularController.js?v=2"></script>
 </body>
 </html>

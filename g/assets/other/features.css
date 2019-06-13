@@ -287,12 +287,12 @@
     width: var(--size);
     height: var(--size);
     line-height: var(--size);
-    font-size: calc(var(--size) * .75 );
+    font-size: calc(var(--size) * .6 );
     text-align: center;
     color: black;
     display: block;
     text-decoration: none;
-    transition: all .5s .05s;
+    transition: all .25s;
     position: relative;
 }
 #social-bar a:before {
@@ -312,18 +312,6 @@
 #social-bar i:hover {
 	/*font-size: calc(var(--size) * .9);*/
     color: white;
-}
-#social-bar .instagram {
-	background: #8a3ab9;
-}
-#social-bar .twitter {
-	background: #00aced;
-}
-#social-bar .facebook {
-	background: #3b5998;
-}
-#social-bar .google {
-	background: #d34836;
 }
 
 /* scroll bar */
